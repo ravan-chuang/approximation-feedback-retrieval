@@ -2,6 +2,12 @@
 
 Research project studying how retrieval approximation errors propagate when retrieved evidence is fed back into subsequent query states.
 
+The project now focuses on a broader question than one-shot ANN quality:
+
+> **When do approximation errors become dynamically amplified by retrieval feedback, when do they remain bounded, and can the resulting risk be predicted and controlled?**
+
+---
+
 ## Core Research Question
 
 Approximate nearest-neighbor retrieval is usually evaluated as a one-shot operation.
@@ -21,8 +27,18 @@ The working mechanism is:
 \rightarrow
 \text{candidate divergence}
 \rightarrow
-\text{utility degradation}
+\text{utility divergence}
 \]
+
+The project therefore distinguishes between:
+
+- one-shot approximation loss,
+- feedback-induced state drift,
+- approximation-specific excess drift,
+- stable / null / reversal regimes,
+- and selective mitigation using higher-fidelity feedback.
+
+---
 
 ## Experimental Lineage
 
@@ -33,13 +49,19 @@ The working mechanism is:
 | ARC-v0.3 | Error Amplification Probe | Synchronized trajectories and intervention |
 | ARC-v0.4 | Statistical Mechanism Audit | Query-level statistical validation |
 | ARC-v0.5 | Sealed FEVER DEV Confirmation | Independent confirmatory experiment |
-| ARC-v0.6.1 | Sealed HotpotQA Replication | Cross-dataset replication in progress |
+| ARC-v0.6.1 | HotpotQA Cross-Dataset Replication Setup | Cross-dataset transfer and audit |
+| ARC-v0.7 | HotpotQA Fidelity Index Rebuild | Rebuilt valid PQ32 / PQ64 / SQ8 retrieval conditions |
+| ARC-v0.8 | Sealed HotpotQA H1–H4 Confirmation | Independent cross-dataset confirmation |
+| ARC-v0.9 | Boundary & Stability Map | Fidelity dose response, stability regimes, held-out prediction |
+| ARC-v0.10 | Boundary-Aware Selective Fidelity Mitigation | Selective high-fidelity feedback control; in progress |
+
+---
 
 ## Sealed FEVER DEV Confirmation
 
 ARC-v0.5 evaluated four preregistered primary endpoints on the untouched FEVER DEV split.
 
-| Endpoint | DEV effect |
+| Endpoint | FEVER DEV effect |
 |---|---:|
 | H1 — Query-state divergence slope | +0.004109 |
 | H2 — Candidate-divergence increment slope | +0.008157 |
@@ -48,15 +70,194 @@ ARC-v0.5 evaluated four preregistered primary endpoints on the untouched FEVER D
 
 All four endpoints passed the preregistered query-level bootstrap, paired sign-flip randomization, and joint Holm-correction criteria.
 
-These results support the tested FEVER configuration; they are not yet claimed as universal across retrieval systems or datasets.
+These results established the first confirmatory evidence for the tested approximation-feedback mechanism.
 
-## Current Replication
+---
 
-ARC-v0.6.1 transfers the frozen FEVER experimental design to HotpotQA.
+## HotpotQA Retrieval Rebuild and Validation
 
-No HotpotQA-based feedback hyperparameter tuning is performed.
+During the HotpotQA replication, a persisted corpus embedding artifact was discovered to be structurally valid by file size and SHA-256 but semantically invalid because its vectors were zero-filled.
+
+The invalid artifacts were quarantined, the 5.23M-document corpus was re-encoded, and the retrieval infrastructure was rebuilt from verified embedding shards.
+
+ARC-v0.7 then established three valid retrieval-fidelity conditions:
+
+| Condition | Recall@10 | MRR@10 | nDCG@10 |
+|---|---:|---:|---:|
+| IVF-PQ32 | 0.5351 | 0.6024 | 0.4898 |
+| IVF-PQ64 | 0.6422 | 0.7406 | 0.6113 |
+| IVF-SQ8 | 0.6828 | 0.8006 | 0.6633 |
+
+The rebuilt indexes passed:
+
+- corpus-vector norm and finite-value audits,
+- positive-vs-random semantic alignment checks,
+- IVF population audits,
+- 100-query retrieval smoke tests,
+- full 5,447-query DEV evaluation,
+- and artifact hash recording.
+
+This validation stage is kept separate from the later H1–H4 mechanism confirmation.
+
+---
+
+## Sealed HotpotQA Cross-Dataset Confirmation
+
+ARC-v0.8 transferred the frozen FEVER experimental design to HotpotQA without HotpotQA H1–H4-based parameter selection.
+
+The primary statistical unit remained the query.
+
+| Endpoint | HotpotQA DEV effect | Result |
+|---|---:|---|
+| H1 — Query-state divergence slope | +0.003229 | PASS |
+| H2 — Candidate-divergence increment slope | +0.005590 | PASS |
+| H3 — Absolute utility-gap slope | +0.022308 | PASS |
+| H4 — High-fidelity feedback intervention | +0.121920 | PASS |
+
+All four endpoints passed:
+
+- query-level bootstrap confidence intervals,
+- one-sided paired sign-flip randomization,
+- and joint Holm family-wise correction.
+
+This gives a second, independent cross-dataset confirmation of the tested mechanism.
+
+The effect magnitudes are not identical across datasets: HotpotQA shows somewhat smaller state/candidate divergence effects but substantially larger downstream utility-gap and intervention effects.
+
+This motivates the next research question:
+
+> **What controls the transition between stable, amplifying, and reversal regimes?**
+
+---
+
+## Boundary and Stability Analysis
+
+ARC-v0.9 is explicitly post-confirmatory.
+
+It does not replace or modify the sealed v0.8 result.
+
+The study introduces a deterministic 50/50 boundary-fit / boundary-validation split and evaluates:
+
+- retrieval-fidelity dose response,
+- feedback gain and concentration,
+- query-level initial-state features,
+- stable / null / reversal regimes,
+- and held-out prediction of later amplification.
+
+### Fidelity dose response
+
+Using the same frozen feedback policies:
+
+| Fidelity contrast | H1 slope | H2 slope | H3 slope |
+|---|---:|---:|---:|
+| PQ32 ↔ PQ64 | 0.002632 | 0.001596 | 0.012274 |
+| PQ64 ↔ SQ8 | 0.001514 | 0.005360 | 0.013828 |
+| PQ32 ↔ SQ8 | **0.003229** | **0.005590** | **0.022308** |
+
+The largest fidelity contrast produces the strongest overall amplification, although the intermediate contrasts are not strictly monotonic for every endpoint.
+
+### Held-out boundary prediction
+
+A simple interpretable first-order model trained only on the boundary-fit half achieved approximately:
+
+| Metric | Validation result |
+|---|---:|
+| \(R^2\) | 0.247 |
+| ROC-AUC | 0.774 |
+| Average Precision | 0.516 |
+| Accuracy | 0.690 |
+
+These results indicate that amplification susceptibility is **partially predictable before feedback unfolds**, but not fully explained by the current first-order features.
+
+### Heterogeneous regimes
+
+The boundary sweep retains all outcomes rather than keeping only positive cases.
+
+Across feedback configurations, queries fall into three empirical regimes:
+
+- **amplifying**
+- **stable / null**
+- **reversal**
+
+Even in strong amplification settings, a substantial fraction of queries remain stable or reverse direction.
+
+Accordingly, the current claim is **not** that approximation errors always amplify.
+
+A more precise interpretation is:
+
+> **Approximation-feedback amplification is a heterogeneous dynamical regime whose risk depends on retrieval fidelity, feedback gain/concentration, and query-specific retrieval geometry.**
+
+---
+
+## Current Mitigation Study
+
+ARC-v0.10 tests whether the v0.9 boundary predictor can be translated into an actionable systems policy.
+
+The evaluation keeps PQ32 as the search/evaluation retriever and changes only the feedback source.
+
+Policies:
+
+1. **Always-PQ32** — PQ32 search → PQ32 feedback
+2. **Always-SQ8** — PQ32 search → SQ8 feedback
+3. **Random selective SQ8** — budget-matched random high-fidelity allocation
+4. **Boundary-aware selective SQ8** — v0.9 risk model allocates SQ8 feedback
+
+Frozen high-fidelity budgets:
+
+- 10%
+- 25%
+- 50%
+
+The primary pre-specified operating point is the **25% SQ8-feedback budget**.
+
+The main system question is:
+
+\[
+\text{recovery}(b)
+=
+\frac{
+U_{\text{selective},b}-U_{\text{PQ32}}
+}{
+U_{\text{SQ8}}-U_{\text{PQ32}}
+}
+\]
+
+where \(b\) is the fraction of queries assigned high-fidelity feedback.
 
 Status: **in progress**.
+
+---
+
+## Current Research Claim
+
+The project currently supports the following evidence chain:
+
+\[
+\text{Phenomenon}
+\rightarrow
+\text{Sealed confirmation}
+\rightarrow
+\text{Cross-dataset replication}
+\rightarrow
+\text{Fidelity / stability boundary}
+\rightarrow
+\text{Held-out susceptibility prediction}
+\rightarrow
+\text{Selective mitigation study}
+\]
+
+The strongest supported claim at this stage is:
+
+> Approximation errors that are tolerable in one-shot retrieval can become dynamically consequential under iterative feedback. The effect replicates across the tested FEVER and HotpotQA settings, varies across fidelity and feedback regimes, and is partially predictable from initial retrieval-state features.
+
+The project does **not** claim that:
+
+- approximation errors always amplify,
+- the mechanism is universal across all encoders or ANN systems,
+- the current boundary model fully explains query-level susceptibility,
+- or selective mitigation is effective before ARC-v0.10 is completed.
+
+---
 
 ## Repository Structure
 
@@ -71,6 +272,8 @@ src/                Reusable implementation
 
 Large corpora, embedding matrices, FAISS indexes, SQLite databases, raw datasets, and private runtime artifacts are intentionally excluded from Git.
 
+---
+
 ## Experimental Philosophy
 
 The project separates:
@@ -80,9 +283,18 @@ The project separates:
 3. direct mechanism probing,
 4. statistical auditing,
 5. sealed independent confirmation,
-6. cross-dataset replication.
+6. cross-dataset confirmation,
+7. post-confirmatory boundary analysis,
+8. held-out prediction,
+9. selective mitigation.
+
+Positive, null, and reversal outcomes are retained.
 
 The primary statistical unit in confirmatory experiments is the query.
+
+Post-confirmatory analyses are labeled explicitly and are not retroactively treated as confirmatory evidence.
+
+---
 
 ## Reproducibility
 
@@ -93,13 +305,34 @@ Where applicable, experiments retain:
 - ANN index configurations,
 - protocol SHA-256 hashes,
 - report SHA-256 hashes,
+- immutable or audited corpus representations,
 - query-level paired inference,
 - bootstrap confidence intervals,
 - paired sign-flip tests,
-- Holm multiple-comparison correction.
+- Holm multiple-comparison correction,
+- fit / validation separation for boundary modeling,
+- and public-facing aggregate evidence artifacts.
 
-## Status
+---
+
+## Research Status
 
 Active research project.
 
-The conclusions and framing may change as HotpotQA and additional cross-dataset / cross-approximation experiments are completed.
+### Completed
+
+- FEVER sealed H1–H4 confirmation
+- HotpotQA corpus/index repair and validity audit
+- HotpotQA full baseline validation
+- HotpotQA sealed H1–H4 cross-dataset confirmation
+- fidelity dose-response analysis
+- boundary/stability mapping
+- held-out query-level amplification prediction
+
+### In progress
+
+- boundary-aware selective-fidelity mitigation
+- cost-quality Pareto evaluation
+- final full-paper framing and external-validity checks
+
+The conclusions and framing may change as mitigation and additional external-validity experiments are completed.
