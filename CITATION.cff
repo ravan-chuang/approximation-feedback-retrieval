@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this research code, please cite this repository."
+title: "Approximation-Feedback Retrieval"
+type: software
+authors:
+  - family-names: "Chuang"
+    given-names: "Ravan"
+repository-code: "https://github.com/ravan-chuang/approximation-feedback-retrieval"
+license: MIT

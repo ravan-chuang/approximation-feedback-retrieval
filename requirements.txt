@@ -1,0 +1,7 @@
+numpy
+pandas
+matplotlib
+scikit-learn
+pyarrow
+psutil
+faiss-cpu==1.12.0

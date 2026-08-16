@@ -1,0 +1,48 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets
+*.pem
+*.key
+secrets/
+credentials/
+
+# Large research artifacts
+*.faiss
+*.memmap
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.npy
+*.npz
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Raw datasets / archives
+data/
+datasets/
+corpus.jsonl
+*.zip
+*.tar
+*.tar.gz
+
+# Temporary artifacts
+tmp/
+temp/
+cache/
+*.log
