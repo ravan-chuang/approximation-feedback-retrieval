@@ -18,7 +18,7 @@ This project studies a different regime:
 
 The working mechanism is:
 
-```math
+\[
 \text{retrieval approximation}
 \rightarrow
 \text{feedback contamination}
@@ -28,7 +28,7 @@ The working mechanism is:
 \text{candidate divergence}
 \rightarrow
 \text{utility divergence}
-```
+\]
 
 The project therefore distinguishes between:
 
@@ -53,7 +53,7 @@ The project therefore distinguishes between:
 | ARC-v0.7 | HotpotQA Fidelity Index Rebuild | Rebuilt valid PQ32 / PQ64 / SQ8 retrieval conditions |
 | ARC-v0.8 | Sealed HotpotQA H1–H4 Confirmation | Independent cross-dataset confirmation |
 | ARC-v0.9 | Boundary & Stability Map | Fidelity dose response, stability regimes, held-out prediction |
-| ARC-v0.10 | Boundary-Aware Selective Fidelity Mitigation | Selective high-fidelity feedback control; in progress |
+| ARC-v0.10 | Boundary-Aware Selective Fidelity Mitigation | Held-out selective high-fidelity feedback control |
 
 ---
 
@@ -162,7 +162,7 @@ A simple interpretable first-order model trained only on the boundary-fit half a
 
 | Metric | Validation result |
 |---|---:|
-| $R^2$ | 0.247 |
+| \(R^2\) | 0.247 |
 | ROC-AUC | 0.774 |
 | Average Precision | 0.516 |
 | Accuracy | 0.690 |
@@ -189,42 +189,48 @@ A more precise interpretation is:
 
 ---
 
-## Current Mitigation Study
+## Boundary-Aware Selective Fidelity Mitigation
 
 ARC-v0.10 tests whether the v0.9 boundary predictor can be translated into an actionable systems policy.
 
-The evaluation keeps PQ32 as the search/evaluation retriever and changes only the feedback source.
-
-Policies:
+The evaluation keeps PQ32 as the search/evaluation retriever and changes only the feedback source:
 
 1. **Always-PQ32** — PQ32 search → PQ32 feedback
 2. **Always-SQ8** — PQ32 search → SQ8 feedback
 3. **Random selective SQ8** — budget-matched random high-fidelity allocation
-4. **Boundary-aware selective SQ8** — v0.9 risk model allocates SQ8 feedback
+4. **Boundary-aware selective SQ8** — v0.9 fit-only risk model allocates SQ8 feedback
 
-Frozen high-fidelity budgets:
+The nominal high-fidelity budgets are 10%, 25%, and 50%. The primary pre-specified operating point is 25%.
 
-- 10%
-- 25%
-- 50%
+Applying the fit-frozen 25% threshold to the held-out validation partition selects **26.47%** of queries.
+The threshold is not re-tuned on validation.
 
-The primary pre-specified operating point is the **25% SQ8-feedback budget**.
+| Feedback configuration | Selective final nDCG@10 | Recovery of Always-SQ8 benefit | Δ vs Always-PQ32 (95% CI) | Δ vs random (95% CI) |
+|---|---:|---:|---:|---:|
+| mean, k=20, α=0.3 | 0.3579 | 41.1% | +0.0197 [0.0163, 0.0231] | +0.0071 [0.0036, 0.0107] |
+| softmax, k=5, α=0.5, T=0.1 | 0.3765 | 44.1% | +0.0842 [0.0769, 0.0917] | +0.0346 [0.0268, 0.0426] |
 
-The main system question is:
+Both frozen feedback configurations beat Always-PQ32 and budget-matched random allocation at the primary operating point.
 
-```math
-\text{recovery}(b)
-=
-\frac{
-U_{\text{selective},b}-U_{\text{PQ32}}
-}{
-U_{\text{SQ8}}-U_{\text{PQ32}}
-}
-```
+Across the budget sweep, boundary-aware recovery is:
 
-where $b$ is the fraction of queries assigned high-fidelity feedback.
+| Nominal budget | Mean feedback | Softmax feedback |
+|---|---:|---:|
+| 10% | 16.1% | 20.3% |
+| 25% | 41.1% | 44.1% |
+| 50% | 68.9% | 69.0% |
 
-Status: **in progress**.
+A negative/null boundary case is retained: for mean feedback at 10%, Δ vs random is +0.00218 with a
+95% bootstrap interval of [-0.00032, 0.00477], so the experiment does not claim a reliable advantage
+over random at that operating point.
+
+Protocol SHA-256:
+`a48d2efbd470314de1042c85d8888312b3f61d1c68d3456f6f91a3150320817f`
+
+Report SHA-256:
+`fdf64925334500bc4823fd828510d9a3ec946719fda940cc8eabd55a8cd44589`
+
+Status: **complete**.
 
 ---
 
@@ -232,7 +238,7 @@ Status: **in progress**.
 
 The project currently supports the following evidence chain:
 
-```math
+\[
 \text{Phenomenon}
 \rightarrow
 \text{Sealed confirmation}
@@ -244,7 +250,7 @@ The project currently supports the following evidence chain:
 \text{Held-out susceptibility prediction}
 \rightarrow
 \text{Selective mitigation study}
-```
+\]
 
 The strongest supported claim at this stage is:
 
@@ -328,11 +334,10 @@ Active research project.
 - fidelity dose-response analysis
 - boundary/stability mapping
 - held-out query-level amplification prediction
+- boundary-aware selective-fidelity mitigation
 
 ### In progress
 
-- boundary-aware selective-fidelity mitigation
-- cost-quality Pareto evaluation
 - final full-paper framing and external-validity checks
 
 The conclusions and framing may change as mitigation and additional external-validity experiments are completed.

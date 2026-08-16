@@ -1,0 +1,35 @@
+{
+  "status": "SEALED_BEFORE_V010_VALIDATION_MITIGATION",
+  "protocol_sha256": "a48d2efbd470314de1042c85d8888312b3f61d1c68d3456f6f91a3150320817f",
+  "risk_model_training": "ARC-v0.9 boundary-fit split only",
+  "nominal_budgets": [
+    0.1,
+    0.25,
+    0.5
+  ],
+  "primary_budget": 0.25,
+  "feedback_configs": [
+    {
+      "method": "mean",
+      "k": 20,
+      "alpha": 0.3,
+      "temperature": null
+    },
+    {
+      "method": "softmax",
+      "k": 5,
+      "alpha": 0.5,
+      "temperature": 0.1
+    }
+  ],
+  "policies": [
+    "always_pq32",
+    "always_sq8",
+    "random_selective_sq8",
+    "boundary_selective_sq8"
+  ],
+  "utility_search_retriever": "PQ32",
+  "high_fidelity_feedback_retriever": "SQ8",
+  "test_access_allowed": false,
+  "note": "Public summary reconstructed from the executed ARC-v0.10 notebook. The SHA is the notebook-emitted sealed protocol SHA."
+}

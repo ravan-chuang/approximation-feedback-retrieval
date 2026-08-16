@@ -1,0 +1,17 @@
+config_key,policy,nominal_budget,mean_final_ndcg,actual_sq8_fraction,recovery_fraction,delta_vs_always_pq32,delta_vs_always_pq32_ci_low,delta_vs_always_pq32_ci_high,delta_vs_random,delta_vs_random_ci_low,delta_vs_random_ci_high
+mean-k20-a0p3-tnone,always_pq32,0.0,0.338249,0.0,0.0,,,,,,
+mean-k20-a0p3-tnone,always_sq8,1.0,0.386022,1.0,1.0,,,,,,
+mean-k20-a0p3-tnone,boundary_selective_sq8,0.1,0.345939,0.100223,0.160977,0.00769,0.005639,0.009836,0.002177,-0.000323,0.00477
+mean-k20-a0p3-tnone,random_selective_sq8,0.1,0.343762,0.100223,0.115403,0.005513,0.003791,0.007408,,,
+mean-k20-a0p3-tnone,boundary_selective_sq8,0.25,0.357904,0.264662,0.411425,0.019655,0.016285,0.023138,0.007084,0.00356,0.010677
+mean-k20-a0p3-tnone,random_selective_sq8,0.25,0.35082,0.264662,0.26314,0.012571,0.009991,0.015262,,,
+mean-k20-a0p3-tnone,boundary_selective_sq8,0.5,0.371147,0.525984,0.688631,0.032898,0.028444,0.037564,0.008968,0.004833,0.013107
+mean-k20-a0p3-tnone,random_selective_sq8,0.5,0.362178,0.525984,0.500903,0.02393,0.020381,0.027638,,,
+softmax-k5-a0p5-t0p1,always_pq32,0.0,0.292336,0.0,0.0,,,,,,
+softmax-k5-a0p5-t0p1,always_sq8,1.0,0.483323,1.0,1.0,,,,,,
+softmax-k5-a0p5-t0p1,boundary_selective_sq8,0.1,0.331119,0.100223,0.203068,0.038784,0.03356,0.044187,0.019628,0.013418,0.026054
+softmax-k5-a0p5-t0p1,random_selective_sq8,0.1,0.311492,0.100223,0.100299,0.019156,0.015286,0.023295,,,
+softmax-k5-a0p5-t0p1,boundary_selective_sq8,0.25,0.376525,0.264662,0.440812,0.08419,0.076935,0.091748,0.034576,0.026755,0.042598
+softmax-k5-a0p5-t0p1,random_selective_sq8,0.25,0.34195,0.264662,0.259775,0.049614,0.044083,0.05537,,,
+softmax-k5-a0p5-t0p1,boundary_selective_sq8,0.5,0.424189,0.525984,0.690376,0.131853,0.123038,0.140548,0.03403,0.025636,0.042536
+softmax-k5-a0p5-t0p1,random_selective_sq8,0.5,0.390159,0.525984,0.512195,0.097823,0.09016,0.105555,,,

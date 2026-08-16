@@ -1,0 +1,3 @@
+config_key,nominal_budget,actual_selected_fraction,mean_final_ndcg,recovery_fraction,delta_vs_always_pq32,delta_vs_always_pq32_ci_low,delta_vs_always_pq32_ci_high,delta_vs_random,delta_vs_random_ci_low,delta_vs_random_ci_high,positive_vs_low,positive_vs_random
+mean-k20-a0p3-tnone,0.25,0.264662,0.357904,0.411425,0.019655,0.016285,0.023138,0.007084,0.00356,0.010677,True,True
+softmax-k5-a0p5-t0p1,0.25,0.264662,0.376525,0.440812,0.08419,0.076935,0.091748,0.034576,0.026755,0.042598,True,True

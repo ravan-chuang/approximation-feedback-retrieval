@@ -1,0 +1,58 @@
+{
+  "status": "ARC_V010_BOUNDARY_AWARE_SELECTIVE_FIDELITY_COMPLETE",
+  "protocol_sha256": "a48d2efbd470314de1042c85d8888312b3f61d1c68d3456f6f91a3150320817f",
+  "report_sha256": "fdf64925334500bc4823fd828510d9a3ec946719fda940cc8eabd55a8cd44589",
+  "risk_model_reconstructed_fit_auc": 0.7665927980531374,
+  "high_amplification_threshold": 0.043681490421295155,
+  "validation_query_count": 2694,
+  "primary_nominal_budget": 0.25,
+  "primary_actual_selected_fraction": 0.26466221232368226,
+  "primary_results": [
+    {
+      "config_key": "mean-k20-a0p3-tnone",
+      "mean_final_ndcg": 0.357904,
+      "recovery_fraction": 0.411425,
+      "delta_vs_always_pq32": 0.019655,
+      "delta_vs_always_pq32_95ci": [
+        0.016285,
+        0.023138
+      ],
+      "delta_vs_random": 0.007084,
+      "delta_vs_random_95ci": [
+        0.00356,
+        0.010677
+      ],
+      "positive_vs_low": true,
+      "positive_vs_random": true
+    },
+    {
+      "config_key": "softmax-k5-a0p5-t0p1",
+      "mean_final_ndcg": 0.376525,
+      "recovery_fraction": 0.440812,
+      "delta_vs_always_pq32": 0.08419,
+      "delta_vs_always_pq32_95ci": [
+        0.076935,
+        0.091748
+      ],
+      "delta_vs_random": 0.034576,
+      "delta_vs_random_95ci": [
+        0.026755,
+        0.042598
+      ],
+      "positive_vs_low": true,
+      "positive_vs_random": true
+    }
+  ],
+  "important_null_case": {
+    "config_key": "mean-k20-a0p3-tnone",
+    "nominal_budget": 0.1,
+    "delta_vs_random": 0.002177,
+    "delta_vs_random_95ci": [
+      -0.000323,
+      0.00477
+    ],
+    "interpretation": "Not distinguishable from budget-matched random at the 95% bootstrap interval."
+  },
+  "test_accessed": false,
+  "note": "Public result summary reconstructed from the executed ARC-v0.10 notebook. The report SHA is the notebook-emitted report SHA."
+}
