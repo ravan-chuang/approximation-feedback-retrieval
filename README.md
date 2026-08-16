@@ -162,7 +162,7 @@ A simple interpretable first-order model trained only on the boundary-fit half a
 
 | Metric | Validation result |
 |---|---:|
-| \(R^2\) | 0.247 |
+| $R^2$ | 0.247 |
 | ROC-AUC | 0.774 |
 | Average Precision | 0.516 |
 | Accuracy | 0.690 |
@@ -222,7 +222,7 @@ U_{\text{SQ8}}-U_{\text{PQ32}}
 }
 ```
 
-where \(b\) is the fraction of queries assigned high-fidelity feedback.
+where $b$ is the fraction of queries assigned high-fidelity feedback.
 
 Status: **in progress**.
 
