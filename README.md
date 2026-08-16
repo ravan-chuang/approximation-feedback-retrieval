@@ -18,7 +18,7 @@ This project studies a different regime:
 
 The working mechanism is:
 
-\[
+$$
 \text{retrieval approximation}
 \rightarrow
 \text{feedback contamination}
@@ -28,7 +28,7 @@ The working mechanism is:
 \text{candidate divergence}
 \rightarrow
 \text{utility divergence}
-\]
+$$
 
 The project therefore distinguishes between:
 
@@ -212,7 +212,7 @@ The primary pre-specified operating point is the **25% SQ8-feedback budget**.
 
 The main system question is:
 
-\[
+$$
 \text{recovery}(b)
 =
 \frac{
@@ -220,7 +220,7 @@ U_{\text{selective},b}-U_{\text{PQ32}}
 }{
 U_{\text{SQ8}}-U_{\text{PQ32}}
 }
-\]
+$$
 
 where \(b\) is the fraction of queries assigned high-fidelity feedback.
 
@@ -232,7 +232,7 @@ Status: **in progress**.
 
 The project currently supports the following evidence chain:
 
-\[
+$$
 \text{Phenomenon}
 \rightarrow
 \text{Sealed confirmation}
@@ -244,7 +244,7 @@ The project currently supports the following evidence chain:
 \text{Held-out susceptibility prediction}
 \rightarrow
 \text{Selective mitigation study}
-\]
+$$
 
 The strongest supported claim at this stage is:
 
