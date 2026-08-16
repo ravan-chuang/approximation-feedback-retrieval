@@ -18,7 +18,7 @@ This project studies a different regime:
 
 The working mechanism is:
 
-\[
+```math
 \text{retrieval approximation}
 \rightarrow
 \text{feedback contamination}
@@ -28,7 +28,7 @@ The working mechanism is:
 \text{candidate divergence}
 \rightarrow
 \text{utility divergence}
-\]
+```
 
 The project therefore distinguishes between:
 
@@ -162,7 +162,7 @@ A simple interpretable first-order model trained only on the boundary-fit half a
 
 | Metric | Validation result |
 |---|---:|
-| \(R^2\) | 0.247 |
+| $R^2$ | 0.247 |
 | ROC-AUC | 0.774 |
 | Average Precision | 0.516 |
 | Accuracy | 0.690 |
@@ -238,7 +238,7 @@ Status: **complete**.
 
 The project currently supports the following evidence chain:
 
-\[
+```math
 \text{Phenomenon}
 \rightarrow
 \text{Sealed confirmation}
@@ -250,7 +250,7 @@ The project currently supports the following evidence chain:
 \text{Held-out susceptibility prediction}
 \rightarrow
 \text{Selective mitigation study}
-\]
+```
 
 The strongest supported claim at this stage is:
 
