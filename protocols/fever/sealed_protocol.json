@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "SEALED_BEFORE_DEV_RETRIEVAL",
+  "created_at_utc": "2026-08-16T07:22:22.298233+00:00",
+  "dataset": "FEVER",
+  "confirmation_split": "DEV",
+  "expected_dev_query_count": 6666,
+  "encoder": "BAAI/bge-small-en-v1.5",
+  "corpus_rows": 5416568,
+  "dimension": 384,
+  "top_retrieve": 100,
+  "top_k": 10,
+  "feedback_rounds": 4,
+  "nlist": 4096,
+  "nprobe": 64,
+  "conditions": {
+    "low_fidelity": "IVF-PQ32",
+    "high_fidelity": "IVF-SQ8"
+  },
+  "feedback_configs": [
+    {
+      "method": "mean",
+      "k": 20,
+      "alpha": 0.3,
+      "temperature": null
+    },
+    {
+      "method": "softmax",
+      "k": 5,
+      "alpha": 0.5,
+      "temperature": 0.1
+    }
+  ],
+  "primary_endpoints": [
+    "H1_query_divergence_slope",
+    "H2_candidate_increment_slope",
+    "H3_abs_utility_gap_slope",
+    "H4_B_minus_A"
+  ],
+  "primary_unit": "query",
+  "method_pooling": "average within query across all previously frozen feedback configs",
+  "bootstrap_samples": 20000,
+  "randomization_samples": 20000,
+  "multiple_testing": "Holm jointly across H1-H4",
+  "endpoint_pass_rule": "mean>0 and bootstrap_CI_low>0 and Holm_p<0.05",
+  "full_confirmation_rule": "all H1-H4 pass",
+  "source_v03": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/error-amplification-v03-20260815-201450",
+  "source_v04": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/statistical-mechanism-audit-v04-20260815-202739",
+  "dev_based_selection_allowed": false,
+  "test_retrieval_allowed": false,
+  "test_qrels_access_allowed": false,
+  "protocol_sha256": "6873cc8f341893fde8fe3ec5f6998d3137340c5d2f4a44bf716cbbe3c19548fc"
+}

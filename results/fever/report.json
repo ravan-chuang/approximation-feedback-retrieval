@@ -1,0 +1,114 @@
+{
+  "status": "SEALED_FEVER_DEV_CONFIRMATION_COMPLETE",
+  "protocol_sha256": "6873cc8f341893fde8fe3ec5f6998d3137340c5d2f4a44bf716cbbe3c19548fc",
+  "source_protocol": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/sealed-fever-dev-confirmation-v05/20260816-072214/sealed_protocol.json",
+  "dev_query_count": 6666,
+  "feedback_configs": [
+    {
+      "method": "mean",
+      "k": 20,
+      "alpha": 0.3,
+      "temperature": null
+    },
+    {
+      "method": "softmax",
+      "k": 5,
+      "alpha": 0.5,
+      "temperature": 0.1
+    }
+  ],
+  "primary_endpoints": [
+    {
+      "endpoint": "H1_query_divergence_slope",
+      "n": 6666,
+      "mean": 0.00410901625977956,
+      "median": 0.00345299243927002,
+      "ci_low": 0.004039153318909189,
+      "ci_high": 0.004179030332994862,
+      "randomization_p": 4.999750012499375e-05,
+      "fraction_positive": 0.9960996099609961,
+      "fraction_zero": 0.0,
+      "fraction_negative": 0.0039003900390039005,
+      "holm_p": 0.000199990000499975,
+      "pass": true
+    },
+    {
+      "endpoint": "H2_candidate_increment_slope",
+      "n": 6666,
+      "mean": 0.008156594857148784,
+      "median": 0.007929407060146332,
+      "ci_low": 0.007795874575237379,
+      "ci_high": 0.008515040977499505,
+      "randomization_p": 4.999750012499375e-05,
+      "fraction_positive": 0.7443744374437443,
+      "fraction_zero": 0.0,
+      "fraction_negative": 0.2556255625562556,
+      "holm_p": 0.000199990000499975,
+      "pass": true
+    },
+    {
+      "endpoint": "H3_abs_utility_gap_slope",
+      "n": 6666,
+      "mean": 0.0072613631825287185,
+      "median": 0.0,
+      "ci_low": 0.006454295070312116,
+      "ci_high": 0.00806130340706502,
+      "randomization_p": 4.999750012499375e-05,
+      "fraction_positive": 0.10396039603960396,
+      "fraction_zero": 0.8753375337533753,
+      "fraction_negative": 0.030303030303030304,
+      "holm_p": 0.000199990000499975,
+      "pass": true
+    },
+    {
+      "endpoint": "H4_B_minus_A",
+      "n": 6666,
+      "mean": 0.030375916320252733,
+      "median": 0.0,
+      "ci_low": 0.02767990923404499,
+      "ci_high": 0.033096785057462386,
+      "randomization_p": 4.999750012499375e-05,
+      "fraction_positive": 0.10321032103210322,
+      "fraction_zero": 0.8907890789078908,
+      "fraction_negative": 0.006000600060006,
+      "holm_p": 0.000199990000499975,
+      "pass": true
+    }
+  ],
+  "effect_preservation": [
+    {
+      "endpoint": "H1_query_divergence_slope",
+      "FIT_reference": 0.003694,
+      "DEV_effect": 0.00410901625977956,
+      "DEV_over_FIT": 1.1123487438493667,
+      "same_direction": true
+    },
+    {
+      "endpoint": "H2_candidate_increment_slope",
+      "FIT_reference": 0.007529,
+      "DEV_effect": 0.008156594857148784,
+      "DEV_over_FIT": 1.0833570005510404,
+      "same_direction": true
+    },
+    {
+      "endpoint": "H3_abs_utility_gap_slope",
+      "FIT_reference": 0.005672,
+      "DEV_effect": 0.0072613631825287185,
+      "DEV_over_FIT": 1.2802121266799575,
+      "same_direction": true
+    },
+    {
+      "endpoint": "H4_B_minus_A",
+      "FIT_reference": 0.024726,
+      "DEV_effect": 0.030375916320252733,
+      "DEV_over_FIT": 1.2285010240335166,
+      "same_direction": true
+    }
+  ],
+  "all_primary_endpoints_pass": true,
+  "decision": "SEALED CONFIRMATION PASS: all four preregistered approximation-feedback amplification endpoints replicate on untouched FEVER DEV under query-level inference and Holm family-wise correction. Proceed to cross-dataset and cross-approximation replication.",
+  "dev_based_selection_performed": false,
+  "test_retrieval_performed": false,
+  "test_qrels_accessed": false,
+  "completed_at_utc": "2026-08-16T07:36:16.775792+00:00"
+}
