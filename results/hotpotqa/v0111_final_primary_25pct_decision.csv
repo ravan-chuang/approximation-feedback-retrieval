@@ -1,0 +1,3 @@
+config_key,mean_final_ndcg,recovery_fraction,delta_vs_random,delta_vs_random_ci_low,delta_vs_random_ci_high,selective_mean_seconds,random_mean_seconds,always_pq32_mean_seconds,always_sq8_mean_seconds,fraction_of_always_sq8_extra_runtime,recovery_per_sq8_extra_runtime_fraction
+mean-k20-a0p3-tnone,0.357904,0.411425,0.007084,0.003560,0.010677,12.170428,11.977410,1.960635,39.587094,0.271346,1.516238
+softmax-k5-a0p5-t0p1,0.376525,0.440812,0.034576,0.026755,0.042598,11.840264,12.078356,1.841870,39.011016,0.268997,1.638726

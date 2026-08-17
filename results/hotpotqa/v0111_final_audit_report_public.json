@@ -1,0 +1,18 @@
+{
+  "audit_scope": "Post-v0.11 deterministic repair of the sealed v0.10 quality-to-v0.11 measured-cost aggregate join. No retrieval, feedback-policy, or system benchmark was rerun.",
+  "environment": {
+    "faiss": "1.12.0",
+    "numpy": "2.0.2",
+    "python": "3.12",
+    "ram_gib": 36.0
+  },
+  "final_pareto_sha256": "e7202ebf7489faf4ab8e8fea7fc36840df5786b123d20201d8deb8c9c5e286d1",
+  "final_primary_sha256": "4900f4e5d843a6c88eae1a240c0c0ea9d0c4741198b8dc2155e17dbcb0317f6f",
+  "final_report_sha256": "e01c4145dfca90ac289bbdd8402b9c4497db9c88b09c28dba37982e4dacd5973",
+  "interpretation_constraint": "System-cost values are measurements from a single Apple M3 Max CPU environment and are not universal production latency or throughput claims.",
+  "machine": "Apple M3 Max / arm64",
+  "primary_operating_point_nominal_budget": 0.25,
+  "realized_sq8_fraction": 0.264662,
+  "source_v011_report_sha256": "d6b49ced27062a76d64b234e8711c652a9d293f464d7a747a6ad2ab5ef13c5f8",
+  "status": "ARC_V0111_FINAL_QUALITY_COST_AUDIT_COMPLETE"
+}

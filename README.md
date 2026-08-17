@@ -54,6 +54,8 @@ The project therefore distinguishes between:
 | ARC-v0.8 | Sealed HotpotQA H1–H4 Confirmation | Independent cross-dataset confirmation |
 | ARC-v0.9 | Boundary & Stability Map | Fidelity dose response, stability regimes, held-out prediction |
 | ARC-v0.10 | Boundary-Aware Selective Fidelity Mitigation | Held-out selective high-fidelity feedback control |
+| ARC-v0.11 | Local M3 Max System Cost & Pareto Audit | Measured CPU latency, throughput, memory, and quality-cost tradeoffs |
+| ARC-v0.11.1 | Final Quality-Cost Merge Audit | Deterministic baseline-join repair and sealed final Pareto evidence |
 
 ---
 
@@ -234,6 +236,31 @@ Status: **complete**.
 
 ---
 
+## Local M3 Max System Cost and Final Pareto Audit
+
+ARC-v0.11 measures the systems cost of the frozen ARC-v0.10 policies on a local Apple M3 Max CPU environment. ARC-v0.11.1 performs a deterministic aggregate join repair for the baseline quality rows; no retrieval, policy, or systems benchmark is rerun.
+
+The primary nominal 25% threshold selects **26.47%** of held-out validation queries for SQ8 feedback.
+
+| Feedback configuration | Selective nDCG@10 | Recovery | Δ vs random (95% CI) | Selective runtime | Random runtime | Fraction of Always-SQ8 extra runtime |
+|---|---:|---:|---:|---:|---:|---:|
+| mean, k=20, α=0.3 | 0.357904 | 41.1% | +0.007084 [0.003560, 0.010677] | 12.170 s | 11.977 s | 27.13% |
+| softmax, k=5, α=0.5, T=0.1 | 0.376525 | 44.1% | +0.034576 [0.026755, 0.042598] | 11.840 s | 12.078 s | 26.90% |
+
+The boundary-aware and budget-matched random policies have nearly identical measured runtime at the primary operating point. The measured quality gain therefore is not explained by boundary-aware allocation using more high-fidelity work.
+
+Relative to Always-PQ32, the selective policy recovers **41–44%** of the Always-SQ8 quality improvement while using about **27%** of the Always-SQ8 incremental runtime. The corresponding recovery / incremental-runtime ratios are **1.516×** and **1.639×**.
+
+ARC-v0.11 report SHA-256:
+`d6b49ced27062a76d64b234e8711c652a9d293f464d7a747a6ad2ab5ef13c5f8`
+
+ARC-v0.11.1 final audit SHA-256:
+`e01c4145dfca90ac289bbdd8402b9c4497db9c88b09c28dba37982e4dacd5973`
+
+These are single-machine Apple M3 Max CPU measurements and are not universal production latency or throughput claims.
+
+---
+
 ## Current Research Claim
 
 The project currently supports the following evidence chain:
@@ -249,19 +276,22 @@ The project currently supports the following evidence chain:
 \rightarrow
 \text{Held-out susceptibility prediction}
 \rightarrow
-\text{Selective mitigation study}
+\text{Selective mitigation}
+\rightarrow
+\text{Measured quality-cost audit}
 ```
 
 The strongest supported claim at this stage is:
 
-> Approximation errors that are tolerable in one-shot retrieval can become dynamically consequential under iterative feedback. The effect replicates across the tested FEVER and HotpotQA settings, varies across fidelity and feedback regimes, and is partially predictable from initial retrieval-state features.
+> Approximation errors that are tolerable in one-shot retrieval can become dynamically consequential under iterative feedback. The effect replicates across the tested FEVER and HotpotQA settings, varies across fidelity and feedback regimes, is partially predictable from initial retrieval-state features, and can be selectively mitigated in the tested HotpotQA setting with a favorable measured quality-cost tradeoff.
 
 The project does **not** claim that:
 
 - approximation errors always amplify,
 - the mechanism is universal across all encoders or ANN systems,
 - the current boundary model fully explains query-level susceptibility,
-- or selective mitigation is effective before ARC-v0.10 is completed.
+- the selective policy is universally optimal across datasets, encoders, ANN systems, or hardware,
+- or the Apple M3 Max measurements are universal production latency/throughput claims.
 
 ---
 
@@ -292,7 +322,9 @@ The project separates:
 6. cross-dataset confirmation,
 7. post-confirmatory boundary analysis,
 8. held-out prediction,
-9. selective mitigation.
+9. selective mitigation,
+10. measured systems-cost auditing,
+11. deterministic post-run provenance repair.
 
 Positive, null, and reversal outcomes are retained.
 
@@ -317,6 +349,8 @@ Where applicable, experiments retain:
 - paired sign-flip tests,
 - Holm multiple-comparison correction,
 - fit / validation separation for boundary modeling,
+- measured single-machine latency / throughput / memory audits,
+- deterministic aggregate-join repair with source hashes,
 - and public-facing aggregate evidence artifacts.
 
 ---
@@ -335,6 +369,8 @@ Active research project.
 - boundary/stability mapping
 - held-out query-level amplification prediction
 - boundary-aware selective-fidelity mitigation
+- local Apple M3 Max system-cost / Pareto audit
+- v0.11.1 final quality-cost merge audit and SHA-256 seal
 
 ### In progress
 
