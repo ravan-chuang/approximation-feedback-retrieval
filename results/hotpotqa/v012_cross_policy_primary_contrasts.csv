@@ -1,0 +1,3 @@
+source_family,target_family,auc,auc_ci_low,auc_ci_high,average_precision,auc_gap_to_target_oracle,auc_change_vs_source_within_family
+mean,softmax,0.766532,0.756424,0.776532,0.54486,-0.016485,0.025854
+softmax,mean,0.755019,0.745265,0.764847,0.435071,0.014342,-0.027997

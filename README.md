@@ -56,6 +56,8 @@ The project therefore distinguishes between:
 | ARC-v0.10 | Boundary-Aware Selective Fidelity Mitigation | Held-out selective high-fidelity feedback control |
 | ARC-v0.11 | Local M3 Max System Cost & Pareto Audit | Measured CPU latency, throughput, memory, and quality-cost tradeoffs |
 | ARC-v0.11.1 | Final Quality-Cost Merge Audit | Deterministic baseline-join repair and sealed final Pareto evidence |
+| ARC-v0.12 | Cross-Policy Boundary Transfer | Held-out transfer of boundary-risk signal across feedback-policy families |
+| ARC-v0.13 | FEVER Boundary External Replication | Cross-dataset boundary/stability external-validity audit (in progress) |
 
 ---
 
@@ -261,6 +263,30 @@ These are single-machine Apple M3 Max CPU measurements and are not universal pro
 
 ---
 
+
+## Cross-Policy Boundary Transfer
+
+ARC-v0.12 tests whether the post-confirmatory boundary-risk signal learned in one HotpotQA feedback-policy family transfers to the other family on the held-out boundary-validation split.
+
+Before accepting the transfer result, the audit reconstructs the sealed ARC-v0.9 classifier. The reconstructed validation ROC-AUC is **0.7736072867** versus the sealed **0.7736072913**, an absolute difference of `4.58e-9`.
+
+| Source → target | ROC-AUC | 95% bootstrap CI | Average Precision | AUC gap to target-family fit-only oracle |
+|---|---:|---:|---:|---:|
+| mean → softmax | **0.766532** | **[0.756424, 0.776532]** | 0.544860 | -0.016485 |
+| softmax → mean | **0.755019** | **[0.745265, 0.764847]** | 0.435071 | +0.014342 |
+
+Both directions retain substantial held-out discrimination. The supported claim is limited to **transferable boundary structure across the tested mean and softmax feedback-policy families**; it is not a universal transfer claim across datasets, encoders, ANN families, or deployment settings.
+
+Protocol SHA-256:
+`5789f053aa51a1bc830b7bb55a0ae95dc7f6dee91211e2353403ccb5b835848d`
+
+Report SHA-256:
+`77e8582c74c71748b8deca85f1f5d652b2db517d5927339706677db4fd87ab01`
+
+ARC-v0.13 then extends the external-validity question to FEVER. That experiment is currently running and **no FEVER boundary outcome is claimed yet**.
+
+---
+
 ## Current Research Claim
 
 The project currently supports the following evidence chain:
@@ -279,11 +305,13 @@ The project currently supports the following evidence chain:
 \text{Selective mitigation}
 \rightarrow
 \text{Measured quality-cost audit}
+\rightarrow
+\text{Cross-policy boundary transfer}
 ```
 
 The strongest supported claim at this stage is:
 
-> Approximation errors that are tolerable in one-shot retrieval can become dynamically consequential under iterative feedback. The effect replicates across the tested FEVER and HotpotQA settings, varies across fidelity and feedback regimes, is partially predictable from initial retrieval-state features, and can be selectively mitigated in the tested HotpotQA setting with a favorable measured quality-cost tradeoff.
+> Approximation errors that are tolerable in one-shot retrieval can become dynamically consequential under iterative feedback. The effect replicates across the tested FEVER and HotpotQA settings, varies across fidelity and feedback regimes, is partially predictable from initial retrieval-state features, can be selectively mitigated in the tested HotpotQA setting with a favorable measured quality-cost tradeoff, and the tested boundary-risk signal retains substantial held-out discrimination across the mean and softmax HotpotQA feedback-policy families.
 
 The project does **not** claim that:
 
@@ -324,7 +352,9 @@ The project separates:
 8. held-out prediction,
 9. selective mitigation,
 10. measured systems-cost auditing,
-11. deterministic post-run provenance repair.
+11. deterministic post-run provenance repair,
+12. cross-policy boundary transfer,
+13. cross-dataset boundary external-validity replication.
 
 Positive, null, and reversal outcomes are retained.
 
@@ -371,9 +401,11 @@ Active research project.
 - boundary-aware selective-fidelity mitigation
 - local Apple M3 Max system-cost / Pareto audit
 - v0.11.1 final quality-cost merge audit and SHA-256 seal
+- ARC-v0.12 cross-policy boundary transfer
 
 ### In progress
 
+- ARC-v0.13 FEVER boundary external replication
 - final full-paper framing and external-validity checks
 
 The conclusions and framing may change as mitigation and additional external-validity experiments are completed.
