@@ -67,6 +67,10 @@ The current evidence **does not** support a universal-instability claim. The dom
 | ARC-v0.15 | Deployable Boundary Prediction | PQ32-only deployment-feasible risk prediction |
 | ARC-v0.15.1 | Full-Coverage Signed Harm Audit | Signed reconstruction of all FEVER amplification events |
 | ARC-v0.16 | Threshold & Alpha-Controlled Robustness | Threshold sensitivity and within-alpha reproducibility audit |
+| ARC-v0.16.1 | Deployable Predictor Feature Ablation | Query-specific PQ32 signal vs policy-only baselines |
+| ARC-v0.16.1a | Feature Provenance Equality Audit | Exact equality of persisted FEVER PQ32 query-feature artifacts |
+| ARC-v0.17 | Deployable Selective Fidelity Closure | FEVER end-to-end risk-aware selective SQ8 feedback |
+| ARC-v0.17.1 | Multi-Random Allocation Audit | 10,000 matched-budget random-allocation robustness audit |
 
 ---
 
@@ -524,6 +528,234 @@ aee5c426bceb8293f574a374d74eb1aba21ef3ac142f1369a62961d66d3dbdb7
 
 ---
 
+## Deployable Predictor Feature Ablation
+
+ARC-v0.16.1 tests whether the deployment-feasible FEVER risk model is merely learning policy variables such as feedback gain and feedback family, or whether lower-fidelity query-specific PQ32 statistics contribute additional held-out discrimination.
+
+Four fixed logistic models are compared on untouched FEVER validation:
+
+| Model | Features | ROC-AUC | PR-AUC |
+|---|---|---:|---:|
+| Alpha only | $\alpha$ | 0.6281 | 0.1078 |
+| Policy only | $\alpha$, $\log k$, family, temperature | 0.6308 | 0.1120 |
+| PQ32 query only | PQ32 entropy, PQ32 margin | **0.7312** | 0.1580 |
+| Full deployable | PQ32 query statistics + policy variables | **0.7309** | **0.1793** |
+
+The primary paired query-cluster bootstrap contrast is:
+
+```math
+\Delta \mathrm{AUC}
+=
+\mathrm{AUC}_{\mathrm{full}}
+-
+\mathrm{AUC}_{\mathrm{policy}}
+=
+0.1001,
+```
+
+with 95% CI approximately **[0.0830, 0.1174]**.
+
+For PR-AUC:
+
+```math
+\Delta \mathrm{PR\text{-}AUC}
+\approx
+0.0680,
+```
+
+with 95% CI approximately **[0.0540, 0.0836]**.
+
+Across 2,000 paired bootstrap replicates, the probability that the full model failed to outperform policy-only was 0.
+
+The query-only model retains essentially the full ROC discrimination, while policy variables improve precision-focused ranking at the high-risk end. At a 25% risk budget:
+
+- policy-only captures approximately **37.88%** of FEVER validation amplification events;
+- PQ32 query-only captures approximately **56.76%**;
+- full deployable captures **57.99%**.
+
+The supported interpretation is:
+
+> **Amplification risk is not merely a configuration-level prior. Query-specific statistics observable from the lower-fidelity PQ32 retriever contain substantial held-out predictive information.**
+
+This is a predictive-information claim, not a causal explanation of amplification.
+
+---
+
+## Feature Provenance Equality Audit
+
+ARC-v0.16.1a audits the persisted FEVER PQ32 query-feature artifacts used around the frozen ARC-v0.13 run.
+
+The frozen and later artifacts each contain:
+
+- **6,666 rows**,
+- **6,666 unique query IDs**,
+- identical query-ID sets,
+- no duplicate inconsistencies,
+- exact equality for `pq32_entropy20`,
+- exact equality for `pq32_margin1_10`,
+- maximum absolute difference **0.0**.
+
+The two files also have the same SHA-256:
+
+```text
+5bd27981191826938ac17f394d7cdbe62e1e83169a1e05ff197bfb2ffe37d2a7
+```
+
+The audit therefore classifies the two persisted feature artifacts as **value-equivalent**, so the ARC-v0.16.1 ablation results do not depend on an artifact mismatch between the frozen and later FEVER runs.
+
+---
+
+## Risk-Aware Selective Fidelity
+
+ARC-v0.17 closes the previously separate FEVER prediction and HotpotQA intervention branches.
+
+The resulting control policy is **Risk-Aware Selective Fidelity (RASF)**.
+
+RASF uses a fit-frozen deployment-feasible risk score computed only from:
+
+- PQ32 score entropy,
+- PQ32 top-1 vs top-10 margin,
+- feedback gain $\alpha$,
+- $\log k$,
+- feedback-family indicator,
+- numeric temperature.
+
+At a fixed budget, the highest-risk validation queries receive SQ8 feedback while search and evaluation remain on PQ32. Lower-risk queries continue to use PQ32 feedback.
+
+Formally, for a budget-selected query set $S_B$:
+
+```math
+F(q)
+=
+\begin{cases}
+F_{\mathrm{SQ8}}(q), & q \in S_B, \\
+F_{\mathrm{PQ32}}(q), & q \notin S_B.
+\end{cases}
+```
+
+The FEVER validation experiment compares:
+
+- Always-PQ32 feedback,
+- Always-SQ8 feedback,
+- budget-matched random selective SQ8 feedback,
+- RASF selective SQ8 feedback.
+
+The primary budget is **25%**.
+
+### FEVER end-to-end closure at the 25% budget
+
+| Configuration | Always-PQ32 | Random 25% | RASF 25% | Always-SQ8 | RASF − Random (95% CI) | Recovery of Always-SQ8 benefit |
+|---|---:|---:|---:|---:|---:|---:|
+| mean, $k=20,\alpha=0.3$ | 0.11504 | 0.11783 | **0.12189** | 0.12816 | **+0.00406 [0.00189, 0.00633]** | **52.2%** |
+| softmax, $k=5,\alpha=0.5,T=0.1$ | 0.10409 | 0.11307 | **0.12473** | 0.15326 | **+0.01166 [0.00793, 0.01548]** | **42.0%** |
+
+Both primary 25% configurations therefore beat the original matched-random allocation with paired query-level bootstrap intervals entirely above zero.
+
+The 10% budget is retained as a mixed/null regime:
+
+- mean feedback has only weak evidence over random;
+- softmax feedback does not reliably beat random.
+
+At 50%, both tested configurations again show a reliable RASF advantage over random.
+
+The supported conclusion is therefore budget-dependent rather than universal:
+
+> **In the tested FEVER setting, deployment-feasible risk ranking becomes actionable at moderate and high selective-feedback budgets, while very small budgets do not reliably outperform random allocation across both feedback families.**
+
+### Local measured cost
+
+A 500-query local runtime audit shows that RASF and matched-random selective feedback have nearly the same execution cost at the 25% budget.
+
+For the mean configuration:
+
+- Always-PQ32: about **24.10 ms/query**,
+- RASF 25%: about **25.18 ms/query**,
+- matched random 25%: about **25.42 ms/query**,
+- Always-SQ8 feedback: about **30.50 ms/query**.
+
+For the softmax configuration:
+
+- Always-PQ32: about **23.39 ms/query**,
+- RASF 25%: about **25.15 ms/query**,
+- matched random 25%: about **25.27 ms/query**,
+- Always-SQ8 feedback: about **29.81 ms/query**.
+
+The correct systems interpretation is not that RASF is faster than matched random. Instead:
+
+> **At approximately matched selective-feedback cost, RASF allocates the same high-fidelity budget more effectively and achieves higher held-out retrieval utility.**
+
+These are local single-machine measurements, not production latency or throughput guarantees.
+
+ARC-v0.17 report SHA-256:
+
+```text
+437fb1cdc1c72d5e18eb3b8d728e3e55eac293ceddfa1bc889784d1e00729674
+```
+
+---
+
+## Multi-Random Allocation Robustness
+
+ARC-v0.17.1 tests whether the original single random selective allocation happened to be unusually weak.
+
+No retrieval is rerun.
+
+For each query, the audit reuses the already measured Always-PQ32 and Always-SQ8 final utilities and evaluates **10,000 independent matched-budget random allocations per configuration and budget**.
+
+For a random subset $S$ of fixed size:
+
+```math
+U_{\mathrm{rand}}(S)
+=
+\bar U^{L}
++
+\frac{1}{N}
+\sum_{q \in S}
+\left(
+U_q^{H}
+-
+U_q^{L}
+\right).
+```
+
+### Primary 25% multi-random result
+
+| Configuration | RASF nDCG@10 | Random expectation | Random 95% upper | RASF − random expectation | Random allocations $\ge$ RASF | Corrected one-sided $p$ |
+|---|---:|---:|---:|---:|---:|---:|
+| mean, $k=20,\alpha=0.3$ | **0.121894** | 0.118321 | 0.119711 | **+0.003573** | **0 / 10,000** | **0.00010** |
+| softmax, $k=5,\alpha=0.5,T=0.1$ | **0.124729** | 0.116384 | 0.118976 | **+0.008344** | **0 / 10,000** | **0.00010** |
+
+Thus, for both primary configurations:
+
+```math
+U_{\mathrm{RASF}}
+>
+q_{0.975}
+\left(
+U_{\mathrm{random}}
+\right).
+```
+
+The finite-population analytic standard deviations closely agree with the Monte Carlo standard deviations, providing an independent check of the random-allocation null reconstruction.
+
+The 10% budget remains mixed:
+
+- mean feedback shows only weak evidence against the random-allocation null;
+- softmax feedback is consistent with the random null.
+
+At 50%, both configurations again lie clearly above the matched-budget random-allocation distribution.
+
+The primary RASF conclusion is therefore not an artifact of one unlucky random subset.
+
+ARC-v0.17.1 report SHA-256:
+
+```text
+0924f090b8d0b1346cd4fa366abc37930832048fc60b605165eadb31f5796d83
+```
+
+
+---
+
 ## Current Research Claim
 
 The evidence chain now is:
@@ -549,14 +781,18 @@ The evidence chain now is:
 \rightarrow
 \text{Threshold / alpha-controlled robustness}
 \rightarrow
-\text{Selective mitigation}
+\text{Deployable feature-ablation validation}
+\rightarrow
+\text{Risk-aware selective fidelity closure}
+\rightarrow
+\text{Multi-random allocation audit}
 \rightarrow
 \text{Measured quality-cost audit}
 ```
 
 The strongest supported claim at this stage is:
 
-> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. In the tested FEVER and HotpotQA settings, the dominant regime is stable/null, while a minority amplifying regime is reproducible across held-out queries, remains qualitatively stable across reasonable regime thresholds, increases with feedback gain, retains substantial configuration-level reproducibility after controlling for alpha, is partially predictable from lower-fidelity retrieval statistics and policy variables, and is predominantly directionally harmful when signed utility is reconstructed. In HotpotQA, a fit-frozen boundary-aware policy selectively allocates higher-fidelity feedback and recovers a disproportionate fraction of the Always-SQ8 quality benefit at a fraction of its measured incremental runtime.**
+> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. In the tested FEVER and HotpotQA settings, the dominant regime is stable/null, while a minority amplifying regime is reproducible across held-out queries, remains qualitatively stable across reasonable regime thresholds, increases with feedback gain, retains substantial configuration-level reproducibility after controlling for alpha, and is predominantly directionally harmful when signed utility is reconstructed. Lower-fidelity PQ32 query statistics provide substantial held-out predictive information beyond policy-level priors. In FEVER, the resulting fit-frozen Risk-Aware Selective Fidelity policy uses those deployment-feasible risk scores to allocate SQ8 feedback and, at the primary 25% budget, outperforms matched random allocation for both tested feedback configurations. Across 10,000 matched-budget random allocations per configuration, no random allocation reaches the observed RASF utility at the primary operating point. In HotpotQA, an earlier richer boundary-aware selector also recovered a disproportionate fraction of the Always-SQ8 quality benefit at a fraction of its measured incremental runtime. These results support selective fidelity control in the tested settings, not universal instability or universal routing optimality across retrievers, encoders, datasets, feedback mechanisms, or hardware.**
 
 The project does **not** claim that:
 
@@ -564,7 +800,7 @@ The project does **not** claim that:
 - amplification is always harmful,
 - the mechanism is universal across all encoders or ANN systems,
 - the current predictor fully explains query-level susceptibility,
-- the FEVER deployable selector has already been validated as a full end-to-end production router,
+- the FEVER RASF controller is a universal or production-validated routing policy beyond the tested experimental setting,
 - the selective policy is universally optimal across datasets, encoders, ANN systems, or hardware,
 - or Apple M3 Max measurements are universal production latency/throughput claims.
 
@@ -606,7 +842,11 @@ The project separates:
 15. mechanism diagnostics,
 16. deployment-feasible prediction,
 17. full-coverage signed construct validation,
-18. threshold-sensitivity and alpha-controlled robustness auditing.
+18. threshold-sensitivity and alpha-controlled robustness auditing,
+19. deployable predictor feature-ablation auditing,
+20. feature provenance equality auditing,
+21. same-setting deployable selective-fidelity closure,
+22. multi-random allocation robustness auditing.
 
 Positive, null, stable, reversal, and beneficial-divergence outcomes are retained rather than filtered away.
 
@@ -637,10 +877,10 @@ Positive, null, stable, reversal, and beneficial-divergence outcomes are retaine
 
 ### Remaining paper-facing work
 
-- final SIGIR full-paper methods and mathematical definitions,
-- related-work expansion and citation audit,
-- final figures / tables and page-budget optimization,
-- final adversarial reviewer and claim audit.
+- integrate ARC-v0.17 / ARC-v0.17.1 into the final SIGIR full-paper methods and results,
+- finalize the formal RASF algorithm description and mathematical notation,
+- finalize figures / tables and ACM page-budget optimization,
+- perform the final adversarial reviewer and claim audit.
 
 ---
 
