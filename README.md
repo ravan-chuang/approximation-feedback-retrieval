@@ -874,6 +874,10 @@ Positive, null, stable, reversal, and beneficial-divergence outcomes are retaine
 - deployable PQ32-only FEVER risk prediction
 - full-coverage FEVER signed harm audit
 - threshold-sensitivity and alpha-controlled FEVER robustness audit
+- deployable predictor feature-ablation audit
+- FEVER PQ32 query-feature provenance equality audit
+- FEVER Risk-Aware Selective Fidelity end-to-end closure
+- 10,000-allocation matched-random robustness audit
 
 ### Remaining paper-facing work
 
