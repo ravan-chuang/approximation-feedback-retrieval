@@ -66,6 +66,7 @@ The current evidence **does not** support a universal-instability claim. The dom
 | ARC-v0.14 | FEVER Mechanism Audit | Configuration reproducibility, dose response, diagnostic prediction |
 | ARC-v0.15 | Deployable Boundary Prediction | PQ32-only deployment-feasible risk prediction |
 | ARC-v0.15.1 | Full-Coverage Signed Harm Audit | Signed reconstruction of all FEVER amplification events |
+| ARC-v0.16 | Threshold & Alpha-Controlled Robustness | Threshold sensitivity and within-alpha reproducibility audit |
 
 ---
 
@@ -428,6 +429,101 @@ The project does **not** claim that amplification is always harmful.
 
 ---
 
+## Threshold Sensitivity and Alpha-Controlled Robustness
+
+ARC-v0.16 addresses two remaining robustness questions for the FEVER boundary analysis:
+
+1. whether the minority-amplification conclusion depends strongly on the operational threshold $\epsilon=0.002$;
+2. whether the high FIT↔validation configuration reproducibility is explained only by the strong common effect of feedback gain $\alpha$.
+
+The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories and the ARC-v0.15.1 signed-replay artifact. It does not rerun the full FEVER retrieval sweep and does not access test data.
+
+### Threshold sensitivity
+
+The regime analysis is repeated for:
+
+```math
+\epsilon
+\in
+\{0,\ 0.001,\ 0.002,\ 0.005,\ 0.01\}.
+```
+
+| $\epsilon$ | FIT amplification | Validation amplification | FIT↔VAL Pearson | FIT↔VAL Spearman |
+|---:|---:|---:|---:|---:|
+| 0.000 | 8.00% | 8.21% | 0.9964 | 0.9831 |
+| 0.001 | 7.74% | 7.97% | 0.9961 | 0.9875 |
+| 0.002 | 7.73% | 7.95% | 0.9958 | 0.9866 |
+| 0.005 | 7.65% | 7.83% | 0.9961 | 0.9882 |
+| 0.010 | 7.43% | 7.59% | 0.9966 | 0.9893 |
+
+Across this threshold range, amplification remains a minority regime and FIT/validation configuration risk remains highly reproducible.
+
+### Feedback-gain dose response under every threshold
+
+For all five thresholds, amplification is **strictly increasing** with $\alpha$ in both FIT and untouched validation.
+
+At the primary $\epsilon=0.002$ threshold:
+
+| $\alpha$ | FIT amplification | Validation amplification |
+|---:|---:|---:|
+| 0.1 | 3.39% | 3.07% |
+| 0.3 | 6.78% | 6.80% |
+| 0.5 | 9.36% | 9.88% |
+| 0.7 | 11.36% | 12.04% |
+
+The same monotone ordering survives at $\epsilon \in \{0,0.001,0.005,0.01\}$.
+
+### Within-$\alpha$ reproducibility
+
+To test whether the global FIT↔validation correlation is driven only by $\alpha$, ARC-v0.16 compares configurations **within each fixed $\alpha$ level**.
+
+At the primary $\epsilon=0.002$ threshold:
+
+| $\alpha$ | Configs | Pearson $r$ | Spearman $\rho$ |
+|---:|---:|---:|---:|
+| 0.1 | 11 | 0.8561 | 0.7791 |
+| 0.3 | 11 | 0.9553 | 0.7018 |
+| 0.5 | 11 | 0.8284 | 0.8670 |
+| 0.7 | 11 | 0.8096 | 0.7757 |
+
+After subtracting the mean amplification risk within each $\alpha$ separately in FIT and validation, the remaining configuration-level structure still transfers:
+
+| Metric | $\epsilon=0.002$ |
+|---|---:|
+| Alpha-centered Pearson $r$ | **0.7671** |
+| Alpha-centered Spearman $\rho$ | **0.7897** |
+
+Across all tested thresholds, alpha-centered Pearson correlations range from **0.7671 to 0.8484**, while alpha-centered Spearman correlations range from **0.7670 to 0.8462**.
+
+This supports a narrower but stronger conclusion:
+
+> **The held-out configuration-risk structure is not explained solely by the global feedback-gain effect; substantial within-$\alpha$ ordering transfers from FIT to untouched validation.**
+
+It does not establish causal transfer of every individual policy factor.
+
+### Signed-harm threshold sensitivity
+
+ARC-v0.15.1 provides exact signed coverage for the primary set $H3_{\mathrm{abs}}>0.002$. Therefore signed-harm sensitivity is directly identifiable for thresholds at or above 0.002.
+
+| $\epsilon$ | Signed events | Harmful final direction | Beneficial divergence | Tied |
+|---:|---:|---:|---:|---:|
+| 0.002 | 11,596 | **94.28%** | 5.20% | 0.52% |
+| 0.005 | 11,420 | **94.33%** | 5.17% | 0.51% |
+| 0.010 | 11,076 | **94.47%** | 5.03% | 0.50% |
+
+The harmful fraction is therefore stable across stricter thresholds.
+
+For $\epsilon<0.002$, ARC-v0.15.1 does not contain signed reconstructions for the additional trajectories introduced by those lower thresholds, so the corresponding harmful fractions are deliberately reported as **not identifiable from the existing signed replay** rather than extrapolated.
+
+ARC-v0.16 report SHA-256:
+
+```text
+aee5c426bceb8293f574a374d74eb1aba21ef3ac142f1369a62961d66d3dbdb7
+```
+
+
+---
+
 ## Current Research Claim
 
 The evidence chain now is:
@@ -451,6 +547,8 @@ The evidence chain now is:
 \rightarrow
 \text{Full-coverage signed harm audit}
 \rightarrow
+\text{Threshold / alpha-controlled robustness}
+\rightarrow
 \text{Selective mitigation}
 \rightarrow
 \text{Measured quality-cost audit}
@@ -458,7 +556,7 @@ The evidence chain now is:
 
 The strongest supported claim at this stage is:
 
-> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. In the tested FEVER and HotpotQA settings, the dominant regime is stable/null, while a minority amplifying regime is reproducible across held-out queries, increases with feedback gain, is partially predictable from lower-fidelity retrieval statistics and policy variables, and is predominantly directionally harmful when signed utility is reconstructed. In HotpotQA, a fit-frozen boundary-aware policy selectively allocates higher-fidelity feedback and recovers a disproportionate fraction of the Always-SQ8 quality benefit at a fraction of its measured incremental runtime.**
+> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. In the tested FEVER and HotpotQA settings, the dominant regime is stable/null, while a minority amplifying regime is reproducible across held-out queries, remains qualitatively stable across reasonable regime thresholds, increases with feedback gain, retains substantial configuration-level reproducibility after controlling for alpha, is partially predictable from lower-fidelity retrieval statistics and policy variables, and is predominantly directionally harmful when signed utility is reconstructed. In HotpotQA, a fit-frozen boundary-aware policy selectively allocates higher-fidelity feedback and recovers a disproportionate fraction of the Always-SQ8 quality benefit at a fraction of its measured incremental runtime.**
 
 The project does **not** claim that:
 
@@ -507,7 +605,8 @@ The project separates:
 14. zero-mass / regime auditing,
 15. mechanism diagnostics,
 16. deployment-feasible prediction,
-17. full-coverage signed construct validation.
+17. full-coverage signed construct validation,
+18. threshold-sensitivity and alpha-controlled robustness auditing.
 
 Positive, null, stable, reversal, and beneficial-divergence outcomes are retained rather than filtered away.
 
@@ -534,12 +633,14 @@ Positive, null, stable, reversal, and beneficial-divergence outcomes are retaine
 - FEVER mechanism audit
 - deployable PQ32-only FEVER risk prediction
 - full-coverage FEVER signed harm audit
+- threshold-sensitivity and alpha-controlled FEVER robustness audit
 
 ### Remaining paper-facing work
 
-- threshold-sensitivity analysis for the empirical $|H3| = 0.002$ regime definition,
-- alpha-controlled / within-alpha configuration robustness analysis,
-- final SIGIR full-paper methods, figures, references, and claim audit.
+- final SIGIR full-paper methods and mathematical definitions,
+- related-work expansion and citation audit,
+- final figures / tables and page-budget optimization,
+- final adversarial reviewer and claim audit.
 
 ---
 
