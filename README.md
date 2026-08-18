@@ -249,7 +249,7 @@ The frozen FEVER study contains:
 - 44 feedback configurations,
 - four feedback gains (`α ∈ {0.1, 0.3, 0.5, 0.7}`),
 - mean and softmax feedback families,
-- and a fixed empirical regime threshold `|H3| = 0.002`.
+- and a fixed empirical regime threshold $|H3| = 0.002$.
 
 ### Zero-mass finding
 
@@ -258,13 +258,13 @@ The FEVER H3 distribution contains substantial exact-zero mass.
 On FIT:
 
 - exact zero: **88.25%**
-- near zero (`|H3| <= 1e-12`): **90.06%**
+- near zero ($|H3| \le 10^{-12}$): **90.06%**
 - q75: **0.0**
 - q90: **0.0**
 
 Therefore the preregistered 75th-percentile classification target is degenerate on FEVER and is retained as a negative protocol outcome rather than retuned.
 
-The primary external-replication interpretation instead uses the independently specified `±0.002` regime definition.
+The primary external-replication interpretation instead uses the independently specified $\pm 0.002$ regime definition.
 
 ### FIT / validation regime replication
 
@@ -375,11 +375,10 @@ This is an event-prioritization result. It is not presented as a fully integrate
 The original H3 endpoint is unsigned:
 
 ```math
-H3_{\text{abs}}
+H3_{\mathrm{abs}}
 =
-\operatorname{slope}
-\left(
-|u_{\text{SQ8}}(t) - u_{\text{PQ32}}(t)|
+\mathrm{slope}\!\left(
+\left|u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t)\right|
 \right)
 ```
 
@@ -415,9 +414,9 @@ Primary full-coverage estimates:
 
 | Metric | Estimate | 95% query-cluster bootstrap CI |
 |---|---:|---:|
-| `P(G_T > 0 | H3_abs > 0.002)` | **0.9428** | **[0.9248, 0.9580]** |
-| `P(H3_signed > 0 | H3_abs > 0.002)` | **0.9469** | **[0.9296, 0.9618]** |
-| `P(ΔG > 0 | H3_abs > 0.002)` | **0.9390** | **[0.9208, 0.9544]** |
+| $P(G_T > 0 \mid H3_{\mathrm{abs}} > 0.002)$ | **0.9428** | **[0.9248, 0.9580]** |
+| $P(H3_{\mathrm{signed}} > 0 \mid H3_{\mathrm{abs}} > 0.002)$ | **0.9469** | **[0.9296, 0.9618]** |
+| $P(\Delta G > 0 \mid H3_{\mathrm{abs}} > 0.002)$ | **0.9390** | **[0.9208, 0.9544]** |
 
 Harmful fractions remain above 91% in every tested method × α stratum.
 
@@ -538,7 +537,7 @@ Positive, null, stable, reversal, and beneficial-divergence outcomes are retaine
 
 ### Remaining paper-facing work
 
-- threshold-sensitivity analysis for the empirical `|H3| = 0.002` regime definition,
+- threshold-sensitivity analysis for the empirical $|H3| = 0.002$ regime definition,
 - alpha-controlled / within-alpha configuration robustness analysis,
 - final SIGIR full-paper methods, figures, references, and claim audit.
 
