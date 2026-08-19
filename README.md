@@ -386,28 +386,17 @@ This is an event-prioritization result. It is not presented as a fully integrate
 
 The original H3 endpoint is unsigned:
 
-$$
-H3_{\text{abs}}
-=
-\mathrm{slope}
-\left(
-|u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t)|
-\right).
-$$
+`H3_abs = slope(|u_SQ8(t) - u_PQ32(t)|)`
 
 Therefore, positive H3 alone proves growing utility disagreement but does not determine which trajectory is better.
 
 ARC-v0.15.1 reconstructs signed utility for all 11,596 / 11,596 FEVER untouched-validation query-policy events with:
 
-$$
-H3_{\text{abs}}>0.002
-$$
+`H3_abs > 0.002`
 
 using:
 
-$$
-G_t=u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t).
-$$
+`G_t = u_SQ8(t) - u_PQ32(t)`
 
 The replay reuses the original v0.13 feedback implementation and verifies that reconstructed $|G_t|$ exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
 
@@ -450,9 +439,7 @@ The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories 
 
 The regime analysis is repeated for:
 
-$$
-\epsilon \in \{0,0.001,0.002,0.005,0.01\}.
-$$
+`ε ∈ {0, 0.001, 0.002, 0.005, 0.01}`
 
 | ε | FIT amplification | Validation amplification | FIT↔VAL Pearson | FIT↔VAL Spearman |
 |---:|---:|---:|---:|---:|
@@ -505,23 +492,13 @@ ARC-v0.16.1 tests whether the deployment-feasible FEVER risk model is merely lea
 
 Primary paired query-cluster bootstrap contrast:
 
-$$
-\Delta AUC
-=
-AUC_{\mathrm{full}}
--
-AUC_{\mathrm{policy}}
-=
-0.1001
-$$
+`ΔAUC = AUC_full - AUC_policy = 0.1001`
 
 with 95% CI approximately [0.0830, 0.1174].
 
 For PR-AUC:
 
-$$
-\Delta PR\text{-}AUC \approx 0.0680
-$$
+`ΔPR-AUC ≈ 0.0680`
 
 with 95% CI approximately [0.0540, 0.0836].
 
@@ -582,14 +559,12 @@ At a fixed budget, the highest-risk validation queries receive SQ8 feedback whil
 
 For a budget-selected query set $S_B$:
 
-$$
-F(q)
-=
-\begin{cases}
-F_{\mathrm{SQ8}}(q), & q\in S_B,\\
-F_{\mathrm{PQ32}}(q), & q\notin S_B.
-\end{cases}
-$$
+RASF feedback rule:
+
+```text
+F(q) = F_SQ8(q)   if q ∈ S_B
+       F_PQ32(q)  otherwise
+```
 
 The FEVER validation experiment compares:
 
@@ -660,15 +635,7 @@ For each query, the audit reuses the already measured Always-PQ32 and Always-SQ8
 
 For a random subset $S$ of fixed size:
 
-$$
-U_{\mathrm{rand}}(S)
-=
-\bar U_L
-+
-\frac{1}{N}
-\sum_{q\in S}
-(U_q^H-U_q^L).
-$$
+`U_rand(S) = Ū_L + (1/N) Σ_{q∈S}(U_q^H - U_q^L)`
 
 ### Primary 25% multi-random result
 
@@ -679,11 +646,7 @@ $$
 
 Thus, for both primary configurations:
 
-$$
-U_{\mathrm{RASF}}
->
-q_{0.975}(U_{\mathrm{random}}).
-$$
+`U_RASF > q_0.975(U_random)`
 
 The 10% budget remains mixed; at 50%, both configurations again lie clearly above the matched-budget random-allocation distribution.
 
@@ -803,19 +766,11 @@ It does not alter the v0.18 `PARTIAL_REPLICATION` claim gate.
 
 For each trajectory:
 
-$$
-G_t
-=
-u_{\mathrm{SQ8}}(t)
--
-u_{\mathrm{PQ32}}(t).
-$$
+`G_t = u_SQ8(t) - u_PQ32(t)`
 
 The primary population is all untouched-validation query-policy events with:
 
-$$
-H3_{\mathrm{abs}}>0.002.
-$$
+`H3_abs > 0.002`
 
 ### Full E5 signed taxonomy
 
@@ -841,33 +796,19 @@ These events involve 2,417 / 3,316 validation queries.
 
 Primary query-cluster bootstrap estimate:
 
-$$
-P(G_T>0 \mid H3_{\mathrm{abs}}>0.002)
-=
-\mathbf{0.9652}
-$$
+`P(G_T > 0 | H3_abs > 0.002) = 0.9652`
 
 with 95% CI:
 
-$$
-\mathbf{[0.9593,\ 0.9706]}.
-$$
+95% CI: `[0.9593, 0.9706]`
 
 Secondary signed endpoints agree:
 
-$$
-P(H3_{\mathrm{signed}}>0 \mid H3_{\mathrm{abs}}>0.002)
-=
-0.9660
-$$
+`P(H3_signed > 0 | H3_abs > 0.002) = 0.9660`
 
 and
 
-$$
-P(\Delta G>0 \mid H3_{\mathrm{abs}}>0.002)
-=
-0.9605.
-$$
+`P(ΔG > 0 | H3_abs > 0.002) = 0.9605`
 
 ### Method × α robustness
 
