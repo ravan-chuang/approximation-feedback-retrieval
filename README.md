@@ -14,20 +14,20 @@ Approximate nearest-neighbor retrieval is usually evaluated as a one-shot operat
 
 This project studies a different regime:
 
-> Can approximation errors that are tolerable in one-shot retrieval become dynamically consequential when retrieved results modify subsequent query states?
+> **Can approximation errors that are tolerable in one-shot retrieval become dynamically consequential when retrieved results modify subsequent query states?**
 
 The working mechanism is:
 
-```math
-\text{retrieval approximation}
-\rightarrow
-\text{feedback contamination}
-\rightarrow
-\text{query-state divergence}
-\rightarrow
-\text{candidate divergence}
-\rightarrow
-\text{utility divergence}
+```text
+retrieval approximation
+→
+feedback contamination
+→
+query-state divergence
+→
+candidate divergence
+→
+utility divergence
 ```
 
 The project therefore distinguishes between:
@@ -40,7 +40,11 @@ The project therefore distinguishes between:
 - deployable risk prediction,
 - and selective mitigation using higher-fidelity feedback.
 
-The current evidence **does not** support a universal-instability claim. The dominant regime in the broad FEVER boundary study is stable/null.
+The current evidence does **not** support a universal-instability claim.
+
+Across the tested settings, approximation-feedback dynamics are heterogeneous. Stable/null behavior dominates some settings, while amplification becomes substantially more prevalent under others. The strongest current evidence supports a narrower conclusion:
+
+> **Approximation-feedback dynamics are structured rather than universal; their prevalence can depend strongly on the retrieval representation, while the direction of amplified utility divergence can remain highly consistent across tested encoder families.**
 
 ---
 
@@ -71,6 +75,9 @@ The current evidence **does not** support a universal-instability claim. The dom
 | ARC-v0.16.1a | Feature Provenance Equality Audit | Exact equality of persisted FEVER PQ32 query-feature artifacts |
 | ARC-v0.17 | Deployable Selective Fidelity Closure | FEVER end-to-end risk-aware selective SQ8 feedback |
 | ARC-v0.17.1 | Multi-Random Allocation Audit | 10,000 matched-budget random-allocation robustness audit |
+| ARC-v0.18 | Cross-Encoder FEVER Replication | E5-small-v2 generalization test under the frozen FEVER design |
+| ARC-v0.18.1 | E5 Signed-Direction Audit | Post-hoc signed construct-validity audit of v0.18 amplification events |
+| ARC-v0.19 | Cross-Approximation nprobe Replication | In progress: search-effort approximation using IVF-SQ8 nprobe 8 vs 64 |
 
 ---
 
@@ -151,7 +158,7 @@ Using the same frozen feedback policies, the HotpotQA fidelity-dose study found:
 |---|---:|---:|---:|
 | PQ32 ↔ PQ64 | 0.002632 | 0.001596 | 0.012274 |
 | PQ64 ↔ SQ8 | 0.001514 | 0.005360 | 0.013828 |
-| PQ32 ↔ SQ8 | **0.003229** | **0.005590** | **0.022308** |
+| PQ32 ↔ SQ8 | 0.003229 | 0.005590 | 0.022308 |
 
 The widest tested fidelity contrast produces the strongest overall H3 amplification, although the intermediate contrasts are not strictly monotonic for every endpoint.
 
@@ -161,7 +168,7 @@ The original interpretable boundary model achieved approximately:
 
 | Metric | Validation result |
 |---|---:|
-| $R^2$ | 0.247 |
+| R² | 0.247 |
 | ROC-AUC | 0.774 |
 | Average Precision | 0.516 |
 | Accuracy | 0.690 |
@@ -176,14 +183,14 @@ ARC-v0.10 tests whether the HotpotQA boundary predictor can be translated into a
 
 The evaluation keeps PQ32 as the search/evaluation retriever and changes only the feedback source:
 
-1. **Always-PQ32** — PQ32 search → PQ32 feedback
-2. **Always-SQ8** — PQ32 search → SQ8 feedback
-3. **Random selective SQ8** — budget-matched random high-fidelity allocation
-4. **Boundary-aware selective SQ8** — fit-only boundary model allocates SQ8 feedback
+- Always-PQ32 — PQ32 search → PQ32 feedback
+- Always-SQ8 — PQ32 search → SQ8 feedback
+- Random selective SQ8 — budget-matched random high-fidelity allocation
+- Boundary-aware selective SQ8 — fit-only boundary model allocates SQ8 feedback
 
 The nominal high-fidelity budgets are 10%, 25%, and 50%. The primary pre-specified operating point is 25%.
 
-Applying the fit-frozen 25% threshold to held-out validation selects **26.47%** of queries.
+Applying the fit-frozen 25% threshold to held-out validation selects 26.47% of queries.
 
 | Feedback configuration | Selective final nDCG@10 | Recovery of Always-SQ8 benefit | Δ vs Always-PQ32 (95% CI) | Δ vs random (95% CI) |
 |---|---:|---:|---:|---:|
@@ -200,7 +207,7 @@ Across the budget sweep, boundary-aware recovery is:
 | 25% | 41.1% | 44.1% |
 | 50% | 68.9% | 69.0% |
 
-A null case is retained: for mean feedback at 10%, Δ vs random is +0.00218 with a 95% bootstrap interval of `[-0.00032, 0.00477]`, so no reliable advantage over random is claimed at that operating point.
+A null case is retained: for mean feedback at 10%, Δ vs random is +0.00218 with a 95% bootstrap interval of [-0.00032, 0.00477], so no reliable advantage over random is claimed at that operating point.
 
 ---
 
@@ -215,9 +222,9 @@ ARC-v0.11.1 performs only a deterministic aggregate join repair for baseline qua
 | mean, k=20, α=0.3 | 0.357904 | 41.1% | +0.007084 [0.003560, 0.010677] | 12.170 s | 11.977 s | 27.13% |
 | softmax, k=5, α=0.5, T=0.1 | 0.376525 | 44.1% | +0.034576 [0.026755, 0.042598] | 11.840 s | 12.078 s | 26.90% |
 
-Relative to Always-PQ32, the selective policy recovers **41–44%** of the Always-SQ8 quality improvement while using about **27%** of the Always-SQ8 incremental runtime in this single-machine benchmark.
+Relative to Always-PQ32, the selective policy recovers 41–44% of the Always-SQ8 quality improvement while using about 27% of the Always-SQ8 incremental runtime in this single-machine benchmark.
 
-The corresponding recovery / incremental-runtime ratios are **1.516×** and **1.639×**.
+The corresponding recovery / incremental-runtime ratios are 1.516× and 1.639×.
 
 These measurements are not universal production latency or throughput claims.
 
@@ -229,12 +236,12 @@ ARC-v0.12 tests whether the HotpotQA boundary-risk signal learned in one feedbac
 
 Before accepting the transfer result, the audit exactly reconstructs the sealed ARC-v0.9 classifier.
 
-The reconstructed validation ROC-AUC is **0.7736072867** versus the sealed **0.7736072913**, an absolute difference of `4.58e-9`.
+The reconstructed validation ROC-AUC is 0.7736072867 versus the sealed 0.7736072913, an absolute difference of 4.58e-9.
 
 | Source → target | ROC-AUC | 95% bootstrap CI | Average Precision | AUC gap to target-family fit-only oracle |
 |---|---:|---:|---:|---:|
-| mean → softmax | **0.766532** | **[0.756424, 0.776532]** | 0.544860 | -0.016485 |
-| softmax → mean | **0.755019** | **[0.745265, 0.764847]** | 0.435071 | +0.014342 |
+| mean → softmax | 0.766532 | [0.756424, 0.776532] | 0.544860 | -0.016485 |
+| softmax → mean | 0.755019 | [0.745265, 0.764847] | 0.435071 | +0.014342 |
 
 Both directions retain substantial held-out discrimination.
 
@@ -252,9 +259,9 @@ The frozen FEVER study contains:
 - 3,350 FIT queries,
 - 3,316 untouched validation queries,
 - 44 feedback configurations,
-- four feedback gains (`α ∈ {0.1, 0.3, 0.5, 0.7}`),
+- four feedback gains (\(\alpha \in \{0.1,0.3,0.5,0.7\}\)),
 - mean and softmax feedback families,
-- and a fixed empirical regime threshold $|H3| = 0.002$.
+- and a fixed empirical regime threshold \(|H3| = 0.002\).
 
 ### Zero-mass finding
 
@@ -263,13 +270,13 @@ The FEVER H3 distribution contains substantial exact-zero mass.
 On FIT:
 
 - exact zero: **88.25%**
-- near zero ($|H3| \le 10^{-12}$): **90.06%**
+- near zero (\(|H3| \le 10^{-12}\)): **90.06%**
 - q75: **0.0**
 - q90: **0.0**
 
 Therefore the preregistered 75th-percentile classification target is degenerate on FEVER and is retained as a negative protocol outcome rather than retuned.
 
-The primary external-replication interpretation instead uses the independently specified $\pm 0.002$ regime definition.
+The primary external-replication interpretation instead uses the independently specified \(\pm 0.002\) regime definition.
 
 ### FIT / validation regime replication
 
@@ -282,7 +289,7 @@ The primary external-replication interpretation instead uses the independently s
 | Queries amplifying under ≥1 config | 17.58% | 17.67% |
 | Queries amplifying under ≥50% configs | 7.31% | 7.96% |
 
-The dominant outcome is therefore **stability/null**, not amplification.
+The dominant outcome under the original BGE FEVER setting is therefore stability/null, not amplification.
 
 The current claim is:
 
@@ -298,10 +305,10 @@ Across the 44 tested configurations, FIT and validation amplification fractions 
 
 | Statistic | Result |
 |---|---:|
-| Pearson correlation | **0.9958** |
-| Spearman correlation | **0.9866** |
+| Pearson correlation | 0.9958 |
+| Spearman correlation | 0.9866 |
 
-Because feedback gain `α` is a strong common driver, these correlations are interpreted as held-out reproducibility of the tested policy grid, not proof that every fine-grained policy factor transfers independently.
+Because feedback gain α is a strong common driver, these correlations are interpreted as held-out reproducibility of the tested policy grid, not proof that every fine-grained policy factor transfers independently.
 
 ### Amplification vs feedback gain
 
@@ -320,9 +327,9 @@ A post-hoc diagnostic model using policy variables together with richer initial-
 
 | Metric | FEVER validation |
 |---|---:|
-| ROC-AUC | **0.7442** |
-| PR-AUC | **0.2081** |
-| Amplification prevalence | **0.0795** |
+| ROC-AUC | 0.7442 |
+| PR-AUC | 0.2081 |
+| Amplification prevalence | 0.0795 |
 
 This model is interpreted diagnostically, not as a deployment-ready selector, because some inputs require information unavailable before higher-fidelity retrieval or relevance assessment.
 
@@ -336,8 +343,8 @@ The deployment-feasible selector uses only:
 
 - PQ32 score entropy,
 - PQ32 top-1 vs top-10 score margin,
-- `α`,
-- `log(k)`,
+- α,
+- log(k),
 - feedback-family indicator,
 - and numeric temperature.
 
@@ -352,26 +359,26 @@ It explicitly excludes:
 
 | Metric | Result |
 |---|---:|
-| ROC-AUC | **0.7309** |
-| 95% query-cluster bootstrap CI | **[0.7102, 0.7525]** |
-| PR-AUC | **0.1793** |
-| Amplification prevalence | **0.0795** |
+| ROC-AUC | 0.7309 |
+| 95% query-cluster bootstrap CI | [0.7102, 0.7525] |
+| PR-AUC | 0.1793 |
+| Amplification prevalence | 0.0795 |
 
 ### Risk enrichment
 
 | Risk budget | Amplification rate | Enrichment vs prevalence |
 |---|---:|---:|
-| Top 10% | **22.57%** | **2.84×** |
-| Top 25% | **18.43%** | **2.32×** |
+| Top 10% | 22.57% | 2.84× |
+| Top 25% | 18.43% | 2.32× |
 
 At a 25% risk budget, the deployable selector captures:
 
 - **57.99%** of all FEVER validation amplification events,
 - versus **25.00%** under matched random allocation.
 
-The matched-random 95% range is approximately `[24.28%, 25.74%]`, with one-sided randomization `p = 0.0005`.
+The matched-random 95% range is approximately [24.28%, 25.74%], with one-sided randomization p = 0.0005.
 
-This is an event-prioritization result. It is not presented as a fully integrated FEVER production routing-and-latency benchmark.
+This is an event-prioritization result. It is not presented as a fully integrated production routing-and-latency benchmark.
 
 ---
 
@@ -379,53 +386,50 @@ This is an event-prioritization result. It is not presented as a fully integrate
 
 The original H3 endpoint is unsigned:
 
-```math
-H3_{\mathrm{abs}}
+\[
+H3_{\text{abs}}
 =
-\mathrm{slope}\!\left(
-\left|u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t)\right|
-\right)
-```
+\mathrm{slope}
+\left(
+|u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t)|
+\right).
+\]
 
 Therefore, positive H3 alone proves growing utility disagreement but does not determine which trajectory is better.
 
-ARC-v0.15.1 reconstructs signed utility for **all 11,596 / 11,596** FEVER untouched-validation query-policy events with:
+ARC-v0.15.1 reconstructs signed utility for all 11,596 / 11,596 FEVER untouched-validation query-policy events with:
 
-```math
-H3_{\text{abs}} > 0.002
-```
+\[
+H3_{\text{abs}}>0.002
+\]
 
 using:
 
-```math
-G_t
-=
-u_{\text{SQ8}}(t)
--
-u_{\text{PQ32}}(t)
-```
+\[
+G_t=u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t).
+\]
 
-The replay reuses the original v0.13 feedback implementation and verifies that reconstructed `|G_t|` exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
+The replay reuses the original v0.13 feedback implementation and verifies that reconstructed \(|G_t|\) exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
 
 ### Signed taxonomy
 
 | Signed outcome | Count | Fraction |
 |---|---:|---:|
-| Harmful final direction (`G_T > 0`) | **10,933** | **94.28%** |
-| Beneficial divergence (`G_T < 0`) | 603 | 5.20% |
+| Harmful final direction (\(G_T>0\)) | 10,933 | 94.28% |
+| Beneficial divergence (\(G_T<0\)) | 603 | 5.20% |
 | Unresolved / tied | 60 | 0.52% |
 
 Primary full-coverage estimates:
 
 | Metric | Estimate | 95% query-cluster bootstrap CI |
 |---|---:|---:|
-| $P(G_T > 0 \mid H3_{\mathrm{abs}} > 0.002)$ | **0.9428** | **[0.9248, 0.9580]** |
-| $P(H3_{\mathrm{signed}} > 0 \mid H3_{\mathrm{abs}} > 0.002)$ | **0.9469** | **[0.9296, 0.9618]** |
-| $P(\Delta G > 0 \mid H3_{\mathrm{abs}} > 0.002)$ | **0.9390** | **[0.9208, 0.9544]** |
+| \(P(G_T>0 \mid H3_{\text{abs}}>0.002)\) | 0.9428 | [0.9248, 0.9580] |
+| \(P(H3_{\text{signed}}>0 \mid H3_{\text{abs}}>0.002)\) | 0.9469 | [0.9296, 0.9618] |
+| \(P(\Delta G>0 \mid H3_{\text{abs}}>0.002)\) | 0.9390 | [0.9208, 0.9544] |
 
 Harmful fractions remain above 91% in every tested method × α stratum.
 
-Accordingly, the project now supports the stronger but still limited statement:
+Accordingly, the project supports the limited statement:
 
 > **Most FEVER trajectories classified as absolute amplification are directionally harmful to the lower-fidelity PQ32 trajectory, but beneficial and tied counterexamples remain and are retained.**
 
@@ -435,10 +439,10 @@ The project does **not** claim that amplification is always harmful.
 
 ## Threshold Sensitivity and Alpha-Controlled Robustness
 
-ARC-v0.16 addresses two remaining robustness questions for the FEVER boundary analysis:
+ARC-v0.16 addresses whether:
 
-1. whether the minority-amplification conclusion depends strongly on the operational threshold $\epsilon=0.002$;
-2. whether the high FIT↔validation configuration reproducibility is explained only by the strong common effect of feedback gain $\alpha$.
+1. the minority-amplification conclusion depends strongly on the operational threshold \(\epsilon=0.002\);
+2. the high FIT↔validation configuration reproducibility is explained only by the strong common effect of feedback gain α.
 
 The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories and the ARC-v0.15.1 signed-replay artifact. It does not rerun the full FEVER retrieval sweep and does not access test data.
 
@@ -446,13 +450,11 @@ The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories 
 
 The regime analysis is repeated for:
 
-```math
-\epsilon
-\in
-\{0,\ 0.001,\ 0.002,\ 0.005,\ 0.01\}.
-```
+\[
+\epsilon \in \{0,0.001,0.002,0.005,0.01\}.
+\]
 
-| $\epsilon$ | FIT amplification | Validation amplification | FIT↔VAL Pearson | FIT↔VAL Spearman |
+| ε | FIT amplification | Validation amplification | FIT↔VAL Pearson | FIT↔VAL Spearman |
 |---:|---:|---:|---:|---:|
 | 0.000 | 8.00% | 8.21% | 0.9964 | 0.9831 |
 | 0.001 | 7.74% | 7.97% | 0.9961 | 0.9875 |
@@ -462,112 +464,68 @@ The regime analysis is repeated for:
 
 Across this threshold range, amplification remains a minority regime and FIT/validation configuration risk remains highly reproducible.
 
-### Feedback-gain dose response under every threshold
+### Within-α reproducibility
 
-For all five thresholds, amplification is **strictly increasing** with $\alpha$ in both FIT and untouched validation.
+At the primary \(\epsilon=0.002\) threshold:
 
-At the primary $\epsilon=0.002$ threshold:
-
-| $\alpha$ | FIT amplification | Validation amplification |
-|---:|---:|---:|
-| 0.1 | 3.39% | 3.07% |
-| 0.3 | 6.78% | 6.80% |
-| 0.5 | 9.36% | 9.88% |
-| 0.7 | 11.36% | 12.04% |
-
-The same monotone ordering survives at $\epsilon \in \{0,0.001,0.005,0.01\}$.
-
-### Within-$\alpha$ reproducibility
-
-To test whether the global FIT↔validation correlation is driven only by $\alpha$, ARC-v0.16 compares configurations **within each fixed $\alpha$ level**.
-
-At the primary $\epsilon=0.002$ threshold:
-
-| $\alpha$ | Configs | Pearson $r$ | Spearman $\rho$ |
+| α | Configs | Pearson r | Spearman ρ |
 |---:|---:|---:|---:|
 | 0.1 | 11 | 0.8561 | 0.7791 |
 | 0.3 | 11 | 0.9553 | 0.7018 |
 | 0.5 | 11 | 0.8284 | 0.8670 |
 | 0.7 | 11 | 0.8096 | 0.7757 |
 
-After subtracting the mean amplification risk within each $\alpha$ separately in FIT and validation, the remaining configuration-level structure still transfers:
+After subtracting the mean amplification risk within each α separately in FIT and validation:
 
-| Metric | $\epsilon=0.002$ |
+| Metric | ε=0.002 |
 |---|---:|
-| Alpha-centered Pearson $r$ | **0.7671** |
-| Alpha-centered Spearman $\rho$ | **0.7897** |
+| Alpha-centered Pearson r | 0.7671 |
+| Alpha-centered Spearman ρ | 0.7897 |
 
-Across all tested thresholds, alpha-centered Pearson correlations range from **0.7671 to 0.8484**, while alpha-centered Spearman correlations range from **0.7670 to 0.8462**.
+Across all tested thresholds, alpha-centered Pearson correlations range from 0.7671 to 0.8484, while alpha-centered Spearman correlations range from 0.7670 to 0.8462.
 
-This supports a narrower but stronger conclusion:
+This supports the narrower conclusion:
 
-> **The held-out configuration-risk structure is not explained solely by the global feedback-gain effect; substantial within-$\alpha$ ordering transfers from FIT to untouched validation.**
+> **The held-out configuration-risk structure is not explained solely by the global feedback-gain effect; substantial within-α ordering transfers from FIT to untouched validation.**
 
 It does not establish causal transfer of every individual policy factor.
-
-### Signed-harm threshold sensitivity
-
-ARC-v0.15.1 provides exact signed coverage for the primary set $H3_{\mathrm{abs}}>0.002$. Therefore signed-harm sensitivity is directly identifiable for thresholds at or above 0.002.
-
-| $\epsilon$ | Signed events | Harmful final direction | Beneficial divergence | Tied |
-|---:|---:|---:|---:|---:|
-| 0.002 | 11,596 | **94.28%** | 5.20% | 0.52% |
-| 0.005 | 11,420 | **94.33%** | 5.17% | 0.51% |
-| 0.010 | 11,076 | **94.47%** | 5.03% | 0.50% |
-
-The harmful fraction is therefore stable across stricter thresholds.
-
-For $\epsilon<0.002$, ARC-v0.15.1 does not contain signed reconstructions for the additional trajectories introduced by those lower thresholds, so the corresponding harmful fractions are deliberately reported as **not identifiable from the existing signed replay** rather than extrapolated.
-
-ARC-v0.16 report SHA-256:
-
-```text
-aee5c426bceb8293f574a374d74eb1aba21ef3ac142f1369a62961d66d3dbdb7
-```
-
 
 ---
 
 ## Deployable Predictor Feature Ablation
 
-ARC-v0.16.1 tests whether the deployment-feasible FEVER risk model is merely learning policy variables such as feedback gain and feedback family, or whether lower-fidelity query-specific PQ32 statistics contribute additional held-out discrimination.
-
-Four fixed logistic models are compared on untouched FEVER validation:
+ARC-v0.16.1 tests whether the deployment-feasible FEVER risk model is merely learning policy variables or whether lower-fidelity query-specific PQ32 statistics contribute additional held-out discrimination.
 
 | Model | Features | ROC-AUC | PR-AUC |
 |---|---|---:|---:|
-| Alpha only | $\alpha$ | 0.6281 | 0.1078 |
-| Policy only | $\alpha$, $\log k$, family, temperature | 0.6308 | 0.1120 |
-| PQ32 query only | PQ32 entropy, PQ32 margin | **0.7312** | 0.1580 |
-| Full deployable | PQ32 query statistics + policy variables | **0.7309** | **0.1793** |
+| Alpha only | α | 0.6281 | 0.1078 |
+| Policy only | α, log k, family, temperature | 0.6308 | 0.1120 |
+| PQ32 query only | PQ32 entropy, PQ32 margin | 0.7312 | 0.1580 |
+| Full deployable | PQ32 query statistics + policy variables | 0.7309 | 0.1793 |
 
-The primary paired query-cluster bootstrap contrast is:
+Primary paired query-cluster bootstrap contrast:
 
-```math
-\Delta \mathrm{AUC}
+\[
+\Delta AUC
 =
-\mathrm{AUC}_{\mathrm{full}}
+AUC_{\mathrm{full}}
 -
-\mathrm{AUC}_{\mathrm{policy}}
+AUC_{\mathrm{policy}}
 =
-0.1001,
-```
+0.1001
+\]
 
-with 95% CI approximately **[0.0830, 0.1174]**.
+with 95% CI approximately [0.0830, 0.1174].
 
 For PR-AUC:
 
-```math
-\Delta \mathrm{PR\text{-}AUC}
-\approx
-0.0680,
-```
+\[
+\Delta PR\text{-}AUC \approx 0.0680
+\]
 
-with 95% CI approximately **[0.0540, 0.0836]**.
+with 95% CI approximately [0.0540, 0.0836].
 
-Across 2,000 paired bootstrap replicates, the probability that the full model failed to outperform policy-only was 0.
-
-The query-only model retains essentially the full ROC discrimination, while policy variables improve precision-focused ranking at the high-risk end. At a 25% risk budget:
+At a 25% risk budget:
 
 - policy-only captures approximately **37.88%** of FEVER validation amplification events;
 - PQ32 query-only captures approximately **56.76%**;
@@ -577,7 +535,7 @@ The supported interpretation is:
 
 > **Amplification risk is not merely a configuration-level prior. Query-specific statistics observable from the lower-fidelity PQ32 retriever contain substantial held-out predictive information.**
 
-This is a predictive-information claim, not a causal explanation of amplification.
+This is a predictive-information claim, not a causal explanation.
 
 ---
 
@@ -587,13 +545,13 @@ ARC-v0.16.1a audits the persisted FEVER PQ32 query-feature artifacts used around
 
 The frozen and later artifacts each contain:
 
-- **6,666 rows**,
-- **6,666 unique query IDs**,
+- 6,666 rows,
+- 6,666 unique query IDs,
 - identical query-ID sets,
 - no duplicate inconsistencies,
 - exact equality for `pq32_entropy20`,
 - exact equality for `pq32_margin1_10`,
-- maximum absolute difference **0.0**.
+- maximum absolute difference 0.0.
 
 The two files also have the same SHA-256:
 
@@ -601,7 +559,7 @@ The two files also have the same SHA-256:
 5bd27981191826938ac17f394d7cdbe62e1e83169a1e05ff197bfb2ffe37d2a7
 ```
 
-The audit therefore classifies the two persisted feature artifacts as **value-equivalent**, so the ARC-v0.16.1 ablation results do not depend on an artifact mismatch between the frozen and later FEVER runs.
+The audit therefore classifies the two persisted feature artifacts as value-equivalent.
 
 ---
 
@@ -615,23 +573,23 @@ RASF uses a fit-frozen deployment-feasible risk score computed only from:
 
 - PQ32 score entropy,
 - PQ32 top-1 vs top-10 margin,
-- feedback gain $\alpha$,
-- $\log k$,
+- feedback gain α,
+- log k,
 - feedback-family indicator,
 - numeric temperature.
 
 At a fixed budget, the highest-risk validation queries receive SQ8 feedback while search and evaluation remain on PQ32. Lower-risk queries continue to use PQ32 feedback.
 
-Formally, for a budget-selected query set $S_B$:
+For a budget-selected query set \(S_B\):
 
-```math
+\[
 F(q)
 =
 \begin{cases}
-F_{\mathrm{SQ8}}(q), & q \in S_B, \\
-F_{\mathrm{PQ32}}(q), & q \notin S_B.
+F_{\mathrm{SQ8}}(q), & q\in S_B,\\
+F_{\mathrm{PQ32}}(q), & q\notin S_B.
 \end{cases}
-```
+\]
 
 The FEVER validation experiment compares:
 
@@ -640,16 +598,16 @@ The FEVER validation experiment compares:
 - budget-matched random selective SQ8 feedback,
 - RASF selective SQ8 feedback.
 
-The primary budget is **25%**.
+The primary budget is 25%.
 
 ### FEVER end-to-end closure at the 25% budget
 
 | Configuration | Always-PQ32 | Random 25% | RASF 25% | Always-SQ8 | RASF − Random (95% CI) | Recovery of Always-SQ8 benefit |
 |---|---:|---:|---:|---:|---:|---:|
-| mean, $k=20,\alpha=0.3$ | 0.11504 | 0.11783 | **0.12189** | 0.12816 | **+0.00406 [0.00189, 0.00633]** | **52.2%** |
-| softmax, $k=5,\alpha=0.5,T=0.1$ | 0.10409 | 0.11307 | **0.12473** | 0.15326 | **+0.01166 [0.00793, 0.01548]** | **42.0%** |
+| mean, k=20, α=0.3 | 0.11504 | 0.11783 | 0.12189 | 0.12816 | +0.00406 [0.00189, 0.00633] | 52.2% |
+| softmax, k=5, α=0.5, T=0.1 | 0.10409 | 0.11307 | 0.12473 | 0.15326 | +0.01166 [0.00793, 0.01548] | 42.0% |
 
-Both primary 25% configurations therefore beat the original matched-random allocation with paired query-level bootstrap intervals entirely above zero.
+Both primary 25% configurations beat the original matched-random allocation with paired query-level bootstrap intervals entirely above zero.
 
 The 10% budget is retained as a mixed/null regime:
 
@@ -658,9 +616,7 @@ The 10% budget is retained as a mixed/null regime:
 
 At 50%, both tested configurations again show a reliable RASF advantage over random.
 
-The supported conclusion is therefore budget-dependent rather than universal:
-
-> **In the tested FEVER setting, deployment-feasible risk ranking becomes actionable at moderate and high selective-feedback budgets, while very small budgets do not reliably outperform random allocation across both feedback families.**
+The supported conclusion is budget-dependent rather than universal.
 
 ### Local measured cost
 
@@ -668,19 +624,19 @@ A 500-query local runtime audit shows that RASF and matched-random selective fee
 
 For the mean configuration:
 
-- Always-PQ32: about **24.10 ms/query**,
-- RASF 25%: about **25.18 ms/query**,
-- matched random 25%: about **25.42 ms/query**,
-- Always-SQ8 feedback: about **30.50 ms/query**.
+- Always-PQ32: about 24.10 ms/query
+- RASF 25%: about 25.18 ms/query
+- matched random 25%: about 25.42 ms/query
+- Always-SQ8 feedback: about 30.50 ms/query
 
 For the softmax configuration:
 
-- Always-PQ32: about **23.39 ms/query**,
-- RASF 25%: about **25.15 ms/query**,
-- matched random 25%: about **25.27 ms/query**,
-- Always-SQ8 feedback: about **29.81 ms/query**.
+- Always-PQ32: about 23.39 ms/query
+- RASF 25%: about 25.15 ms/query
+- matched random 25%: about 25.27 ms/query
+- Always-SQ8 feedback: about 29.81 ms/query
 
-The correct systems interpretation is not that RASF is faster than matched random. Instead:
+The correct systems interpretation is:
 
 > **At approximately matched selective-feedback cost, RASF allocates the same high-fidelity budget more effectively and achieves higher held-out retrieval utility.**
 
@@ -700,50 +656,36 @@ ARC-v0.17.1 tests whether the original single random selective allocation happen
 
 No retrieval is rerun.
 
-For each query, the audit reuses the already measured Always-PQ32 and Always-SQ8 final utilities and evaluates **10,000 independent matched-budget random allocations per configuration and budget**.
+For each query, the audit reuses the already measured Always-PQ32 and Always-SQ8 final utilities and evaluates 10,000 independent matched-budget random allocations per configuration and budget.
 
-For a random subset $S$ of fixed size:
+For a random subset \(S\) of fixed size:
 
-```math
+\[
 U_{\mathrm{rand}}(S)
 =
-\bar U^{L}
+\bar U_L
 +
 \frac{1}{N}
-\sum_{q \in S}
-\left(
-U_q^{H}
--
-U_q^{L}
-\right).
-```
+\sum_{q\in S}
+(U_q^H-U_q^L).
+\]
 
 ### Primary 25% multi-random result
 
-| Configuration | RASF nDCG@10 | Random expectation | Random 95% upper | RASF − random expectation | Random allocations $\ge$ RASF | Corrected one-sided $p$ |
+| Configuration | RASF nDCG@10 | Random expectation | Random 95% upper | RASF − random expectation | Random allocations ≥ RASF | Corrected one-sided p |
 |---|---:|---:|---:|---:|---:|---:|
-| mean, $k=20,\alpha=0.3$ | **0.121894** | 0.118321 | 0.119711 | **+0.003573** | **0 / 10,000** | **0.00010** |
-| softmax, $k=5,\alpha=0.5,T=0.1$ | **0.124729** | 0.116384 | 0.118976 | **+0.008344** | **0 / 10,000** | **0.00010** |
+| mean, k=20, α=0.3 | 0.121894 | 0.118321 | 0.119711 | +0.003573 | 0 / 10,000 | 0.00010 |
+| softmax, k=5, α=0.5, T=0.1 | 0.124729 | 0.116384 | 0.118976 | +0.008344 | 0 / 10,000 | 0.00010 |
 
 Thus, for both primary configurations:
 
-```math
+\[
 U_{\mathrm{RASF}}
 >
-q_{0.975}
-\left(
-U_{\mathrm{random}}
-\right).
-```
+q_{0.975}(U_{\mathrm{random}}).
+\]
 
-The finite-population analytic standard deviations closely agree with the Monte Carlo standard deviations, providing an independent check of the random-allocation null reconstruction.
-
-The 10% budget remains mixed:
-
-- mean feedback shows only weak evidence against the random-allocation null;
-- softmax feedback is consistent with the random null.
-
-At 50%, both configurations again lie clearly above the matched-budget random-allocation distribution.
+The 10% budget remains mixed; at 50%, both configurations again lie clearly above the matched-budget random-allocation distribution.
 
 The primary RASF conclusion is therefore not an artifact of one unlucky random subset.
 
@@ -753,60 +695,339 @@ ARC-v0.17.1 report SHA-256:
 0924f090b8d0b1346cd4fa366abc37930832048fc60b605165eadb31f5796d83
 ```
 
+---
+
+# Cross-Encoder FEVER Replication
+
+ARC-v0.18 tests whether the approximation-feedback findings obtained with `BAAI/bge-small-en-v1.5` generalize to a second encoder family without choosing the encoder or policy settings after seeing outcomes.
+
+The frozen second encoder is:
+
+```text
+intfloat/e5-small-v2
+```
+
+with 384 dimensions, E5 `query:` / `passage:` prefixes, L2-normalized embeddings, the same FEVER corpus, the same authoritative 3,350 FIT / 3,316 untouched-validation membership, and the same 44 feedback configurations.
+
+The retrieval ladder is rebuilt under E5 using IVF-PQ32 and IVF-SQ8 with `nprobe=64`.
+
+### One-shot E5 retrieval fidelity
+
+| Retriever | Recall@10 | MRR@10 | nDCG@10 |
+|---|---:|---:|---:|
+| IVF-PQ32 | 0.6065 | 0.4641 | 0.4824 |
+| IVF-SQ8 | 0.7961 | 0.7497 | 0.7372 |
+
+The SQ8 condition remains a valid relative higher-fidelity comparator under E5.
+
+### Aggregate cross-encoder endpoints
+
+| Split | H1 mean | H2 mean | H3 absolute mean | H3 signed mean |
+|---|---:|---:|---:|---:|
+| FIT | 0.001937 | 0.007603 | 0.030382 | 0.031387 |
+| Validation | **0.001882** | **0.007657** | **0.030166** | **0.030957** |
+
+All three primary divergence directions remain positive on untouched validation.
+
+### E5 validation regime composition
+
+At the primary \(\epsilon=0.002\) threshold:
+
+| Regime | Validation fraction |
+|---|---:|
+| Stable / null | **45.56%** |
+| Amplifying | **41.36%** |
+| Reversal | **13.08%** |
+
+This differs materially from the original BGE FEVER regime, where stable/null behavior dominated.
+
+The preregistered v0.18 claim gate therefore returns:
+
+```text
+PARTIAL_REPLICATION
+```
+
+with **5 / 6** frozen criteria passing.
+
+The single failed criterion is the preregistered requirement that stable/null trajectories remain a majority.
+
+### E5 feedback-gain dose response
+
+Untouched-validation amplification prevalence:
+
+| α | Amplification |
+|---:|---:|
+| 0.1 | 21.23% |
+| 0.3 | 41.23% |
+| 0.5 | 50.94% |
+| 0.7 | 52.05% |
+
+Amplification incidence therefore rises strongly from α=0.1 to α=0.7, although the mean H3 magnitude is not claimed to be strictly monotonic at every gain.
+
+### E5 FIT → validation reproducibility
+
+| Statistic | Result |
+|---|---:|
+| Pearson correlation | **0.99749** |
+| Spearman correlation | **0.98104** |
+| Alpha-centered Pearson | **0.98900** |
+| Alpha-centered Spearman | **0.95073** |
+
+The very high alpha-centered correlations indicate that E5 configuration-level amplification structure transfers strongly from FIT to untouched validation and is not explained only by the common feedback-gain effect.
+
+### Supported cross-encoder interpretation
+
+ARC-v0.18 does **not** support encoder-invariant regime prevalence.
+
+Instead, it supports the more precise statement:
+
+> **Approximation-feedback dynamics generalize across the tested encoder families, but their regime prevalence is representation-dependent.**
+
+The E5 result strengthens the evidence that the phenomenon is not specific to the original BGE embedding geometry while simultaneously identifying an important boundary condition: the frequency of stable, amplifying, and reversal behavior can change substantially across encoder families.
+
+ARC-v0.18 source report SHA-256:
+
+```text
+e6e4aaabe8ef6feabe1c702c1e60b3566f7d1c45f02fb374a58532488b099221
+```
+
+No FEVER test outcomes were used.
 
 ---
 
-## Current Research Claim
+# E5 Cross-Encoder Signed-Direction Audit
 
-The evidence chain now is:
+ARC-v0.18.1 is a post-hoc construct-validity audit of the completed E5 cross-encoder replication.
 
-```math
-\text{Phenomenon}
-\rightarrow
-\text{Sealed confirmation}
-\rightarrow
-\text{Cross-dataset replication}
-\rightarrow
-\text{Fidelity / stability boundary}
-\rightarrow
-\text{Held-out regime replication}
-\rightarrow
-\text{Cross-policy transfer}
-\rightarrow
-\text{Diagnostic prediction}
-\rightarrow
-\text{Deployable PQ32-only prediction}
-\rightarrow
-\text{Full-coverage signed harm audit}
-\rightarrow
-\text{Threshold / alpha-controlled robustness}
-\rightarrow
-\text{Deployable feature-ablation validation}
-\rightarrow
-\text{Risk-aware selective fidelity closure}
-\rightarrow
-\text{Multi-random allocation audit}
-\rightarrow
-\text{Measured quality-cost audit}
+It does not alter the v0.18 `PARTIAL_REPLICATION` claim gate.
+
+For each trajectory:
+
+\[
+G_t
+=
+u_{\mathrm{SQ8}}(t)
+-
+u_{\mathrm{PQ32}}(t).
+\]
+
+The primary population is all untouched-validation query-policy events with:
+
+\[
+H3_{\mathrm{abs}}>0.002.
+\]
+
+### Full E5 signed taxonomy
+
+Total validation query-policy events:
+
+```text
+145,904
+```
+
+Primary amplification events:
+
+```text
+60,346  (41.36%)
+```
+
+These events involve 2,417 / 3,316 validation queries.
+
+| Signed outcome | Count | Fraction |
+|---|---:|---:|
+| **Harmful to PQ32** | **58,247** | **96.52%** |
+| Beneficial to PQ32 | 2,042 | 3.38% |
+| Tied / unresolved | 57 | 0.095% |
+
+Primary query-cluster bootstrap estimate:
+
+\[
+P(G_T>0 \mid H3_{\mathrm{abs}}>0.002)
+=
+\mathbf{0.9652}
+\]
+
+with 95% CI:
+
+\[
+\mathbf{[0.9593,\ 0.9706]}.
+\]
+
+Secondary signed endpoints agree:
+
+\[
+P(H3_{\mathrm{signed}}>0 \mid H3_{\mathrm{abs}}>0.002)
+=
+0.9660
+\]
+
+and
+
+\[
+P(\Delta G>0 \mid H3_{\mathrm{abs}}>0.002)
+=
+0.9605.
+\]
+
+### Method × α robustness
+
+Across all tested method × α strata, harmful fractions remain in the narrow range:
+
+```text
+96.04% – 97.01%
+```
+
+### Threshold robustness
+
+| ε | Harmful final fraction |
+|---:|---:|
+| 0 | 96.48% |
+| 0.001 | 96.50% |
+| 0.002 | **96.52%** |
+| 0.005 | 96.56% |
+| 0.010 | 96.71% |
+
+The signed direction is therefore highly stable across the tested threshold range.
+
+### Query-level concentration
+
+Among the 2,417 validation queries with at least one amplification event:
+
+- **2,144** have all observed amplification events harmful to PQ32;
+- only **54** have no harmful amplification event;
+- the median harmful fraction among affected queries is **1.0**.
+
+The v0.18.1 signed-direction gate returns:
+
+```text
+SIGNED_HARM_PRESERVED
+```
+
+The supported cross-encoder interpretation is therefore:
+
+> **Regime prevalence is encoder-dependent, but conditional on amplification, the direction of utility divergence remains strongly preserved across the tested BGE and E5 encoder families.**
+
+This result does not imply that amplification is always harmful.
+
+Replay parity matches the persisted v0.18 endpoints to numerical precision.
+
+ARC-v0.18.1 report SHA-256:
+
+```text
+1c548a7849bfca09fad417950fc8780bbe016fc0127e3e9d318b65c76ccbaeac
+```
+
+No FEVER test outcomes were used.
+
+---
+
+# Cross-Approximation Search-Effort Replication — In Progress
+
+ARC-v0.19 is the final currently planned large-scale generalization experiment.
+
+Its purpose is to test whether the approximation-feedback phenomenon extends beyond the original PQ32-vs-SQ8 **representation-fidelity** contrast to a different approximation mechanism: **search-effort approximation within a fixed index representation**.
+
+The frozen comparison is:
+
+```text
+IVF-SQ8, nprobe=8
+vs
+IVF-SQ8, nprobe=64
+```
+
+Both conditions use:
+
+- the same E5 encoder,
+- the same normalized 384-d embeddings,
+- the same IVF-SQ8 index representation,
+- the same coarse centroids,
+- the same corpus,
+- the same FEVER FIT / untouched-validation split,
+- the same 44 feedback policies.
+
+Only search effort changes.
+
+The experiment evaluates:
+
+- one-shot fidelity ordering,
+- H1/H2/H3 trajectory divergence,
+- stable / amplifying / reversal regimes,
+- feedback-gain dose response,
+- FIT→validation configuration-risk reproducibility,
+- and a preregistered secondary signed-direction endpoint.
+
+**No v0.19 scientific outcome is claimed in this README until the frozen run completes.**
+
+---
+
+# Current Research Claim
+
+The evidence chain is now:
+
+```text
+Phenomenon
+→
+Sealed confirmation
+→
+Cross-dataset replication
+→
+Fidelity / stability boundary
+→
+Held-out regime replication
+→
+Cross-policy transfer
+→
+Diagnostic prediction
+→
+Deployable PQ32-only prediction
+→
+Full-coverage signed harm audit
+→
+Threshold / alpha-controlled robustness
+→
+Deployable feature-ablation validation
+→
+Risk-aware selective fidelity closure
+→
+Multi-random allocation audit
+→
+Cross-encoder replication
+→
+Cross-encoder signed-direction validation
+→
+Cross-approximation replication (in progress)
+→
+Measured quality-cost audit
 ```
 
 The strongest supported claim at this stage is:
 
-> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. In the tested FEVER and HotpotQA settings, the dominant regime is stable/null, while a minority amplifying regime is reproducible across held-out queries, remains qualitatively stable across reasonable regime thresholds, increases with feedback gain, retains substantial configuration-level reproducibility after controlling for alpha, and is predominantly directionally harmful when signed utility is reconstructed. Lower-fidelity PQ32 query statistics provide substantial held-out predictive information beyond policy-level priors. In FEVER, the resulting fit-frozen Risk-Aware Selective Fidelity policy uses those deployment-feasible risk scores to allocate SQ8 feedback and, at the primary 25% budget, outperforms matched random allocation for both tested feedback configurations. Across 10,000 matched-budget random allocations per configuration, no random allocation reaches the observed RASF utility at the primary operating point. In HotpotQA, an earlier richer boundary-aware selector also recovered a disproportionate fraction of the Always-SQ8 quality benefit at a fraction of its measured incremental runtime. These results support selective fidelity control in the tested settings, not universal instability or universal routing optimality across retrievers, encoders, datasets, feedback mechanisms, or hardware.**
+> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. The effect is not universal: stability, amplification, and reversal occur in different proportions across settings. Under the original BGE FEVER setting, amplification is a sparse minority regime; under E5, amplification becomes substantially more prevalent and stable/null behavior no longer forms a majority. Despite this shift in regime prevalence, amplification remains highly structured and reproducible across held-out queries and policy configurations, and its signed utility direction remains strongly preserved: 94.28% of amplified BGE FEVER events and 96.52% of amplified E5 FEVER events end in favor of the higher-fidelity trajectory. Lower-fidelity retrieval statistics provide substantial held-out predictive information beyond policy-level priors, and Risk-Aware Selective Fidelity uses those deployment-feasible risk scores to allocate higher-fidelity feedback more effectively than matched random allocation at the primary FEVER operating point.**
+
+The project therefore currently supports:
+
+- dynamic approximation-feedback effects across FEVER and HotpotQA,
+- partial cross-encoder generalization across BGE and E5,
+- encoder-dependent regime prevalence,
+- strongly preserved signed-harm direction conditional on amplification,
+- deployable query-level risk prediction,
+- and selective higher-fidelity feedback control in the tested FEVER / HotpotQA settings.
 
 The project does **not** claim that:
 
 - approximation errors always amplify,
 - amplification is always harmful,
+- stable/null behavior dominates every encoder,
 - the mechanism is universal across all encoders or ANN systems,
 - the current predictor fully explains query-level susceptibility,
-- the FEVER RASF controller is a universal or production-validated routing policy beyond the tested experimental setting,
+- RASF is a universal or production-validated routing policy,
 - the selective policy is universally optimal across datasets, encoders, ANN systems, or hardware,
+- the current evidence yet proves cross-approximation generality beyond quantization / IVF settings,
 - or Apple M3 Max measurements are universal production latency/throughput claims.
 
 ---
 
-## Repository Structure
+# Repository Structure
 
 ```text
 notebooks/          Experimental notebooks
@@ -821,40 +1042,43 @@ Large corpora, embedding matrices, FAISS indexes, SQLite databases, raw datasets
 
 ---
 
-## Experimental Philosophy
+# Experimental Philosophy
 
 The project separates:
 
-1. exploratory discovery,
-2. retriever-condition replication,
-3. direct mechanism probing,
-4. statistical auditing,
-5. sealed independent confirmation,
-6. cross-dataset confirmation,
-7. post-confirmatory boundary analysis,
-8. held-out prediction,
-9. selective mitigation,
-10. measured systems-cost auditing,
-11. deterministic post-run provenance repair,
-12. cross-policy boundary transfer,
-13. external FEVER boundary replication,
-14. zero-mass / regime auditing,
-15. mechanism diagnostics,
-16. deployment-feasible prediction,
-17. full-coverage signed construct validation,
-18. threshold-sensitivity and alpha-controlled robustness auditing,
-19. deployable predictor feature-ablation auditing,
-20. feature provenance equality auditing,
-21. same-setting deployable selective-fidelity closure,
-22. multi-random allocation robustness auditing.
+- exploratory discovery,
+- retriever-condition replication,
+- direct mechanism probing,
+- statistical auditing,
+- sealed independent confirmation,
+- cross-dataset confirmation,
+- post-confirmatory boundary analysis,
+- held-out prediction,
+- selective mitigation,
+- measured systems-cost auditing,
+- deterministic post-run provenance repair,
+- cross-policy boundary transfer,
+- external FEVER boundary replication,
+- zero-mass / regime auditing,
+- mechanism diagnostics,
+- deployment-feasible prediction,
+- full-coverage signed construct validation,
+- threshold-sensitivity and alpha-controlled robustness auditing,
+- deployable predictor feature-ablation auditing,
+- feature provenance equality auditing,
+- same-setting deployable selective-fidelity closure,
+- multi-random allocation robustness auditing,
+- cross-encoder external replication,
+- cross-encoder signed-direction construct validation,
+- cross-approximation search-effort replication.
 
-Positive, null, stable, reversal, and beneficial-divergence outcomes are retained rather than filtered away.
+Positive, null, stable, reversal, beneficial-divergence, partial-replication, and non-replication outcomes are retained rather than filtered away.
 
 ---
 
-## Current Status
+# Current Status
 
-### Completed
+## Completed
 
 - large-corpus memory-safe IVF-PQ infrastructure
 - retriever-condition replication
@@ -878,27 +1102,39 @@ Positive, null, stable, reversal, and beneficial-divergence outcomes are retaine
 - FEVER PQ32 query-feature provenance equality audit
 - FEVER Risk-Aware Selective Fidelity end-to-end closure
 - 10,000-allocation matched-random robustness audit
+- E5 cross-encoder FEVER partial replication
+- E5 full signed-direction audit with `SIGNED_HARM_PRESERVED`
 
-### Remaining paper-facing work
+## In progress
 
-- integrate ARC-v0.17 / ARC-v0.17.1 into the final SIGIR full-paper methods and results,
-- finalize the formal RASF algorithm description and mathematical notation,
-- finalize figures / tables and ACM page-budget optimization,
-- perform the final adversarial reviewer and claim audit.
+- ARC-v0.19 cross-approximation search-effort replication (`IVF-SQ8 nprobe=8 vs 64`)
+
+## Remaining paper-facing work
+
+- complete and audit ARC-v0.19 without retuning the frozen comparison,
+- freeze the large-scale experimental line after v0.19 unless a genuine validity issue is discovered,
+- integrate v0.18 / v0.18.1 / v0.19 into the final SIGIR full-paper methods and results,
+- remove ARC version-history narration from the main paper and retain it only in artifact documentation,
+- finalize the formal coupled-trajectory and RASF algorithm notation,
+- finalize the paper overview and quality-budget figures,
+- perform the final adversarial reviewer / claim audit,
+- finalize the ACM submission-format manuscript.
 
 ---
 
-## Research Scope
+# Research Scope
 
 This repository is an active research artifact.
 
-The intended contribution is an empirical and methodological study of **approximation under retrieval feedback**, not a claim that any specific ANN index, encoder, feedback policy, or mitigation strategy is universally optimal.
+The intended contribution is an empirical and methodological study of approximation under retrieval feedback, not a claim that any specific ANN index, encoder, feedback policy, or mitigation strategy is universally optimal.
 
 The project emphasizes:
 
 - explicit separation between exploratory and confirmatory stages,
+- frozen or sealed evaluation protocols where appropriate,
 - held-out validation,
 - query-level or query-cluster uncertainty where appropriate,
-- retention of negative/null/reversal outcomes,
-- artifact hashing and checkpoint auditing,
+- retention of negative / null / reversal / beneficial outcomes,
+- exact replay and provenance audits,
+- artifact hashing and checkpoint verification,
 - and conservative interpretation when evidence does not support universal claims.
