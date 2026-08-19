@@ -259,9 +259,9 @@ The frozen FEVER study contains:
 - 3,350 FIT queries,
 - 3,316 untouched validation queries,
 - 44 feedback configurations,
-- four feedback gains (\(\alpha \in \{0.1,0.3,0.5,0.7\}\)),
+- four feedback gains ($\alpha \in \{0.1,0.3,0.5,0.7\}$),
 - mean and softmax feedback families,
-- and a fixed empirical regime threshold \(|H3| = 0.002\).
+- and a fixed empirical regime threshold $|H3| = 0.002$.
 
 ### Zero-mass finding
 
@@ -270,13 +270,13 @@ The FEVER H3 distribution contains substantial exact-zero mass.
 On FIT:
 
 - exact zero: **88.25%**
-- near zero (\(|H3| \le 10^{-12}\)): **90.06%**
+- near zero ($|H3| \le 10^{-12}$): **90.06%**
 - q75: **0.0**
 - q90: **0.0**
 
 Therefore the preregistered 75th-percentile classification target is degenerate on FEVER and is retained as a negative protocol outcome rather than retuned.
 
-The primary external-replication interpretation instead uses the independently specified \(\pm 0.002\) regime definition.
+The primary external-replication interpretation instead uses the independently specified $\pm 0.002$ regime definition.
 
 ### FIT / validation regime replication
 
@@ -386,46 +386,46 @@ This is an event-prioritization result. It is not presented as a fully integrate
 
 The original H3 endpoint is unsigned:
 
-\[
+$$
 H3_{\text{abs}}
 =
 \mathrm{slope}
 \left(
 |u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t)|
 \right).
-\]
+$$
 
 Therefore, positive H3 alone proves growing utility disagreement but does not determine which trajectory is better.
 
 ARC-v0.15.1 reconstructs signed utility for all 11,596 / 11,596 FEVER untouched-validation query-policy events with:
 
-\[
+$$
 H3_{\text{abs}}>0.002
-\]
+$$
 
 using:
 
-\[
+$$
 G_t=u_{\mathrm{SQ8}}(t)-u_{\mathrm{PQ32}}(t).
-\]
+$$
 
-The replay reuses the original v0.13 feedback implementation and verifies that reconstructed \(|G_t|\) exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
+The replay reuses the original v0.13 feedback implementation and verifies that reconstructed $|G_t|$ exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
 
 ### Signed taxonomy
 
 | Signed outcome | Count | Fraction |
 |---|---:|---:|
-| Harmful final direction (\(G_T>0\)) | 10,933 | 94.28% |
-| Beneficial divergence (\(G_T<0\)) | 603 | 5.20% |
+| Harmful final direction ($G_T>0$) | 10,933 | 94.28% |
+| Beneficial divergence ($G_T<0$) | 603 | 5.20% |
 | Unresolved / tied | 60 | 0.52% |
 
 Primary full-coverage estimates:
 
 | Metric | Estimate | 95% query-cluster bootstrap CI |
 |---|---:|---:|
-| \(P(G_T>0 \mid H3_{\text{abs}}>0.002)\) | 0.9428 | [0.9248, 0.9580] |
-| \(P(H3_{\text{signed}}>0 \mid H3_{\text{abs}}>0.002)\) | 0.9469 | [0.9296, 0.9618] |
-| \(P(\Delta G>0 \mid H3_{\text{abs}}>0.002)\) | 0.9390 | [0.9208, 0.9544] |
+| $P(G_T>0 \mid H3_{\text{abs}}>0.002)$ | 0.9428 | [0.9248, 0.9580] |
+| $P(H3_{\text{signed}}>0 \mid H3_{\text{abs}}>0.002)$ | 0.9469 | [0.9296, 0.9618] |
+| $P(\Delta G>0 \mid H3_{\text{abs}}>0.002)$ | 0.9390 | [0.9208, 0.9544] |
 
 Harmful fractions remain above 91% in every tested method × α stratum.
 
@@ -441,7 +441,7 @@ The project does **not** claim that amplification is always harmful.
 
 ARC-v0.16 addresses whether:
 
-1. the minority-amplification conclusion depends strongly on the operational threshold \(\epsilon=0.002\);
+1. the minority-amplification conclusion depends strongly on the operational threshold $\epsilon=0.002$;
 2. the high FIT↔validation configuration reproducibility is explained only by the strong common effect of feedback gain α.
 
 The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories and the ARC-v0.15.1 signed-replay artifact. It does not rerun the full FEVER retrieval sweep and does not access test data.
@@ -450,9 +450,9 @@ The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories 
 
 The regime analysis is repeated for:
 
-\[
+$$
 \epsilon \in \{0,0.001,0.002,0.005,0.01\}.
-\]
+$$
 
 | ε | FIT amplification | Validation amplification | FIT↔VAL Pearson | FIT↔VAL Spearman |
 |---:|---:|---:|---:|---:|
@@ -466,7 +466,7 @@ Across this threshold range, amplification remains a minority regime and FIT/val
 
 ### Within-α reproducibility
 
-At the primary \(\epsilon=0.002\) threshold:
+At the primary $\epsilon=0.002$ threshold:
 
 | α | Configs | Pearson r | Spearman ρ |
 |---:|---:|---:|---:|
@@ -505,7 +505,7 @@ ARC-v0.16.1 tests whether the deployment-feasible FEVER risk model is merely lea
 
 Primary paired query-cluster bootstrap contrast:
 
-\[
+$$
 \Delta AUC
 =
 AUC_{\mathrm{full}}
@@ -513,15 +513,15 @@ AUC_{\mathrm{full}}
 AUC_{\mathrm{policy}}
 =
 0.1001
-\]
+$$
 
 with 95% CI approximately [0.0830, 0.1174].
 
 For PR-AUC:
 
-\[
+$$
 \Delta PR\text{-}AUC \approx 0.0680
-\]
+$$
 
 with 95% CI approximately [0.0540, 0.0836].
 
@@ -580,16 +580,16 @@ RASF uses a fit-frozen deployment-feasible risk score computed only from:
 
 At a fixed budget, the highest-risk validation queries receive SQ8 feedback while search and evaluation remain on PQ32. Lower-risk queries continue to use PQ32 feedback.
 
-For a budget-selected query set \(S_B\):
+For a budget-selected query set $S_B$:
 
-\[
+$$
 F(q)
 =
 \begin{cases}
 F_{\mathrm{SQ8}}(q), & q\in S_B,\\
 F_{\mathrm{PQ32}}(q), & q\notin S_B.
 \end{cases}
-\]
+$$
 
 The FEVER validation experiment compares:
 
@@ -658,9 +658,9 @@ No retrieval is rerun.
 
 For each query, the audit reuses the already measured Always-PQ32 and Always-SQ8 final utilities and evaluates 10,000 independent matched-budget random allocations per configuration and budget.
 
-For a random subset \(S\) of fixed size:
+For a random subset $S$ of fixed size:
 
-\[
+$$
 U_{\mathrm{rand}}(S)
 =
 \bar U_L
@@ -668,7 +668,7 @@ U_{\mathrm{rand}}(S)
 \frac{1}{N}
 \sum_{q\in S}
 (U_q^H-U_q^L).
-\]
+$$
 
 ### Primary 25% multi-random result
 
@@ -679,11 +679,11 @@ U_{\mathrm{rand}}(S)
 
 Thus, for both primary configurations:
 
-\[
+$$
 U_{\mathrm{RASF}}
 >
 q_{0.975}(U_{\mathrm{random}}).
-\]
+$$
 
 The 10% budget remains mixed; at 50%, both configurations again lie clearly above the matched-budget random-allocation distribution.
 
@@ -731,7 +731,7 @@ All three primary divergence directions remain positive on untouched validation.
 
 ### E5 validation regime composition
 
-At the primary \(\epsilon=0.002\) threshold:
+At the primary $\epsilon=0.002$ threshold:
 
 | Regime | Validation fraction |
 |---|---:|
@@ -803,19 +803,19 @@ It does not alter the v0.18 `PARTIAL_REPLICATION` claim gate.
 
 For each trajectory:
 
-\[
+$$
 G_t
 =
 u_{\mathrm{SQ8}}(t)
 -
 u_{\mathrm{PQ32}}(t).
-\]
+$$
 
 The primary population is all untouched-validation query-policy events with:
 
-\[
+$$
 H3_{\mathrm{abs}}>0.002.
-\]
+$$
 
 ### Full E5 signed taxonomy
 
@@ -841,33 +841,33 @@ These events involve 2,417 / 3,316 validation queries.
 
 Primary query-cluster bootstrap estimate:
 
-\[
+$$
 P(G_T>0 \mid H3_{\mathrm{abs}}>0.002)
 =
 \mathbf{0.9652}
-\]
+$$
 
 with 95% CI:
 
-\[
+$$
 \mathbf{[0.9593,\ 0.9706]}.
-\]
+$$
 
 Secondary signed endpoints agree:
 
-\[
+$$
 P(H3_{\mathrm{signed}}>0 \mid H3_{\mathrm{abs}}>0.002)
 =
 0.9660
-\]
+$$
 
 and
 
-\[
+$$
 P(\Delta G>0 \mid H3_{\mathrm{abs}}>0.002)
 =
 0.9605.
-\]
+$$
 
 ### Method × α robustness
 
