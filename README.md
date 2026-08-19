@@ -77,7 +77,7 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.17.1 | Multi-Random Allocation Audit | 10,000 matched-budget random-allocation robustness audit |
 | ARC-v0.18 | Cross-Encoder FEVER Replication | E5-small-v2 generalization test under the frozen FEVER design |
 | ARC-v0.18.1 | E5 Signed-Direction Audit | Post-hoc signed construct-validity audit of v0.18 amplification events |
-| ARC-v0.19 | Cross-Approximation nprobe Replication | In progress: search-effort approximation using IVF-SQ8 nprobe 8 vs 64 |
+| ARC-v0.19 | Cross-Approximation nprobe Replication | Search-effort approximation boundary test using IVF-SQ8 nprobe 8 vs 64 |
 
 ---
 
@@ -259,9 +259,9 @@ The frozen FEVER study contains:
 - 3,350 FIT queries,
 - 3,316 untouched validation queries,
 - 44 feedback configurations,
-- four feedback gains ($\alpha \in \{0.1,0.3,0.5,0.7\}$),
+- four feedback gains (`alpha in {0.1,0.3,0.5,0.7`),
 - mean and softmax feedback families,
-- and a fixed empirical regime threshold $|H3| = 0.002$.
+- and a fixed empirical regime threshold `|H3| = 0.002`.
 
 ### Zero-mass finding
 
@@ -270,13 +270,13 @@ The FEVER H3 distribution contains substantial exact-zero mass.
 On FIT:
 
 - exact zero: **88.25%**
-- near zero ($|H3| \le 10^{-12}$): **90.06%**
+- near zero (`|H3| <= 10^{-12`): **90.06%**
 - q75: **0.0**
 - q90: **0.0**
 
 Therefore the preregistered 75th-percentile classification target is degenerate on FEVER and is retained as a negative protocol outcome rather than retuned.
 
-The primary external-replication interpretation instead uses the independently specified $\pm 0.002$ regime definition.
+The primary external-replication interpretation instead uses the independently specified `+/- 0.002` regime definition.
 
 ### FIT / validation regime replication
 
@@ -398,23 +398,23 @@ using:
 
 `G_t = u_SQ8(t) - u_PQ32(t)`
 
-The replay reuses the original v0.13 feedback implementation and verifies that reconstructed $|G_t|$ exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
+The replay reuses the original v0.13 feedback implementation and verifies that reconstructed `|G_t|` exactly matches the sealed v0.13 absolute utility-gap trajectory for the accepted checkpoints.
 
 ### Signed taxonomy
 
 | Signed outcome | Count | Fraction |
 |---|---:|---:|
-| Harmful final direction ($G_T>0$) | 10,933 | 94.28% |
-| Beneficial divergence ($G_T<0$) | 603 | 5.20% |
+| Harmful final direction (`G_T>0`) | 10,933 | 94.28% |
+| Beneficial divergence (`G_T<0`) | 603 | 5.20% |
 | Unresolved / tied | 60 | 0.52% |
 
 Primary full-coverage estimates:
 
 | Metric | Estimate | 95% query-cluster bootstrap CI |
 |---|---:|---:|
-| $P(G_T>0 \mid H3_{\text{abs}}>0.002)$ | 0.9428 | [0.9248, 0.9580] |
-| $P(H3_{\text{signed}}>0 \mid H3_{\text{abs}}>0.002)$ | 0.9469 | [0.9296, 0.9618] |
-| $P(\Delta G>0 \mid H3_{\text{abs}}>0.002)$ | 0.9390 | [0.9208, 0.9544] |
+| `P(G_T>0 | H3_{abs>0.002)` | 0.9428 | [0.9248, 0.9580] |
+| `P(H3_{signed>0 | H3_{abs>0.002)` | 0.9469 | [0.9296, 0.9618] |
+| `P(Delta G>0 | H3_{abs>0.002)` | 0.9390 | [0.9208, 0.9544] |
 
 Harmful fractions remain above 91% in every tested method × α stratum.
 
@@ -430,7 +430,7 @@ The project does **not** claim that amplification is always harmful.
 
 ARC-v0.16 addresses whether:
 
-1. the minority-amplification conclusion depends strongly on the operational threshold $\epsilon=0.002$;
+1. the minority-amplification conclusion depends strongly on the operational threshold `epsilon=0.002`;
 2. the high FIT↔validation configuration reproducibility is explained only by the strong common effect of feedback gain α.
 
 The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories and the ARC-v0.15.1 signed-replay artifact. It does not rerun the full FEVER retrieval sweep and does not access test data.
@@ -439,7 +439,7 @@ The audit reuses the frozen ARC-v0.13 FIT and untouched-validation trajectories 
 
 The regime analysis is repeated for:
 
-`ε ∈ {0, 0.001, 0.002, 0.005, 0.01}`
+`epsilon in {0, 0.001, 0.002, 0.005, 0.01}`
 
 | ε | FIT amplification | Validation amplification | FIT↔VAL Pearson | FIT↔VAL Spearman |
 |---:|---:|---:|---:|---:|
@@ -453,7 +453,7 @@ Across this threshold range, amplification remains a minority regime and FIT/val
 
 ### Within-α reproducibility
 
-At the primary $\epsilon=0.002$ threshold:
+At the primary `epsilon=0.002` threshold:
 
 | α | Configs | Pearson r | Spearman ρ |
 |---:|---:|---:|---:|
@@ -492,13 +492,13 @@ ARC-v0.16.1 tests whether the deployment-feasible FEVER risk model is merely lea
 
 Primary paired query-cluster bootstrap contrast:
 
-`ΔAUC = AUC_full - AUC_policy = 0.1001`
+`Delta AUC = AUC_full - AUC_policy = 0.1001`
 
 with 95% CI approximately [0.0830, 0.1174].
 
 For PR-AUC:
 
-`ΔPR-AUC ≈ 0.0680`
+`Delta PR-AUC ~= 0.0680`
 
 with 95% CI approximately [0.0540, 0.0836].
 
@@ -557,12 +557,12 @@ RASF uses a fit-frozen deployment-feasible risk score computed only from:
 
 At a fixed budget, the highest-risk validation queries receive SQ8 feedback while search and evaluation remain on PQ32. Lower-risk queries continue to use PQ32 feedback.
 
-For a budget-selected query set $S_B$:
+For a budget-selected query set `S_B`:
 
 RASF feedback rule:
 
 ```text
-F(q) = F_SQ8(q)   if q ∈ S_B
+F(q) = F_SQ8(q)   if q in S_B
        F_PQ32(q)  otherwise
 ```
 
@@ -633,9 +633,9 @@ No retrieval is rerun.
 
 For each query, the audit reuses the already measured Always-PQ32 and Always-SQ8 final utilities and evaluates 10,000 independent matched-budget random allocations per configuration and budget.
 
-For a random subset $S$ of fixed size:
+For a random subset `S` of fixed size:
 
-`U_rand(S) = Ū_L + (1/N) Σ_{q∈S}(U_q^H - U_q^L)`
+`U_rand(S) = Ubar_L + (1/N) sum_{q in S}(U_q^H - U_q^L)`
 
 ### Primary 25% multi-random result
 
@@ -694,7 +694,7 @@ All three primary divergence directions remain positive on untouched validation.
 
 ### E5 validation regime composition
 
-At the primary $\epsilon=0.002$ threshold:
+At the primary `epsilon=0.002` threshold:
 
 | Regime | Validation fraction |
 |---|---:|
@@ -808,7 +808,7 @@ Secondary signed endpoints agree:
 
 and
 
-`P(ΔG > 0 | H3_abs > 0.002) = 0.9605`
+`P(Delta G > 0 | H3_abs > 0.002) = 0.9605`
 
 ### Method × α robustness
 
@@ -862,11 +862,9 @@ No FEVER test outcomes were used.
 
 ---
 
-# Cross-Approximation Search-Effort Replication — In Progress
+# Cross-Approximation Search-Effort Replication
 
-ARC-v0.19 is the final currently planned large-scale generalization experiment.
-
-Its purpose is to test whether the approximation-feedback phenomenon extends beyond the original PQ32-vs-SQ8 **representation-fidelity** contrast to a different approximation mechanism: **search-effort approximation within a fixed index representation**.
+ARC-v0.19 tests whether the approximation-feedback phenomenon extends beyond the original PQ32-vs-SQ8 **representation-fidelity** contrast to a different approximation mechanism: **search-effort approximation within a fixed index representation**.
 
 The frozen comparison is:
 
@@ -878,93 +876,306 @@ IVF-SQ8, nprobe=64
 
 Both conditions use:
 
-- the same E5 encoder,
+- the same E5 encoder (`intfloat/e5-small-v2`),
 - the same normalized 384-d embeddings,
-- the same IVF-SQ8 index representation,
+- the same IVF-SQ8 representation,
 - the same coarse centroids,
-- the same corpus,
-- the same FEVER FIT / untouched-validation split,
-- the same 44 feedback policies.
+- the same FEVER corpus,
+- the same 3,350 FIT / 3,316 untouched-validation split,
+- the same 44 mean / softmax feedback configurations.
 
-Only search effort changes.
+Only IVF search effort changes. The higher-`nprobe` condition is a **relative higher-search-effort comparator**, not an exact-search oracle.
 
-The experiment evaluates:
+### One-shot search-effort fidelity
 
-- one-shot fidelity ordering,
-- H1/H2/H3 trajectory divergence,
-- stable / amplifying / reversal regimes,
-- feedback-gain dose response,
-- FIT→validation configuration-risk reproducibility,
-- and a preregistered secondary signed-direction endpoint.
+| Condition | DEV nDCG@10 |
+|---|---:|
+| IVF-SQ8, nprobe=8 | 0.506462 |
+| IVF-SQ8, nprobe=64 | **0.737180** |
 
-**No v0.19 scientific outcome is claimed in this README until the frozen run completes.**
+The frozen one-shot fidelity ordering passes:
+
+```text
+nprobe=64 > nprobe=8
+```
+
+### Aggregate coupled-trajectory endpoints
+
+| Split | H1 mean | H2 mean | H3 absolute mean | H3 signed mean |
+|---|---:|---:|---:|---:|
+| FIT | +0.000881 | -0.006978 | -0.003679 | -0.007656 |
+| Validation | **+0.000833** | **-0.007495** | **-0.003575** | **-0.007357** |
+
+The search-effort experiment does **not** reproduce the full positive H1/H2/H3 pattern observed under the representation-fidelity contrast.
+
+Instead, the untouched-validation result is:
+
+```text
+H1 > 0
+H2 < 0
+H3_abs < 0
+```
+
+The low- vs high-search-effort query states diverge, while candidate and absolute utility disagreement contract on average over later feedback rounds.
+
+This result is retained as a mechanism boundary rather than retuned.
+
+### Validation regime composition
+
+At the primary threshold `epsilon = 0.002`:
+
+| Regime | Validation fraction |
+|---|---:|
+| Stable / null | **77.45%** |
+| Amplifying | **10.34%** |
+| Reversal | **12.22%** |
+
+Amplification remains a minority regime.
+
+Across the threshold sweep:
+
+| epsilon | Stable / null | Amplifying | Reversal |
+|---:|---:|---:|---:|
+| 0.000 | 59.21% | 11.99% | 28.80% |
+| 0.001 | 77.24% | 10.44% | 12.32% |
+| 0.002 | 77.45% | 10.34% | 12.22% |
+| 0.005 | 78.14% | 10.03% | 11.83% |
+| 0.010 | 79.07% | 9.56% | 11.37% |
+
+The qualitative interpretation remains stable across the tested thresholds.
+
+### Feedback-gain dose response
+
+Untouched-validation amplification prevalence:
+
+| alpha | Amplification | Mean H3 absolute slope |
+|---:|---:|---:|
+| 0.1 | 3.24% | -0.000160 |
+| 0.3 | 7.95% | -0.001072 |
+| 0.5 | 12.25% | -0.004991 |
+| 0.7 | **17.91%** | -0.008076 |
+
+A structured minority of trajectories still amplifies, and amplification incidence rises strongly with feedback gain even though the **aggregate H3 direction is contractive**.
+
+The paper therefore distinguishes amplification prevalence from the mean direction of the population-level dynamics.
+
+### FIT -> validation configuration reproducibility
+
+| Statistic | Result |
+|---|---:|
+| Pearson correlation | **0.996586** |
+| Spearman correlation | **0.985298** |
+| Alpha-centered Pearson | **0.968564** |
+| Alpha-centered Spearman | **0.942160** |
+
+The negative aggregate H2/H3 result is therefore not an isolated validation fluctuation. Configuration-level structure transfers extremely strongly from FIT to untouched validation, including after controlling for the shared feedback-gain effect.
+
+### Secondary signed-direction endpoint
+
+At the primary amplification threshold `H3_abs > 0.002`:
+
+- amplification events: **15,082**
+- affected validation queries: **1,540**
+- harmful final direction: **65.97%**
+- 95% query-cluster bootstrap CI: **[63.11%, 68.76%]**
+- bootstrap replicates: **5,000**
+
+Amplified search-effort trajectories remain more often harmful than beneficial to the lower-search-effort path, but the directional concentration is substantially weaker than under the BGE and E5 representation-fidelity experiments.
+
+| Approximation setting | Harmful fraction conditional on amplification |
+|---|---:|
+| BGE, PQ32 vs SQ8 | 94.28% |
+| E5, PQ32 vs SQ8 | 96.52% |
+| E5, SQ8 nprobe 8 vs 64 | **65.97%** |
+
+This identifies a second cross-mechanism boundary:
+
+> **The strong signed-harm direction preserved across encoder families under representation approximation does not transfer unchanged to search-effort approximation.**
+
+### Frozen claim gate
+
+ARC-v0.19 passes **5 / 7** preregistered primary criteria:
+
+| Criterion | Result |
+|---|---|
+| One-shot high-nprobe nDCG > low-nprobe | PASS |
+| H1 positive | PASS |
+| H2 positive | **FAIL** |
+| H3 positive | **FAIL** |
+| Amplification remains a minority | PASS |
+| alpha=0.7 amplification > alpha=0.1 | PASS |
+| FIT -> validation configuration Pearson > 0.5 | PASS |
+
+Final gate:
+
+```text
+CROSS_APPROX_PARTIAL_REPLICATION
+```
+
+The correct interpretation is not that search-effort approximation reproduces the original dynamics in full.
+
+Instead:
+
+> **Approximation-feedback behavior depends materially on how approximation enters the retrieval loop. Representation approximation can produce persistent candidate and utility divergence, whereas search-effort approximation in the tested E5 IVF-SQ8 setting produces positive query-state divergence but aggregate candidate and utility contraction, alongside a reproducible minority amplification regime.**
+
+This result directly rejects a universal cross-approximation claim and establishes an empirical boundary condition.
+
+ARC-v0.19 protocol SHA-256:
+
+```text
+56a1a88a44593a51f04c1989a4a3ca8d0e969cdf205e2002797481d8f346c58d
+```
+
+ARC-v0.19 report SHA-256:
+
+```text
+a895acddb90449cf5029f8645e42a35936a93e52e472cf5913b8cf420919aff0
+```
+
+No FEVER test outcomes were used.
 
 ---
 
 # Current Research Claim
 
-The evidence chain is now:
+The completed evidence chain is now:
 
 ```text
 Phenomenon
-→
-Sealed confirmation
-→
-Cross-dataset replication
-→
-Fidelity / stability boundary
-→
-Held-out regime replication
-→
-Cross-policy transfer
-→
-Diagnostic prediction
-→
-Deployable PQ32-only prediction
-→
-Full-coverage signed harm audit
-→
-Threshold / alpha-controlled robustness
-→
-Deployable feature-ablation validation
-→
-Risk-aware selective fidelity closure
-→
-Multi-random allocation audit
-→
-Cross-encoder replication
-→
-Cross-encoder signed-direction validation
-→
-Cross-approximation replication (in progress)
-→
-Measured quality-cost audit
+-> Sealed confirmation
+-> Cross-dataset replication
+-> Fidelity / stability boundary
+-> Held-out regime replication
+-> Cross-policy transfer
+-> Diagnostic prediction
+-> Deployable PQ32-only prediction
+-> Full-coverage signed harm audit
+-> Threshold / alpha-controlled robustness
+-> Deployable feature-ablation validation
+-> Risk-aware selective fidelity closure
+-> Multi-random allocation audit
+-> Cross-encoder replication
+-> Cross-encoder signed-direction validation
+-> Cross-approximation boundary test
+-> Measured quality-cost audit
 ```
 
 The strongest supported claim at this stage is:
 
-> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback. The effect is not universal: stability, amplification, and reversal occur in different proportions across settings. Under the original BGE FEVER setting, amplification is a sparse minority regime; under E5, amplification becomes substantially more prevalent and stable/null behavior no longer forms a majority. Despite this shift in regime prevalence, amplification remains highly structured and reproducible across held-out queries and policy configurations, and its signed utility direction remains strongly preserved: 94.28% of amplified BGE FEVER events and 96.52% of amplified E5 FEVER events end in favor of the higher-fidelity trajectory. Lower-fidelity retrieval statistics provide substantial held-out predictive information beyond policy-level priors, and Risk-Aware Selective Fidelity uses those deployment-feasible risk scores to allocate higher-fidelity feedback more effectively than matched random allocation at the primary FEVER operating point.**
+> **Approximation-induced retrieval differences that are tolerable in one-shot evaluation can become dynamically consequential under iterative feedback, but the resulting dynamics are neither universal nor determined by one-shot loss alone. Their prevalence, persistence, and signed utility direction depend on how approximation enters the retrieval-feedback loop.**
 
-The project therefore currently supports:
+The completed evidence supports seven narrower conclusions.
 
-- dynamic approximation-feedback effects across FEVER and HotpotQA,
-- partial cross-encoder generalization across BGE and E5,
-- encoder-dependent regime prevalence,
-- strongly preserved signed-harm direction conditional on amplification,
-- deployable query-level risk prediction,
+### 1. Approximation-feedback dynamics are real but heterogeneous
+
+The sealed FEVER and HotpotQA confirmation experiments establish positive coupled-trajectory divergence under the tested representation-fidelity conditions.
+
+Later boundary studies show that stable, amplifying, and reversal regimes coexist rather than collapsing into a universal instability mode.
+
+### 2. Regime prevalence is representation-dependent
+
+Under the original BGE FEVER setting, amplification is sparse and stable/null behavior dominates.
+
+Under E5, amplification becomes substantially more prevalent and stable/null behavior no longer forms a majority.
+
+Regime prevalence is therefore not encoder-invariant.
+
+### 3. Signed harm is strongly preserved across tested encoder families under representation approximation
+
+Conditional on amplification:
+
+- **94.28%** of amplified BGE FEVER events end in favor of the higher-fidelity trajectory;
+- **96.52%** of amplified E5 FEVER events end in favor of the higher-fidelity trajectory.
+
+The E5 query-cluster bootstrap 95% CI is **[95.93%, 97.06%]**.
+
+### 4. Approximation mechanism is a genuine boundary condition
+
+ARC-v0.19 changes the approximation mechanism while keeping the encoder and IVF-SQ8 representation fixed:
+
+```text
+IVF-SQ8 nprobe=8
+vs
+IVF-SQ8 nprobe=64
+```
+
+Despite a large one-shot quality difference:
+
+```text
+0.506462 -> 0.737180 nDCG@10
+```
+
+the aggregate untouched-validation dynamics are:
+
+```text
+H1 = +0.000833
+H2 = -0.007495
+H3_abs = -0.003575
+```
+
+Therefore a large one-shot approximation gap does **not** imply later feedback amplification.
+
+The search-effort setting instead exhibits aggregate contraction together with a reproducible minority amplification regime.
+
+> **One-shot ANN degradation and dynamic feedback instability are distinct properties.**
+
+### 5. Amplification susceptibility remains structured even when aggregate dynamics contract
+
+In ARC-v0.19, amplification prevalence rises from **3.24%** at alpha=0.1 to **17.91%** at alpha=0.7.
+
+FIT -> validation configuration risk remains highly reproducible:
+
+```text
+Pearson = 0.996586
+Alpha-centered Pearson = 0.968564
+```
+
+Thus the minority amplification regime remains structured even when mean H3 is negative.
+
+### 6. Lower-fidelity observables can predict amplification risk
+
+The deployable FEVER predictor uses only lower-fidelity PQ32 query statistics and policy variables.
+
+At the 25% risk budget, it captures **57.99%** of validation amplification events versus **25.00%** under matched random allocation.
+
+Feature ablation shows that query-specific PQ32 observables contribute substantial predictive information beyond policy-level priors.
+
+### 7. Risk prediction can be converted into selective control
+
+Risk-Aware Selective Fidelity (RASF) allocates higher-fidelity SQ8 feedback to selected high-risk queries under a fixed budget.
+
+At the primary FEVER 25% budget, both tested feedback configurations outperform matched-random allocation.
+
+Across 10,000 matched-budget random allocations per primary configuration, no random allocation reaches the observed RASF utility.
+
+The supported control claim is budget- and setting-specific, not universal.
+
+---
+
+The project therefore supports:
+
+- dynamic approximation-feedback effects across FEVER and HotpotQA;
+- partial cross-encoder generalization across BGE and E5;
+- encoder-dependent regime prevalence;
+- strongly preserved signed-harm direction across tested encoders under representation approximation;
+- a cross-approximation boundary showing that search-effort approximation can contract on average despite large one-shot degradation;
+- structured minority amplification under the tested search-effort mechanism;
+- deployable query-level risk prediction;
 - and selective higher-fidelity feedback control in the tested FEVER / HotpotQA settings.
 
 The project does **not** claim that:
 
-- approximation errors always amplify,
-- amplification is always harmful,
-- stable/null behavior dominates every encoder,
-- the mechanism is universal across all encoders or ANN systems,
-- the current predictor fully explains query-level susceptibility,
-- RASF is a universal or production-validated routing policy,
-- the selective policy is universally optimal across datasets, encoders, ANN systems, or hardware,
-- the current evidence yet proves cross-approximation generality beyond quantization / IVF settings,
-- or Apple M3 Max measurements are universal production latency/throughput claims.
+- approximation errors always amplify;
+- amplification is always harmful;
+- stable/null behavior dominates every encoder;
+- one-shot approximation loss determines iterative feedback instability;
+- all approximation mechanisms produce the same feedback dynamics;
+- signed-harm concentration is invariant across approximation mechanisms;
+- the mechanism is universal across all encoders, indexes, ANN algorithms, or feedback systems;
+- the current predictor fully explains query-level susceptibility;
+- RASF is a universal or production-validated routing policy;
+- the selective policy is universally optimal across datasets, encoders, ANN systems, or hardware;
+- or Apple M3 Max measurements are universal production latency / throughput claims.
 
 ---
 
@@ -1011,7 +1222,7 @@ The project separates:
 - multi-random allocation robustness auditing,
 - cross-encoder external replication,
 - cross-encoder signed-direction construct validation,
-- cross-approximation search-effort replication.
+- cross-approximation search-effort boundary testing.
 
 Positive, null, stable, reversal, beneficial-divergence, partial-replication, and non-replication outcomes are retained rather than filtered away.
 
@@ -1045,15 +1256,17 @@ Positive, null, stable, reversal, beneficial-divergence, partial-replication, an
 - 10,000-allocation matched-random robustness audit
 - E5 cross-encoder FEVER partial replication
 - E5 full signed-direction audit with `SIGNED_HARM_PRESERVED`
+- ARC-v0.19 cross-approximation search-effort partial replication with `CROSS_APPROX_PARTIAL_REPLICATION`
+- explicit cross-approximation boundary showing positive H1 but negative aggregate H2/H3 under the frozen nprobe comparison
 
-## In progress
+## Experimental line status
 
-- ARC-v0.19 cross-approximation search-effort replication (`IVF-SQ8 nprobe=8 vs 64`)
+The large-scale empirical line is now **frozen after ARC-v0.19**, unless a genuine validity defect is discovered.
+
+Negative and partial outcomes are retained; ARC-v0.19 is not retuned into a positive replication.
 
 ## Remaining paper-facing work
 
-- complete and audit ARC-v0.19 without retuning the frozen comparison,
-- freeze the large-scale experimental line after v0.19 unless a genuine validity issue is discovered,
 - integrate v0.18 / v0.18.1 / v0.19 into the final SIGIR full-paper methods and results,
 - remove ARC version-history narration from the main paper and retain it only in artifact documentation,
 - finalize the formal coupled-trajectory and RASF algorithm notation,
