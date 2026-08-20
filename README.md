@@ -78,6 +78,7 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.18 | Cross-Encoder FEVER Replication | E5-small-v2 generalization test under the frozen FEVER design |
 | ARC-v0.18.1 | E5 Signed-Direction Audit | Post-hoc signed construct-validity audit of v0.18 amplification events |
 | ARC-v0.19 | Cross-Approximation nprobe Replication | Search-effort approximation boundary test using IVF-SQ8 nprobe 8 vs 64 |
+| ARC-v0.20d | Cross-Approximation HNSW Replication | In progress: graph-search approximation boundary test with checkpointed FIT / validation trajectories |
 
 ---
 
@@ -1036,6 +1037,16 @@ No FEVER test outcomes were used.
 
 ---
 
+# Cross-Approximation HNSW Replication — In Progress
+
+ARC-v0.20d extends the cross-approximation boundary study to a graph-based ANN mechanism. The run is intentionally treated as **in progress**: no endpoint values or claims are reported before the checkpointed FIT and untouched-validation trajectories and their statistical summaries are complete.
+
+The experiment preserves the authoritative FEVER split used by the frozen cross-approximation line (3,350 FIT / 3,316 untouched-validation queries), evaluates the frozen feedback-policy grid, writes resumable trajectory checkpoints, and uses query-cluster bootstrap endpoint summaries. Its purpose is to test whether the boundary observed for IVF search effort persists, reverses, or changes under HNSW-style graph-search approximation.
+
+Until the run completes and passes integrity checks, ARC-v0.20d contributes **no new empirical claim** to the repository. The strongest supported conclusions below therefore remain based on completed evidence through ARC-v0.19.
+
+---
+
 # Current Research Claim
 
 The completed evidence chain is now:
@@ -1261,13 +1272,14 @@ Positive, null, stable, reversal, beneficial-divergence, partial-replication, an
 
 ## Experimental line status
 
-The large-scale empirical line is now **frozen after ARC-v0.19**, unless a genuine validity defect is discovered.
+The completed evidence through **ARC-v0.19 remains frozen**. ARC-v0.20d is a separately declared HNSW cross-approximation replication currently in progress; completed v0.19 outcomes are not retuned in response to it.
 
 Negative and partial outcomes are retained; ARC-v0.19 is not retuned into a positive replication.
 
 ## Remaining paper-facing work
 
-- integrate v0.18 / v0.18.1 / v0.19 into the final SIGIR full-paper methods and results,
+- complete and integrity-audit ARC-v0.20d HNSW cross-approximation replication,
+- integrate v0.18 / v0.18.1 / v0.19 and, if validly completed, v0.20d into the final SIGIR full-paper methods and results,
 - remove ARC version-history narration from the main paper and retain it only in artifact documentation,
 - finalize the formal coupled-trajectory and RASF algorithm notation,
 - finalize the paper overview and quality-budget figures,
