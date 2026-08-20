@@ -271,13 +271,13 @@ The FEVER H3 distribution contains substantial exact-zero mass.
 On FIT:
 
 - exact zero: **88.25%**
-- near zero (`|H3| <= 10^{-12`): **90.06%**
+- near zero (`|H3| <= 10^{-12}`): **90.06%**
 - q75: **0.0**
 - q90: **0.0**
 
 Therefore the preregistered 75th-percentile classification target is degenerate on FEVER and is retained as a negative protocol outcome rather than retuned.
 
-The primary external-replication interpretation instead uses the independently specified `+/- 0.002` regime definition.
+The primary external-replication interpretation instead uses the independently specified `±0.002` regime definition.
 
 ### FIT / validation regime replication
 
@@ -413,9 +413,9 @@ Primary full-coverage estimates:
 
 | Metric | Estimate | 95% query-cluster bootstrap CI |
 |---|---:|---:|
-| `P(G_T>0 | H3_{abs>0.002)` | 0.9428 | [0.9248, 0.9580] |
-| `P(H3_{signed>0 | H3_{abs>0.002)` | 0.9469 | [0.9296, 0.9618] |
-| `P(Delta G>0 | H3_{abs>0.002)` | 0.9390 | [0.9208, 0.9544] |
+| `P(G_T > 0 given H3_abs > 0.002)` | 0.9428 | [0.9248, 0.9580] |
+| `P(H3_signed > 0 given H3_abs > 0.002)` | 0.9469 | [0.9296, 0.9618] |
+| `P(Delta G > 0 given H3_abs > 0.002)` | 0.9390 | [0.9208, 0.9544] |
 
 Harmful fractions remain above 91% in every tested method × α stratum.
 
