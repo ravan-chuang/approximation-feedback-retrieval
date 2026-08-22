@@ -23,6 +23,7 @@ The current paper-facing evidence supports three central conclusions:
 2. **Approximation mechanism is a material boundary condition.** Representation approximation expands candidate and utility separation in the tested BGE/E5 settings, while two search-effort interventions—IVF `nprobe` and HNSW `efSearch`—produce positive state divergence but aggregate candidate and utility contraction.
 3. **Predictive susceptibility does not guarantee intervention value.** RASF is effective at the frozen FEVER-BGE operating point, but the frozen E5 method replication does not beat matched-budget random allocation.
 4. **The mechanism boundary is robust to alternative H3 summaries.** Endpoint and round-averaged utility-gap changes preserve representation expansion and search-effort contraction across the four audited settings.
+5. **Common-state replay exposes distinct operator-perturbation profiles.** Under E5, representation approximation produces substantially larger direct perturbations than IVF or HNSW search-effort approximation across state, candidate, feedback, and utility proxies; the post-primary audit does not establish causal mediation.
 
 A particularly informative descriptive cross-mechanism comparison is:
 
@@ -108,6 +109,8 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.20d | HNSW Severity Sensitivity | Post-primary exploratory `32 → 256` and `64 → 256` robustness audit |
 | ARC-v0.21 | E5 RASF Cross-Encoder Replication | Frozen cross-encoder controller replication; predictor transfers modestly, 25% intervention advantage does not |
 | ARC-v0.22 | H3 Robustness Audit | Frozen construct-robustness audit across alternative utility-gap summaries; primary sign gate passes |
+| ARC-v0.23 | Eq. 6 Common-State Operator Replay | Frozen post-primary decomposition of propagated-state vs direct-fidelity perturbations across E5 representation, IVF nprobe, and HNSW interventions |
+| ARC-v0.23.1 | NaN-Safe Statistical Recompute | Analysis-only repair with explicit finite-coverage reporting; no retrieval rerun or undefined-value imputation |
 
 ---
 
@@ -1324,6 +1327,78 @@ The supported robustness conclusion is:
 
 No FEVER test outcomes are used.
 
+# Eq. 6 Common-State Operator Replay
+
+ARC-v0.23 is a **frozen post-primary mechanism-hardening audit** of the manuscript decomposition
+
+```text
+T_H(q_H^t) - T_L(q_L^t)
+= [T_H(q_H^t) - T_H(q_L^t)]
++ [T_H(q_L^t) - T_L(q_L^t)].
+```
+
+The first term is the **propagated-state component** and the second is the **direct-fidelity component**. The replay holds the low-fidelity state fixed for the common-state counterfactual and compares three E5 interventions on the same FEVER FIT-held-out validation split:
+
+- representation: IVF-PQ32 → IVF-SQ8 at `nprobe=64`;
+- IVF search effort: SQ8 `nprobe=8 → 64`;
+- HNSW search effort: `efSearch=8 → 256`.
+
+Across 3,316 validation queries, 44 frozen feedback policies, four rounds, and the three interventions, the replay measures state-vector components together with candidate, feedback, and utility perturbation proxies.
+
+### Common-state component profile
+
+| Measure | E5 representation | E5 IVF nprobe | E5 HNSW |
+|---|---:|---:|---:|
+| State direct norm | **0.06941** | 0.02870 | 0.02768 |
+| State propagated norm | **0.04801** | 0.03439 | 0.03756 |
+| Candidate direct Jaccard distance | **0.85344** | 0.45143 | 0.69794 |
+| Feedback direct cosine distance | **0.01781** | 0.00650 | 0.00857 |
+| Utility direct absolute gap | **0.34884** | 0.17721 | 0.15505 |
+| State cancellation ratio | 0.84768 | **0.89132** | 0.87777 |
+
+The representation contrast therefore produces substantially larger **fixed-common-state direct perturbations** than either tested search-effort contrast across state, candidate, feedback, and utility levels. It also produces larger propagated-state separation.
+
+For the state direct norm, the paired query-level representation-minus-search-effort contrasts are:
+
+```text
+representation − IVF nprobe = +0.040713
+95% CI: [0.040176, 0.041243]
+
+representation − HNSW = +0.041733
+95% CI: [0.040993, 0.042479]
+```
+
+All **14 / 14** preselected core representation-vs-search-effort comparisons have query-level 95% intervals excluding zero, including **8 / 8** direct-profile comparisons. The pattern is interpreted jointly rather than by the count alone.
+
+The cancellation result is also informative: search-effort contraction is **not** explained by stronger vector cancellation in this audit. The representation condition has the lowest mean cancellation ratio of the three settings. Accordingly, the evidence supports distinct empirical operator-perturbation profiles, not a simple cancellation explanation.
+
+The supported interpretation is deliberately limited:
+
+> **A frozen post-primary common-state replay shows that the tested representation and search-effort interventions have substantially different direct and propagated perturbation profiles. Representation approximation induces larger fixed-common-state perturbations across state, candidate, feedback, and utility levels. These associations strengthen the empirical mechanism boundary, but they do not constitute a causal mediation result or an operator-level theorem.**
+
+No FEVER test outcomes are used.
+
+## NaN-Safe Statistical Recompute
+
+ARC-v0.23.1 repairs the statistical reporting layer of the v0.23 replay without rerunning retrieval. Undefined quantities—most notably component cosine when one component has zero norm—remain undefined rather than being imputed, and finite coverage is reported explicitly before bootstrap estimation.
+
+The repaired analysis retains the v0.23 conclusions:
+
+```text
+status: ARC_V0231_ANALYSIS_REPAIR_COMPLETE
+retrieval_rerun: false
+undefined_values_imputed: false
+validation_queries: 3316
+core representation-vs-search-effort CIs excluding zero: 14 / 14
+direct-profile CIs excluding zero: 8 / 8
+```
+
+For example, undefined component-cosine values can occur when the propagated component is exactly zero (including the structurally expected initial-round case). ARC-v0.23.1 treats this as mathematical undefinedness rather than silently dropping or replacing it.
+
+The v0.23/v0.23.1 evidence is therefore **post-primary mechanism hardening**. It may support wording such as *associated with distinct operator-perturbation profiles*, but not claims that the replay proves why representation expands or why search-effort approximation contracts.
+
+---
+
 # Current Research Claim
 
 The completed evidence chain is now:
@@ -1345,6 +1420,8 @@ Phenomenon discovery
 → HNSW post-primary severity robustness
 → E5 RASF cross-encoder control non-replication
 → H3 construct robustness audit
+→ Eq. 6 common-state operator replay
+→ NaN-safe statistical recompute
 ```
 
 The strongest supported paper-facing claim is:
