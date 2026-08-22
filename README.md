@@ -22,6 +22,7 @@ The current paper-facing evidence supports three central conclusions:
 1. **One-shot ANN fidelity and feedback stability are distinct evaluation axes.**
 2. **Approximation mechanism is a material boundary condition.** Representation approximation expands candidate and utility separation in the tested BGE/E5 settings, while two search-effort interventions—IVF `nprobe` and HNSW `efSearch`—produce positive state divergence but aggregate candidate and utility contraction.
 3. **Predictive susceptibility does not guarantee intervention value.** RASF is effective at the frozen FEVER-BGE operating point, but the frozen E5 method replication does not beat matched-budget random allocation.
+4. **The mechanism boundary is robust to alternative H3 summaries.** Endpoint and round-averaged utility-gap changes preserve representation expansion and search-effort contraction across the four audited settings.
 
 A particularly informative descriptive cross-mechanism comparison is:
 
@@ -106,6 +107,7 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.20c | HNSW Mechanism Replication | Frozen graph-search boundary test, `efSearch 8 → 256` |
 | ARC-v0.20d | HNSW Severity Sensitivity | Post-primary exploratory `32 → 256` and `64 → 256` robustness audit |
 | ARC-v0.21 | E5 RASF Cross-Encoder Replication | Frozen cross-encoder controller replication; predictor transfers modestly, 25% intervention advantage does not |
+| ARC-v0.22 | H3 Robustness Audit | Frozen construct-robustness audit across alternative utility-gap summaries; primary sign gate passes |
 
 ---
 
@@ -1285,6 +1287,43 @@ This result motivates future **value-aware** or **utility-per-cost-aware** routi
 
 ---
 
+---
+
+# H3 Construct Robustness Audit
+
+ARC-v0.22 tests whether the central mechanism-dependent H3 conclusion depends on the primary five-round OLS slope definition of absolute utility-gap dynamics. The audit is post-primary and does not alter any earlier frozen claim gate.
+
+It evaluates three alternative summaries on the same 3,316 FIT-held-out FEVER validation queries and 44 feedback configurations per setting (145,904 query-policy events):
+
+- **R1 — endpoint gap change:** final absolute utility gap minus initial absolute utility gap;
+- **R2 — round-averaged gap change:** later-round average absolute utility gap relative to the initial gap;
+- **R3 — maximum excursion:** maximum later absolute utility gap relative to the initial gap.
+
+### Validation robustness results
+
+| Setting | Primary H3abs | R1 endpoint-gap change | R2 round-average change | R3 max excursion | R1 95% query-cluster CI |
+|---|---:|---:|---:|---:|---:|
+| BGE representation | **+0.006771** | **+0.030722** | **+0.018494** | +0.037572 | [0.026773, 0.034737] |
+| E5 representation | **+0.030166** | **+0.147000** | **+0.077332** | +0.192453 | [0.138565, 0.155333] |
+| E5 IVF nprobe search effort | **-0.003575** | **-0.014123** | **-0.010812** | +0.046372 | [-0.020647, -0.007737] |
+| E5 HNSW search effort | **-0.006311** | **-0.025450** | **-0.018828** | +0.044676 | [-0.031720, -0.019217] |
+
+The primary robustness gate returns:
+
+```text
+H3_ROBUSTNESS_PRIMARY_PASS
+```
+
+R1 preserves the sign of the primary H3abs endpoint in all four settings, with all four query-cluster confidence intervals excluding zero. R2 independently preserves the same representation-positive / search-effort-negative sign pattern.
+
+R3 is positive in all four settings. This is retained rather than retuned: a search-effort trajectory can exhibit a transient intermediate excursion while still contracting in its endpoint, round-average, and OLS trend. Accordingly, the search-effort result is interpreted as an **aggregate trajectory contraction**, not as a claim that every intermediate feedback round monotonically contracts.
+
+The supported robustness conclusion is:
+
+> **The observed representation-expansion / search-effort-contraction boundary is not specific to the primary OLS-slope construction. Endpoint and round-averaged utility-gap summaries preserve the same qualitative mechanism-dependent sign across all four audited settings, while maximum excursion exposes transient divergence that is compatible with aggregate contraction.**
+
+No FEVER test outcomes are used.
+
 # Current Research Claim
 
 The completed evidence chain is now:
@@ -1305,6 +1344,7 @@ Phenomenon discovery
 → HNSW cross-index-family replication
 → HNSW post-primary severity robustness
 → E5 RASF cross-encoder control non-replication
+→ H3 construct robustness audit
 ```
 
 The strongest supported paper-facing claim is:
