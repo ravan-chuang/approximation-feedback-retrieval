@@ -1,0 +1,46 @@
+{
+  "ann_score_H3abs": {
+    "ci95": [
+      0.029110240729805267,
+      0.03276904194799057
+    ],
+    "mean": 0.030964039034037105
+  },
+  "completed_at_utc": "2026-08-24T20:54:42.363549+00:00",
+  "dataset": "FEVER",
+  "encoder": "intfloat/e5-small-v2",
+  "exact_minus_ann_H3abs": {
+    "ci95": [
+      -0.009406148948608643,
+      -0.00854033485704972
+    ],
+    "mean": -0.008964362597835715
+  },
+  "exact_rescore_H3abs": {
+    "ci95": [
+      0.02036540841584914,
+      0.02367247356655315
+    ],
+    "mean": 0.021999676436201394
+  },
+  "exact_rescore_is_not_exact_search": true,
+  "interpretation_gate": "SELECTION_CHANNEL_SUFFICIENT_FOR_POSITIVE_REPRESENTATION_H3ABS",
+  "n_validation_queries": 3316,
+  "negative_null_or_reversal_retained": true,
+  "policy_count": 32,
+  "policy_family": "softmax",
+  "post_primary": true,
+  "pristine_confirmation_claim": false,
+  "protocol_sha256": "6fa8c981ffb15d7929371c4ee9457a8612cb03b850cf53bc2d6d85142dd8e789",
+  "provenance_repair": {
+    "endpoints_modified": false,
+    "original_run": "20260824-150217",
+    "reason": "Runtime restart created a second v0.26 run directory. Validation checkpoints and completed artifacts belong to the original frozen run 20260824-150217. Final report protocol SHA was restored to the original frozen protocol.",
+    "repaired_at_utc": "2026-08-24T21:02:51.863124+00:00",
+    "scientific_results_recomputed": false,
+    "trajectories_modified": false,
+    "type": "metadata_only"
+  },
+  "status": "ARC_V026_SCORE_CHANNEL_AUDIT_ANALYZED",
+  "validation_retuning_performed": false
+}

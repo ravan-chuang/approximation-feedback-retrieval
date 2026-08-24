@@ -1,6 +1,6 @@
 # SIGIR Artifact Manifest
 
-This manifest maps the current paper-facing post-primary/external results to compact public artifacts.
+This manifest maps the current paper-facing and post-freeze reviewer-oriented results to compact public artifacts.
 
 ## ARC-v0.24 — MS MARCO External Boundary Replication
 
@@ -46,9 +46,61 @@ Paper-facing H3abs values:
 
 ## ARC-v0.26 — FEVER-E5 Softmax Score-Channel Audit
 
-Status: prepared / pending.
+Status: **completed post-primary reviewer-oriented mechanism audit**.
 
-ARC-v0.26 is not counted as completed evidence until the frozen validation audit is completed and its result is retained regardless of sign.
+Scientific role:
+- tests whether representation-side softmax amplification survives when ANN-returned feedback scores are replaced by shared exact embedding dot-product rescoring over the already retrieved candidates;
+- preserves ANN candidate selection;
+- does **not** perform exact nearest-neighbor search;
+- uses the same 3,316 FEVER-E5 validation queries and all 32 frozen softmax policies;
+- retains positive, null, or reversal outcomes without validation retuning.
+
+Canonical protocol:
+- `protocols/fever/v026_frozen_score_channel_protocol.json`
+- `protocols/fever/V026_PROTOCOL_SHA256.txt`
+- `protocols/fever/v026_frozen_softmax_policy_grid.csv`
+
+Canonical summaries:
+- `results/fever/v026_score_channel_query_bootstrap.csv`
+- `results/fever/v026_score_channel_configuration_summary.csv`
+- `results/fever/v026_score_channel_alpha_summary.csv`
+- `results/fever/v026_score_channel_final_report.json`
+
+Artifact integrity:
+- `results/fever/V026_SCORE_CHANNEL_ARTIFACT_SHA256.csv`
+
+Frozen protocol SHA-256:
+- `6fa8c981ffb15d7929371c4ee9457a8612cb03b850cf53bc2d6d85142dd8e789`
+
+Final repaired report SHA-256:
+- `b6239e140e3e8382a23156d495c58aa9a0974ad7f7af0cacde45766e8b1a3eb7`
+
+Primary score-channel H3abs results:
+- ANN-score softmax: +0.0309640390, 95% CI [0.0291102407, 0.0327690419]
+- shared exact candidate rescoring: +0.0219996764, 95% CI [0.0203654084, 0.0236724736]
+- exact-rescore minus ANN-score: -0.0089643626, 95% CI [-0.0094061489, -0.0085403349]
+
+Endpoint robustness:
+- ANN-score R1 final-minus-initial absolute gap: +0.1490638937, 95% CI [0.1405322281, 0.1574235213]
+- exact-rescore R1: +0.1051885434, 95% CI [0.0977789719, 0.1126382536]
+- exact-rescore minus ANN-score R1: -0.0438753503, 95% CI [-0.0458982118, -0.0418688817]
+
+Interpretation:
+> Shared exact rescoring reduces the magnitude of representation-side softmax amplification, but the exact-rescored H3abs remains clearly positive. Under this tested FEVER-E5 setup, ANN score geometry contributes materially to the magnitude, while candidate/evidence-selection perturbation remains sufficient for positive short-horizon representation-side H3abs.
+
+This is a post-primary mechanism audit rather than a pristine confirmation. It does not establish exact-search behavior or a universal decomposition across feedback operators, corpora, encoders, or index families.
+
+Provenance repair:
+- the completed validation checkpoints belong to original run `20260824-150217`;
+- a runtime restart created a second run directory;
+- only final-report protocol metadata was repaired to point back to the original frozen protocol;
+- trajectories, endpoints, and scientific estimates were not modified or recomputed.
+
+## Version-freeze boundary
+
+The existing `sigir-v9.1-artifact-freeze` tag remains immutable and predates ARC-v0.26 completion.
+
+ARC-v0.26 should be treated as post-v9.1 evidence. If incorporated into a revised manuscript/artifact snapshot, create a new version/tag rather than moving the v9.1 freeze tag.
 
 ## Public artifact boundary
 

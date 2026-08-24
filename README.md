@@ -134,7 +134,7 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.23.1 | NaN-Safe Statistical Recompute | Analysis-only repair with explicit finite-coverage reporting; no retrieval rerun or undefined-value imputation |
 | ARC-v0.24 | MS MARCO External Boundary Replication | Outcome-blind full-corpus E5 replication on 8.84M BEIR MS MARCO passages; representation positive and nprobe negative in the frozen all-policy estimand |
 | ARC-v0.25 | FEVER-E5 Severity-Matched Mechanism Validation | FIT-only one-shot nDCG@10 severity calibration followed by untouched 3,316-query validation; paired mechanism contrast remains strongly positive |
-| ARC-v0.26 | FEVER-E5 Softmax Score-Channel Audit | **Prepared / pending** post-primary audit separating ANN-score weighting from shared exact candidate rescoring; not an exact-search experiment |
+| ARC-v0.26 | FEVER-E5 Softmax Score-Channel Audit | Completed post-primary audit: exact candidate rescoring preserves positive representation H3abs while significantly reducing its magnitude; not an exact-search experiment |
 
 ---
 
@@ -1551,7 +1551,7 @@ This is **not** equivalent to matching every dimension of approximation severity
 
 # FEVER-E5 Softmax Score-Channel Audit
 
-ARC-v0.26 is the next reviewer-oriented mechanism audit and is currently **prepared but not yet incorporated as completed evidence**.
+ARC-v0.26 is a completed **post-primary reviewer-oriented mechanism audit** that separates the softmax feedback score channel from ANN candidate/evidence selection under the FEVER-E5 index-representation contrast.
 
 The motivation is that softmax feedback can mix two channels:
 
@@ -1561,7 +1561,7 @@ ANN candidate / evidence selection
 ANN score geometry / calibration
 ```
 
-The audit keeps the representation intervention fixed:
+The frozen audit keeps the representation intervention fixed:
 
 ```text
 IVF-PQ32 @ nprobe=64
@@ -1569,28 +1569,75 @@ vs
 IVF-SQ8  @ nprobe=64
 ```
 
-and compares the same 32 frozen softmax policies under two feedback-weight channels:
+and evaluates all **32 frozen softmax policies** over the same **3,316 validation queries** under two feedback-weight channels:
 
 1. **ANN-score softmax** — use the scores returned by each ANN index;
 2. **shared exact candidate rescoring** — keep each branch's ANN-retrieved candidate IDs, but recompute feedback weights from the FP32 dot product between the current normalized query state and the shared normalized corpus embedding.
 
-The second condition is **not exact nearest-neighbor search**. It only removes approximate ANN score calibration from the feedback weighting over already retrieved candidates.
+The second condition is **not exact nearest-neighbor search**. It removes ANN approximate-score calibration from feedback weighting over already retrieved candidates while preserving ANN candidate selection.
 
-Primary post-primary estimands will be:
+The completed validation audit contains:
 
 ```text
-ANN-score representation H3abs
-shared-rescore representation H3abs
-shared-rescore − ANN-score H3abs
+validation queries : 3,316
+softmax policies   : 32
+score channels     : 2
+feedback updates   : 4
+trajectory rows    : 1,061,120
 ```
 
-Interpretation is frozen in advance:
+### Query-level score-channel result
 
-- shared-rescore H3abs remains clearly positive → candidate/evidence-selection channel is sufficient for a positive representation-side softmax effect in this setting;
-- shared-rescore H3abs collapses toward zero → ANN score geometry is a major contributor;
-- both remain positive but differ → both channels likely contribute.
+| Estimand | Mean | 95% query-bootstrap CI |
+|---|---:|---:|
+| ANN-score H3abs | **+0.030964** | **[+0.029110, +0.032769]** |
+| Exact-rescore H3abs | **+0.022000** | **[+0.020365, +0.023672]** |
+| Exact-rescore − ANN-score H3abs | **-0.008964** | **[-0.009406, -0.008540]** |
 
-Negative, null, or reversal outcomes will be retained unchanged.
+The endpoint final-minus-initial absolute-gap summary preserves the same pattern:
+
+| Estimand | R1 | 95% query-bootstrap CI |
+|---|---:|---:|
+| ANN-score R1 | **+0.149064** | **[+0.140532, +0.157424]** |
+| Exact-rescore R1 | **+0.105189** | **[+0.097779, +0.112638]** |
+| Exact-rescore − ANN-score R1 | **-0.043875** | **[-0.045898, -0.041869]** |
+
+The alpha audit also preserves positive H3abs in both channels:
+
+| alpha | ANN-score H3abs | Exact-rescore H3abs |
+|---:|---:|---:|
+| 0.1 | 0.008447 | 0.005880 |
+| 0.3 | 0.029174 | 0.019983 |
+| 0.5 | 0.043635 | 0.031130 |
+| 0.7 | 0.042600 | 0.031005 |
+
+The supported interpretation is:
+
+> **Shared exact rescoring materially reduces representation-side softmax amplification, but it does not eliminate it. Under this tested FEVER-E5 setup, ANN score geometry contributes to the magnitude, while candidate/evidence-selection perturbation remains sufficient for positive short-horizon representation-side H3abs.**
+
+This audit is explicitly post-primary rather than a pristine confirmation. It does **not** establish exact-search behavior, isolate every possible score/candidate interaction, or prove that the same decomposition transfers to other feedback operators, corpora, encoders, or index families.
+
+### Provenance repair
+
+The completed validation checkpoints and scientific artifacts belong to the original frozen run:
+
+```text
+20260824-150217
+```
+
+Frozen protocol SHA-256:
+
+```text
+6fa8c981ffb15d7929371c4ee9457a8612cb03b850cf53bc2d6d85142dd8e789
+```
+
+A runtime restart created a second run directory and temporarily caused the final report to reference the wrong protocol SHA. The final report was repaired **metadata-only** to point back to the original frozen protocol. Trajectories, endpoints, bootstrap estimates, policies, split membership, and scientific results were not modified or recomputed.
+
+Final repaired report SHA-256:
+
+```text
+b6239e140e3e8382a23156d495c58aa9a0974ad7f7af0cacde45766e8b1a3eb7
+```
 
 
 # Current Research Claim
@@ -1618,9 +1665,8 @@ Phenomenon discovery
 → NaN-safe statistical recompute
 → MS MARCO external boundary replication
 → FEVER-E5 severity-matched mechanism validation
+→ FEVER-E5 softmax score-channel audit
 ```
-
-ARC-v0.26 is a prepared post-primary score-channel audit and is **not** counted as completed evidence until its frozen run finishes.
 
 The strongest supported paper-facing claim is:
 
@@ -1783,21 +1829,27 @@ does not imply the same ranking as:
 E[utility value of higher-fidelity feedback | lower-fidelity observables].
 ```
 
-### 11. A score-channel ambiguity remains under softmax feedback
+### 11. Softmax score geometry contributes to magnitude but is not sufficient to explain representation amplification
 
-Softmax feedback depends on ANN scores as well as retrieved evidence. The current completed evidence does not fully separate:
+ARC-v0.26 separates ANN-score weighting from candidate/evidence selection while preserving ANN-retrieved candidate IDs.
 
-```text
-candidate / evidence-selection perturbation
-```
-
-from:
+Across 3,316 FEVER-E5 validation queries and all 32 frozen softmax policies:
 
 ```text
-approximate-score geometry / calibration perturbation.
+ANN-score H3abs        = +0.030964
+Exact-rescore H3abs    = +0.022000
+Exact − ANN            = -0.008964
+95% CI of Exact − ANN  = [-0.009406, -0.008540]
 ```
 
-ARC-v0.26 is explicitly designed to audit this remaining ambiguity without changing the already frozen paper results.
+The exact-rescored H3abs remains clearly positive, while its magnitude is significantly lower than the ANN-score condition.
+
+The supported interpretation is therefore two-part:
+
+- ANN score geometry / calibration materially increases representation-side softmax amplification in this setting;
+- candidate/evidence-selection perturbation remains sufficient for positive short-horizon H3abs after shared exact candidate rescoring.
+
+Because exact rescoring is performed only over ANN-retrieved candidates, this is **not** an exact-search experiment and is not a universal causal decomposition.
 
 ---
 
@@ -1815,6 +1867,7 @@ The project currently supports:
 - common-state operator-perturbation profiling;
 - large-corpus MS MARCO external replication of the cross-mechanism ordering;
 - FEVER-E5 one-shot-severity-matched validation of the mechanism contrast;
+- FEVER-E5 softmax score-channel decomposition showing that exact candidate rescoring reduces but does not eliminate representation-side H3abs;
 - deployable lower-fidelity susceptibility prediction;
 - selective high-fidelity feedback value at the frozen FEVER-BGE operating point;
 - and a frozen E5 controller non-replication showing that susceptibility prediction and intervention value are distinct.
@@ -1837,7 +1890,7 @@ The project does **not** claim that:
 - RASF is a universal or production-validated router;
 - RASF generalizes across encoders merely because amplification risk remains predictable;
 - local Apple M3 Max / Colab measurements are universal production throughput guarantees;
-- or ARC-v0.26 has produced evidence before its frozen score-channel run is completed.
+- or ARC-v0.26 constitutes exact nearest-neighbor search or a universal causal decomposition of candidate selection and score calibration.
 
 ---
 
@@ -1944,30 +1997,32 @@ Positive, null, stable, reversal, beneficial-divergence, partial-replication, an
 - anonymity / comments / tracked-changes audit
 - full nine-page render and layout QA for the current v9.1 candidate
 
-## In progress / next audit
+## Post-v9.1 completed audit
 
 ### ARC-v0.26 — FEVER-E5 Softmax Score-Channel Audit
 
 Status:
 
 ```text
-protocol / notebook : prepared
+protocol / notebook : completed
 scientific role     : post-primary reviewer-oriented mechanism audit
-validation result   : pending
-paper claim status  : unchanged until completion
+validation queries  : 3,316
+softmax policies    : 32
+trajectory rows     : 1,061,120
+interpretation gate : SELECTION_CHANNEL_SUFFICIENT_FOR_POSITIVE_REPRESENTATION_H3ABS
 ```
 
-The audit does **not** re-encode FEVER or rebuild the existing FAISS indexes.
+The audit does **not** re-encode FEVER or rebuild the existing FAISS indexes, and exact candidate rescoring is not exact nearest-neighbor search.
 
-It asks whether the softmax representation-side effect survives after feedback weights are recomputed from shared exact embedding dot-products over the ANN-retrieved candidates.
+The completed result shows that shared exact candidate rescoring lowers H3abs from +0.030964 to +0.022000, while the exact-rescored interval remains strictly above zero. The paired exact-minus-ANN difference is -0.008964 with 95% CI [-0.009406, -0.008540].
 
-The audit is not exact nearest-neighbor search and will retain positive, null, or reversal outcomes without retuning.
+The result is post-primary mechanism hardening, not a pristine confirmation, and is retained without validation retuning.
 
 ## Experimental line status
 
-The main paper-facing experimental evidence through **ARC-v0.25 is complete**.
+The frozen **v9.1** artifact remains complete through ARC-v0.25 and is preserved by the immutable `sigir-v9.1-artifact-freeze` tag.
 
-ARC-v0.26 is optional mechanism hardening. It is intended to resolve a specific reviewer-level ambiguity, not to rescue an otherwise incomplete experiment line.
+ARC-v0.26 is completed **post-v9.1 evidence**. If it is incorporated into a revised manuscript, the resulting manuscript/artifact state should receive a new version and freeze tag rather than moving the v9.1 tag.
 
 Negative, partial, contracting, beneficial, exploratory, null, and failed-transfer outcomes remain part of the record.
 
@@ -1979,7 +2034,7 @@ The project does not convert:
 - the v0.21 E5 RASF failure into a successful controller-transfer result;
 - the v0.24 operator-family dependence into universal representation expansion;
 - the v0.25 one-shot nDCG match into complete causal severity matching;
-- or the pending v0.26 audit into evidence before its validation run is complete.
+- or the v0.26 score-channel audit into exact-search evidence or a universal causal decomposition.
 
 ## Current manuscript state
 
@@ -1990,12 +2045,12 @@ Current reviewer-hardened paper title:
 Current manuscript:
 
 ```text
-version                  : v9.1
+version                  : v9.1 frozen artifact + post-freeze ARC-v0.26 evidence
 target                   : SIGIR full paper
-rendered length          : 9 pages in the current submission candidate
-primary science freeze   : complete through ARC-v0.25
-reviewer hardening       : complete
-ARC-v0.26                : pending optional mechanism audit
+rendered length          : 9 pages in the frozen v9.1 submission candidate
+v9.1 science freeze      : complete through ARC-v0.25
+v9.1 artifact tag        : sigir-v9.1-artifact-freeze
+ARC-v0.26                : completed post-v9.1; candidate for conservative v9.2 incorporation
 ```
 
 Current paper-facing QA state:
@@ -2014,8 +2069,8 @@ render / layout QA          : complete
 
 ## Remaining submission-facing work
 
-- run ARC-v0.26 only if the score-channel mechanism audit is desired before submission;
-- if v0.26 is completed, incorporate it conservatively and preserve its post-primary status;
+- decide whether ARC-v0.26 should be incorporated into a revised v9.2 manuscript or retained as artifact-only post-primary evidence;
+- if incorporated, preserve its post-primary status and create a new manuscript/artifact freeze rather than moving the v9.1 tag;
 - verify final compliance against the exact target-year ACM / SIGIR call and template;
 - verify anonymized repository / artifact links;
 - perform one final PDF-level pre-upload inspection after any template conversion;
@@ -2038,7 +2093,7 @@ The current evidence specifically separates:
 
 - one-shot retrieval effectiveness from short-horizon feedback dynamics;
 - index-representation approximation from search-effort approximation;
-- candidate/evidence perturbation from the still-partly-confounded ANN score-weighting channel;
+- candidate/evidence selection from ANN score-weighting effects under the completed softmax score-channel audit, while retaining the limitation that exact candidate rescoring is not exact search;
 - susceptibility prediction from intervention value;
 - and confirmatory/frozen evidence from post-primary mechanism audits.
 

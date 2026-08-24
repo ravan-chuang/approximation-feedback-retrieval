@@ -1,0 +1,1 @@
+6fa8c981ffb15d7929371c4ee9457a8612cb03b850cf53bc2d6d85142dd8e789  v026_frozen_score_channel_protocol.json

@@ -1,0 +1,49 @@
+{
+  "alphas": [
+    0.1,
+    0.3,
+    0.5,
+    0.7
+  ],
+  "bootstrap_reps": 10000,
+  "channels": {
+    "ann_score": "softmax weights from ANN-returned scores",
+    "exact_rescore": "same retrieved IDs per branch; softmax weights recomputed from FP32 dot(current_query_state, shared normalized corpus embedding)"
+  },
+  "created_at_utc": "2026-08-24T15:03:35.180158+00:00",
+  "dataset": "FEVER",
+  "encoder": "intfloat/e5-small-v2",
+  "exact_rescore_is_not_exact_search": true,
+  "feedback_updates": 4,
+  "high_retriever": "IVF-SQ8 nprobe=64",
+  "k": [
+    5,
+    20
+  ],
+  "low_retriever": "IVF-PQ32 nprobe=64",
+  "mechanism": "index_representation",
+  "negative_null_or_reversal_retained": true,
+  "parent_run": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/cross-encoder-fever-replication-v018/20260819-015645",
+  "policy_count": 32,
+  "policy_family": "softmax only",
+  "post_primary": true,
+  "primary_estimands": [
+    "query-averaged ANN-score H3abs",
+    "query-averaged exact-rescored H3abs",
+    "paired exact-rescored minus ANN-score H3abs"
+  ],
+  "primary_unit": "query",
+  "pristine_confirmation_claim": false,
+  "status": "ARC_V026_POST_PRIMARY_SCORE_CHANNEL_AUDIT_FROZEN",
+  "temperatures": [
+    0.05,
+    0.1,
+    0.2,
+    0.5
+  ],
+  "top_retrieve": 100,
+  "utility": "nDCG@10",
+  "validation_membership_sha256": "5e7bd8e3e5e3f0120b1e93726a19183285624c405ef68b34005c8766a9568b42",
+  "validation_query_count": 3316,
+  "validation_retuning_allowed": false
+}
