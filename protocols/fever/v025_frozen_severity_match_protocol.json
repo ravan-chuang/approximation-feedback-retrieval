@@ -1,0 +1,42 @@
+{
+  "calibration_split": "FIT only",
+  "common_high": {
+    "index": "IVF-SQ8",
+    "nprobe": 64
+  },
+  "corpus_rows": 5416568,
+  "created_at_utc": "2026-08-24T09:51:57.523659+00:00",
+  "dataset": "FEVER",
+  "encoder": "intfloat/e5-small-v2",
+  "fit_absolute_gap_mismatch": 0.011303113675451337,
+  "fit_matched_search_gap": 0.2380353610251752,
+  "fit_membership_sha256": "85c01de943636a080abe10cb18cf5538b705b89f6f042a74c92bac366d89612c",
+  "fit_query_count": 3350,
+  "fit_relative_gap_mismatch": 0.04533240884313044,
+  "fit_representation_gap": 0.24933847470062653,
+  "negative_null_or_reversal_retained": true,
+  "post_selection_retuning_allowed": false,
+  "representation_low": {
+    "index": "IVF-PQ32",
+    "nprobe": 64
+  },
+  "search_effort_candidates": [
+    1,
+    2,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "selected_search_effort_low_nprobe": 8,
+  "selection_rule": "Choose nprobe_low minimizing |FIT nDCG@10 gap(SQ8@64-PQ32@64) - FIT nDCG@10 gap(SQ8@64-SQ8@nprobe_low)|",
+  "source_v018_protocol_sha256": "88889e8119a82bf5e5d621e7d2aba87b43e4fec650c005505676582d736b4611",
+  "source_v018_run": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/cross-encoder-fever-replication-v018/20260819-015645",
+  "status": "ARC_V025_SEVERITY_MATCH_FROZEN_BEFORE_VALIDATION_TRAJECTORIES",
+  "validation_membership_sha256": "5e7bd8e3e5e3f0120b1e93726a19183285624c405ef68b34005c8766a9568b42",
+  "validation_query_count": 3316,
+  "validation_trajectory_accessed": false
+}

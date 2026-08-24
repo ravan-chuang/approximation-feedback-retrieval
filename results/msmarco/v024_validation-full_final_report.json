@@ -1,0 +1,42 @@
+{
+  "status": "ARC_V024_EXTERNAL_BOUNDARY_ANALYZED",
+  "mode": "validation-full",
+  "n_queries": 3490,
+  "representation_H3abs": {
+    "mean": 0.0019159752098278236,
+    "ci95": [
+      0.00042814973915861773,
+      0.00342203418249456
+    ],
+    "hypothesis": ">0",
+    "direction_matches": true
+  },
+  "nprobe_H3abs": {
+    "mean": -0.0019327358223004206,
+    "ci95": [
+      -0.003085119124966288,
+      -0.0008162648639823427
+    ],
+    "hypothesis": "<0",
+    "direction_matches": true
+  },
+  "boundary_sign_map_matches_current_paper": true,
+  "negative_null_or_opposite_results_retained": true,
+  "validation_trajectory_tuning_performed": false,
+  "test_accessed": false,
+  "test_relevance_accessed": false,
+  "protocol_sha256": "a77eb58051145aa3f3a28cf10b6adab7171e0cd87ce8a1cd0ee6d862dc8d2d4d",
+  "dataset": "BEIR MS MARCO passage",
+  "encoder": "intfloat/e5-small-v2",
+  "corpus_rows": 8841823,
+  "split_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/msmarco-external-boundary-replication-v024/20260823-140056/v024_msmarco_dev_split.csv",
+  "one_shot_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/msmarco-external-boundary-replication-v024/20260823-140056/v024_one_shot_ndcg10.csv",
+  "trajectory_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/msmarco-external-boundary-replication-v024/20260823-140056/v024_validation-full_trajectories.parquet",
+  "endpoint_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/msmarco-external-boundary-replication-v024/20260823-140056/v024_validation-full_endpoints.parquet",
+  "summary_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/msmarco-external-boundary-replication-v024/20260823-140056/v024_validation-full_query_bootstrap_summary.csv",
+  "regime_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/msmarco-external-boundary-replication-v024/20260823-140056/v024_validation-full_regime_summary.csv",
+  "large_artifacts_persisted_to_drive": false,
+  "validation_smoke_queries_used": false,
+  "validation_one_shot_timing": "post-primary trajectory and frozen gate",
+  "completed_at_utc": "2026-08-24T01:42:04.845303+00:00"
+}

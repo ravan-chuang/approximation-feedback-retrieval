@@ -13,7 +13,7 @@ The project asks a broader question than one-shot ANN quality:
 
 The current manuscript is the reviewer-hardened **v9.1 SIGIR full-paper submission candidate**:
 
-> **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Harm in Iterative Retrieval**
+> **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Effects in Iterative Retrieval**
 
 The manuscript is in **submission-freeze preparation** after factual, numerical, reference, claim-strength, citation-support, anonymity, layout, and adversarial-review audits.
 
@@ -1451,8 +1451,8 @@ queries         :     3,490
 
 | Mechanism | Mean H3abs | 95% query-bootstrap CI |
 |---|---:|---:|
-| Index representation | **+0.001916** | **[+0.000308, +0.003521]** |
-| IVF `nprobe` search effort | **-0.001933** | **[-0.003159, -0.000725]** |
+| Index representation | **+0.001916** | **[+0.000428, +0.003422]** |
+| IVF `nprobe` search effort | **-0.001933** | **[-0.003085, -0.000816]** |
 | Representation − nprobe | **+0.003849** | **positive; CI excludes zero** |
 
 The frozen all-policy sign map therefore transfers:
@@ -1985,7 +1985,7 @@ The project does not convert:
 
 Current reviewer-hardened paper title:
 
-> **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Harm in Iterative Retrieval**
+> **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Effects in Iterative Retrieval**
 
 Current manuscript:
 

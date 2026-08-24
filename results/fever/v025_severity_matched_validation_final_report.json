@@ -1,0 +1,50 @@
+{
+  "completed_at_utc": "2026-08-24T11:38:51.144780+00:00",
+  "dataset": "FEVER",
+  "encoder": "intfloat/e5-small-v2",
+  "family_balanced_paired_rep_minus_nprobe_H3abs": {
+    "ci95": [
+      0.031567444113758385,
+      0.03538568100405677
+    ],
+    "ci_excludes_zero_positive": true,
+    "mean": 0.03344326767216533,
+    "positive": true
+  },
+  "fit_matched_search_gap": 0.2380353610251752,
+  "fit_relative_gap_mismatch": 0.04533240884313044,
+  "fit_representation_gap": 0.24933847470062653,
+  "frozen_sign_map_matches": true,
+  "matched_nprobe_H3abs": {
+    "ci95": [
+      -0.00500749709122837,
+      -0.0021428915969353654
+    ],
+    "direction_negative": true,
+    "mean": -0.003572982681517049
+  },
+  "matched_nprobe_low": 8,
+  "n_validation_queries": 3316,
+  "negative_null_or_reversal_retained": true,
+  "paired_rep_minus_nprobe_H3abs": {
+    "ci95": [
+      0.03183836989341656,
+      0.03564166941146108
+    ],
+    "ci_excludes_zero_positive": true,
+    "mean": 0.0337393787536338,
+    "positive": true
+  },
+  "protocol_sha256": "62351de5e3d2993129fd0b4f67e3fd49e06b97059b050cd800645d2d6c467e24",
+  "representation_H3abs": {
+    "ci95": [
+      0.028332011739086393,
+      0.032006121412634536
+    ],
+    "direction_positive": true,
+    "mean": 0.030166396072116748
+  },
+  "severity_matched_mechanism_contrast_supported": true,
+  "status": "ARC_V025_SEVERITY_MATCHED_VALIDATION_ANALYZED",
+  "validation_retuning_performed": false
+}
