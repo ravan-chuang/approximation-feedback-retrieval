@@ -1,0 +1,54 @@
+{
+  "created_at_utc": "2026-08-25T14:03:40.824091+00:00",
+  "dataset": "BEIR Natural Questions",
+  "dimension": 384,
+  "encoder": "thenlper/gte-small",
+  "feedback": {
+    "policy_count": 44,
+    "rounds": 4,
+    "top_retrieve": 100,
+    "utility_k": 10
+  },
+  "global_pristine_claim": false,
+  "negative_null_reversal_retained": true,
+  "primary_confirmatory_estimand": "query-averaged H3abs representation minus severity-matched search effort",
+  "primary_success_criterion": "paired query-bootstrap 95% CI strictly above zero",
+  "representation": {
+    "high": "IVF-SQ8",
+    "low": "IVF-PQ32",
+    "nlist": 4096,
+    "nprobe": 64,
+    "pq_m": 32,
+    "pq_nbits": 8
+  },
+  "representation_sign_is_required": false,
+  "search_effort": {
+    "candidate_low_nprobes": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      12,
+      16,
+      24,
+      32
+    ],
+    "high_nprobe": 64,
+    "representation": "same IVF-SQ8",
+    "selection_data": "FIT only",
+    "selection_metric": "absolute mismatch between mean one-shot nDCG@10 high-minus-low gap and representation high-minus-low gap",
+    "tie_breaker": "smaller nprobe"
+  },
+  "seed": 20260827,
+  "split": {
+    "fit_sha256": "7b48ad8860b9ea5d639d53126ae48fbe4c98146658b0ec6fb7facc604e11a201",
+    "n_fit": 1726,
+    "n_total": 3452,
+    "n_validation": 1726,
+    "validation_sha256": "8548189d7a7e5fda6150642f5e6eed4215baa04d4baf389c99acf632ae6e04cf"
+  },
+  "status": "ARC_V027_FIT_CALIBRATION_DESIGN_FROZEN_BEFORE_FIT_OUTCOMES",
+  "validation_trajectory_outcome_blind_target": true,
+  "validation_trajectory_retuning_allowed": false
+}

@@ -1,0 +1,38 @@
+{
+  "completed_at_utc": "2026-08-25T15:36:57.846430+00:00",
+  "dataset": "BEIR Natural Questions",
+  "encoder": "thenlper/gte-small",
+  "fit_matched_search_gap_ndcg10": 0.1649720924272112,
+  "fit_relative_gap_mismatch": 0.023946331320913332,
+  "fit_representation_gap_ndcg10": 0.1611140031278725,
+  "matched_nprobe_low": 2,
+  "n_validation_queries": 1726,
+  "negative_null_or_reversal_retained": true,
+  "paired_representation_minus_search_H3abs": {
+    "ci95": [
+      0.009921786853261335,
+      0.013793549862199338
+    ],
+    "ci_excludes_zero_positive": true,
+    "mean": 0.011868464945867714
+  },
+  "primary_confirmatory_boundary_supported": true,
+  "protocol_sha256": "44a15f18297dce9d5db2b590f403859763f916ed0f3cfb3a196d3b2198ecc94a",
+  "representation_H3abs": {
+    "ci95": [
+      0.00919137018365518,
+      0.01276974095978581
+    ],
+    "mean": 0.010952758412573772
+  },
+  "severity_matched_search_H3abs": {
+    "ci95": [
+      -0.002299192018388321,
+      0.0004359966421359962
+    ],
+    "mean": -0.0009157065332939448
+  },
+  "status": "ARC_V027_NQ_GTE_INDEPENDENT_SEVERITY_MATCHED_CONFIRMATION_ANALYZED",
+  "validation_one_shot_accessed_before_primary_gate": false,
+  "validation_retuning_performed": false
+}

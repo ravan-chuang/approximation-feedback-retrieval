@@ -1,0 +1,1 @@
+c7066afd50734f58435091d76aa356986dd2a1e1749dd3aee667ade6ce7b077b  v027_fit_calibration_protocol.json

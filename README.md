@@ -11,7 +11,7 @@ The project asks a broader question than one-shot ANN quality:
 
 ## Current Paper-Facing Snapshot
 
-The current manuscript is the reviewer-hardened **v9.1 SIGIR full-paper submission candidate**:
+The current manuscript baseline is the reviewer-hardened **v9.2.2 SIGIR full-paper submission-freeze candidate**, with ARC-v0.27 available as post-v9.2.2 confirmatory evidence:
 
 > **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Effects in Iterative Retrieval**
 
@@ -26,6 +26,7 @@ The current paper-facing evidence supports the following central conclusions:
 5. **The main H3 mechanism boundary is not an artifact of one OLS slope definition.** Endpoint and round-averaged utility-gap changes preserve representation expansion and search-effort contraction in the audited FEVER settings.
 6. **Common-state replay exposes distinct perturbation profiles.** Under E5, index-representation approximation creates substantially larger fixed-common-state direct perturbations than IVF or HNSW search-effort approximation across state, candidate, feedback, and utility proxies; this is mechanistic evidence, not a causal mediation theorem.
 7. **Predictive susceptibility does not guarantee intervention value.** RASF is effective at the frozen FEVER-BGE operating point, but the frozen E5 method replication does not beat matched-budget random allocation.
+8. **The severity-matched cross-mechanism ordering independently confirms on a new corpus and encoder family.** On BEIR Natural Questions with `thenlper/gte-small`, FIT-only calibration selects `nprobe=2` with a 2.39% one-shot nDCG@10 gap mismatch; on 1,726 untouched validation queries, the paired representation-minus-search H3abs contrast is **+0.011868** with 95% CI **[+0.009922, +0.013794]**.
 
 A central severity-controlled result is:
 
@@ -135,6 +136,7 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.24 | MS MARCO External Boundary Replication | Outcome-blind full-corpus E5 replication on 8.84M BEIR MS MARCO passages; representation positive and nprobe negative in the frozen all-policy estimand |
 | ARC-v0.25 | FEVER-E5 Severity-Matched Mechanism Validation | FIT-only one-shot nDCG@10 severity calibration followed by untouched 3,316-query validation; paired mechanism contrast remains strongly positive |
 | ARC-v0.26 | FEVER-E5 Softmax Score-Channel Audit | Completed post-primary audit: exact candidate rescoring preserves positive representation H3abs while significantly reducing its magnitude; not an exact-search experiment |
+| ARC-v0.27 | NQ-GTE Independent Severity-Matched Confirmation | FIT-only severity calibration on BEIR NQ + GTE-small followed by outcome-blind 1,726-query validation; paired representation-minus-search H3abs remains clearly positive |
 
 ---
 
@@ -1638,6 +1640,65 @@ Final repaired report SHA-256:
 ```text
 b6239e140e3e8382a23156d495c58aa9a0974ad7f7af0cacde45766e8b1a3eb7
 ```
+
+
+
+# NQ-GTE Independent Severity-Matched Confirmation
+
+ARC-v0.27 combines a new corpus, a new encoder family, FIT-only one-shot severity calibration, and outcome-blind validation feedback trajectories.
+
+```text
+dataset                 : BEIR Natural Questions
+encoder                 : thenlper/gte-small
+corpus                  : 2,681,468 documents
+queries                 : 3,452
+FIT / validation        : 1,726 / 1,726
+feedback policies       : 44
+feedback updates        : 4
+representation contrast : IVF-PQ32 -> IVF-SQ8, nprobe=64
+search-effort contrast  : IVF-SQ8, nprobe=2 -> 64
+```
+
+FIT-only one-shot nDCG@10 severity calibration gives:
+
+| Severity target | Gap |
+|---|---:|
+| Representation: SQ8 - PQ32 | **0.161114** |
+| Search effort: SQ8 n64 - SQ8 n2 | **0.164972** |
+
+The relative gap mismatch is **2.395%**.
+
+The final confirmation protocol was frozen before validation trajectories with SHA-256:
+
+```text
+44a15f18297dce9d5db2b590f403859763f916ed0f3cfb3a196d3b2198ecc94a
+```
+
+### Primary validation result
+
+| Estimand | Mean H3abs | 95% query-bootstrap CI |
+|---|---:|---:|
+| Representation | **+0.010953** | **[+0.009191, +0.012770]** |
+| Severity-matched search effort | **-0.000916** | **[-0.002299, +0.000436]** |
+| Representation - search | **+0.011868** | **[+0.009922, +0.013794]** |
+
+The primary confirmatory boundary is supported because the paired representation-minus-search interval lies strictly above zero.
+
+The search-effort estimate itself is not claimed to show reliable contraction on NQ because its 95% CI crosses zero. The stronger pre-specified conclusion is the positive cross-mechanism ordering under matched one-shot effectiveness degradation.
+
+### Feedback-family robustness
+
+| Estimand | Paired difference | 95% CI |
+|---|---:|---:|
+| Mean-only | **+0.011488** | **[+0.009541, +0.013421]** |
+| Softmax-only | **+0.012011** | **[+0.010107, +0.013930]** |
+| Equal-family | **+0.011750** | **[+0.009836, +0.013690]** |
+
+At epsilon=0.002, representation events are amplifying in **33.10%** of endpoint events versus **14.05%** for severity-matched search effort, while stable/null behavior is **46.92%** versus **70.36%**.
+
+> **On a new corpus and encoder family, matching one-shot nDCG@10 degradation on FIT does not remove the positive representation-versus-search-effort H3abs ordering on untouched validation trajectories.**
+
+ARC-v0.27 does not establish a universal mechanism law and does not remove the short-horizon anchored-feedback scope limitation.
 
 
 # Current Research Claim

@@ -1,0 +1,94 @@
+{
+  "calibration_protocol_sha256": "c7066afd50734f58435091d76aa356986dd2a1e1749dd3aee667ade6ce7b077b",
+  "created_at_utc": "2026-08-25T14:24:37.543111+00:00",
+  "dataset": "BEIR Natural Questions",
+  "dimension": 384,
+  "encoder": "thenlper/gte-small",
+  "feedback": {
+    "alphas": [
+      0.1,
+      0.3,
+      0.5,
+      0.7
+    ],
+    "anchoring": "q_(t+1)=normalize((1-alpha)q0 + alpha*F_t)",
+    "mean_k": [
+      5,
+      20,
+      50
+    ],
+    "policy_count": 44,
+    "rounds": 4,
+    "softmax_k": [
+      5,
+      20
+    ],
+    "temperatures": [
+      0.05,
+      0.1,
+      0.2,
+      0.5
+    ],
+    "top_retrieve": 100,
+    "utility_k": 10
+  },
+  "fit_severity_calibration": {
+    "candidate_jaccard_is_secondary_diagnostic_only": true,
+    "candidate_low_nprobes": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      12,
+      16,
+      24,
+      32
+    ],
+    "metric": "mean one-shot nDCG@10 high-minus-low gap",
+    "post_selection_retuning_allowed": false,
+    "relative_gap_mismatch": 0.023946331320913332,
+    "representation_gap": 0.1611140031278725,
+    "selected_nprobe_low": 2,
+    "selected_search_gap": 0.1649720924272112
+  },
+  "global_pristine_claim": false,
+  "negative_null_or_reversal_results_retained": true,
+  "primary_confirmatory_estimand": "query-averaged H3_abs_slope representation minus query-averaged H3_abs_slope severity-matched search effort",
+  "primary_success_criterion": "10,000-replicate paired query-bootstrap 95% CI strictly above zero",
+  "representation_positive_is_not_required": true,
+  "retrievers": {
+    "representation_high": {
+      "nlist": 4096,
+      "nprobe": 64,
+      "quantizer": "QT_8bit",
+      "type": "IndexIVFScalarQuantizer"
+    },
+    "representation_low": {
+      "m": 32,
+      "nbits": 8,
+      "nlist": 4096,
+      "nprobe": 64,
+      "type": "IndexIVFPQ"
+    },
+    "search_effort_high": {
+      "nprobe": 64,
+      "type": "same IVF-SQ8"
+    },
+    "search_effort_low": {
+      "nprobe": 2,
+      "type": "same IVF-SQ8"
+    }
+  },
+  "seed": 20260827,
+  "split": {
+    "fit_sha256": "7b48ad8860b9ea5d639d53126ae48fbe4c98146658b0ec6fb7facc604e11a201",
+    "n_fit": 1726,
+    "n_validation": 1726,
+    "validation_sha256": "8548189d7a7e5fda6150642f5e6eed4215baa04d4baf389c99acf632ae6e04cf"
+  },
+  "status": "ARC_V027_NQ_GTE_CONFIRMATORY_PROTOCOL_FROZEN_BEFORE_VALIDATION_TRAJECTORIES",
+  "validation_one_shot_deferred_until_after_primary_gate": true,
+  "validation_retuning_allowed": false,
+  "validation_trajectory_outcome_blind_claim": "No validation feedback-trajectory outcome was generated or inspected before this final protocol was frozen."
+}
