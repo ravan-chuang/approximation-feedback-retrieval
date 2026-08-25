@@ -1,0 +1,1 @@
+15f968514bde2602870ac0a08a3bb6a9eca77b2ca40038120b8f82f5017ec93a  v028_frozen_h50_agentic_bridge_protocol.json

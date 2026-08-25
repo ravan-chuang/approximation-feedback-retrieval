@@ -1,0 +1,9 @@
+method,alpha,k,temperature,config_key
+mean,0.1,20,,mean-k20-a0p1-tnone
+softmax,0.1,20,0.1,softmax-k20-a0p1-t0p1
+mean,0.3,20,,mean-k20-a0p3-tnone
+softmax,0.3,20,0.1,softmax-k20-a0p3-t0p1
+mean,0.5,20,,mean-k20-a0p5-tnone
+softmax,0.5,20,0.1,softmax-k20-a0p5-t0p1
+mean,0.7,20,,mean-k20-a0p7-tnone
+softmax,0.7,20,0.1,softmax-k20-a0p7-t0p1

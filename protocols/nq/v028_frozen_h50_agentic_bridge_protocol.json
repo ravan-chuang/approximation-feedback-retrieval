@@ -1,0 +1,80 @@
+{
+  "classification": "post-v0.27 reviewer-oriented prospective operator/horizon audit; controlled bridge toward Agentic IR/RAG, not a full LLM-agent experiment",
+  "created_at_utc": "2026-08-25T18:17:03.731563+00:00",
+  "dataset": "BEIR Natural Questions",
+  "encoder": "thenlper/gte-small",
+  "execution_plan": {
+    "fallback_backend": "batched CPU FAISS",
+    "fit_only_cpu_gpu_semantic_audit": true,
+    "localize_corpus_embedding_blocks": true,
+    "preferred_backend": "single-GPU CUDA FAISS",
+    "query_batch_size": 32
+  },
+  "frozen_severity_match_reused_without_retuning": {
+    "matched_nprobe_low": 2,
+    "relative_gap_mismatch": 0.023946331320913332,
+    "representation": "IVF-PQ32 -> IVF-SQ8 at nprobe=64",
+    "representation_gap_ndcg10": 0.1611140031278725,
+    "search_effort": "IVF-SQ8 nprobe=2 -> 64",
+    "search_gap_ndcg10": 0.1649720924272112
+  },
+  "negative_null_saturation_reversal_retained": true,
+  "operators": {
+    "anchored": "q_(t+1)=normalize((1-alpha)q0 + alpha*F_t)",
+    "recursive": "q_(t+1)=normalize((1-alpha)q_t + alpha*F_t)"
+  },
+  "primary_new_estimand": "recursive H=50 long-policy-subset query-averaged nDCG@10 H3abs representation minus severity-matched search effort",
+  "primary_success_criterion": "10,000-replicate paired query-bootstrap 95% CI strictly above zero",
+  "secondary_prespecified": [
+    "recursive H12/H16/H24/H32/H40 paired ordering",
+    "anchored H12/H16/H24/H32/H40/H50 paired ordering",
+    "full-policy anchored/recursive H4/H8 paired ordering",
+    "mean-only, softmax-only, equal-family paired ordering",
+    "MRR@10 and Recall@10 H3abs paired ordering",
+    "H50-minus-H8 persistence/saturation/late-reversal diagnostics",
+    "raw round50-minus-round8 absolute-gap growth",
+    "peak-gap round distribution"
+  ],
+  "split": {
+    "fit_sha256": "7b48ad8860b9ea5d639d53126ae48fbe4c98146658b0ec6fb7facc604e11a201",
+    "n_fit": 1726,
+    "n_validation": 1726,
+    "validation_sha256": "8548189d7a7e5fda6150642f5e6eed4215baa04d4baf389c99acf632ae6e04cf"
+  },
+  "status": "ARC_V028_H50_A100_BATCHED_AGENTIC_BRIDGE_FROZEN_BEFORE_NEW_VALIDATION_TRAJECTORIES",
+  "tier_A_full_policy": {
+    "analysis_horizons": [
+      4,
+      8
+    ],
+    "max_feedback_updates": 8,
+    "policy_count": 44
+  },
+  "tier_B_h50_agentic_bridge": {
+    "analysis_horizons": [
+      4,
+      8,
+      12,
+      16,
+      24,
+      32,
+      40,
+      50
+    ],
+    "config_keys": [
+      "mean-k20-a0p1-tnone",
+      "softmax-k20-a0p1-t0p1",
+      "mean-k20-a0p3-tnone",
+      "softmax-k20-a0p3-t0p1",
+      "mean-k20-a0p5-tnone",
+      "softmax-k20-a0p5-t0p1",
+      "mean-k20-a0p7-tnone",
+      "softmax-k20-a0p7-t0p1"
+    ],
+    "max_feedback_updates": 50,
+    "policy_count": 8,
+    "selection_rule": "for each alpha: mean-k20 and softmax-k20-t0.1; structural selection frozen before validation outcomes"
+  },
+  "v027_confirmation_protocol_sha256": "44a15f18297dce9d5db2b590f403859763f916ed0f3cfb3a196d3b2198ecc94a",
+  "validation_retuning_allowed": false
+}

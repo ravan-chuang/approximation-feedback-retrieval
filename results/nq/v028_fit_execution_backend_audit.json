@@ -1,0 +1,15 @@
+{
+  "cpu_rep_gap": 0.17712630043849303,
+  "cpu_search_gap": 0.15665377118911702,
+  "gpu_rep_gap": 0.17712630043849303,
+  "gpu_search_gap": 0.15665377118911702,
+  "max_abs_ndcg_diff_high": 0.0,
+  "max_abs_ndcg_diff_representation_low": 0.0,
+  "max_abs_ndcg_diff_search_low": 0.0,
+  "mean_ndcg_diff_high": 0.0,
+  "mean_ndcg_diff_representation_low": 0.0,
+  "mean_ndcg_diff_search_low": 0.0,
+  "n_fit_queries": 256,
+  "rep_gap_abs_backend_delta": 0.0,
+  "search_gap_abs_backend_delta": 0.0
+}

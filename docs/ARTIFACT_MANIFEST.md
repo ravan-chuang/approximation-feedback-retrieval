@@ -146,11 +146,77 @@ Interpretation:
 The search-effort H3abs interval crosses zero, so ARC-v0.27 does **not** independently establish search-effort contraction. The supported confirmatory claim is the paired mechanism ordering.
 
 
+
+## ARC-v0.28 — NQ-GTE H=50 Operator/Horizon Agentic-IR Bridge Audit
+
+Status: **completed frozen post-v0.27 reviewer-oriented long-horizon boundary audit**.
+
+Scientific role:
+- reuses the ARC-v0.27 NQ-GTE FIT-only severity match without retuning;
+- reuses the same 1,726 validation queries;
+- retains the full 44-policy grid through H=8;
+- evaluates a structurally frozen eight-policy subset through H=50;
+- compares anchored vs recursive state updates;
+- retains the pre-specified negative H=50 primary unchanged;
+- serves as a controlled bridge toward sequential Agentic IR / Agentic RAG, not a full LLM-agent experiment.
+
+Canonical protocol:
+- `protocols/nq/v028_frozen_h50_agentic_bridge_protocol.json`
+- `protocols/nq/V028_PROTOCOL_SHA256.txt`
+- `protocols/nq/v028_reused_v027_query_split.csv`
+- `protocols/nq/v028_frozen_policy_grid.csv`
+- `protocols/nq/v028_frozen_h50_policy_subset.csv`
+
+Canonical compact summaries:
+- `results/nq/v028_fit_execution_backend_audit.json`
+- `results/nq/v028_validation_checkpoint_manifest.csv`
+- `results/nq/v028_h50_query_bootstrap.csv`
+- `results/nq/v028_h50_family_robustness.csv`
+- `results/nq/v028_h50_interactions.csv`
+- `results/nq/v028_h50_late_gap_summary.csv`
+- `results/nq/v028_h50_peak_gap_round_summary.csv`
+- `results/nq/v028_h50_regime_summary.csv`
+- `results/nq/v028_primary_h50_agentic_bridge_gate.json`
+- `results/nq/v028_final_h50_agentic_bridge_report.json`
+
+Artifact integrity:
+- `results/nq/V028_H50_ARTIFACT_SHA256.csv`
+
+Frozen protocol SHA-256:
+- `15f968514bde2602870ac0a08a3bb6a9eca77b2ca40038120b8f82f5017ec93a`
+
+Final report SHA-256:
+- `5b6c3db1e7d31bd7c43f120767df1674f8981130b95007a1478cd8c701b8b879`
+
+Primary H=50 outcome:
+- recursive representation-minus-search H3abs: -0.0008664827, 95% CI [-0.0010827446, -0.0006570085]
+- the frozen positive-persistence gate is **not supported**.
+
+Recursive horizon transition:
+- H=4: +0.0154201526, 95% CI [0.0119633707, 0.0188403771]
+- H=8: +0.0022306498, 95% CI [0.0004883059, 0.0039935602]
+- H=12: -0.0003741051, 95% CI [-0.0015496392, 0.0008008740]
+- H=16: -0.0010497262, 95% CI [-0.0019007355, -0.0001996686]
+- H=24: -0.0013055262, 95% CI [-0.0018431516, -0.0007712818]
+- H=32: -0.0012443797, 95% CI [-0.0016400689, -0.0008679137]
+- H=40: -0.0010719383, 95% CI [-0.0013652680, -0.0007858012]
+- H=50: -0.0008664827, 95% CI [-0.0010827446, -0.0006570085]
+
+Anchored H=50:
+- +0.0001258742, 95% CI [0.0000870942, 0.0001660908]
+
+Interpretation:
+> The pre-specified recursive H=50 positive-persistence hypothesis is rejected. Instead, the NQ-GTE long-horizon audit identifies an operator- and horizon-conditioned boundary: recursive feedback transitions from positive short-horizon ordering to a negative ordering from H=16 through H=50, whereas anchored feedback decays toward zero without reversing.
+
+Public artifact boundary:
+- the 26.36 MB consolidated endpoint parquet and the 5,053,728-row trajectory checkpoints remain outside Git;
+- their SHA-256 values and checkpoint hashes are retained in the public integrity manifests.
+
 ## Version-freeze boundary
 
 The existing `sigir-v9.1-artifact-freeze` tag remains immutable and predates ARC-v0.26 completion.
 
-ARC-v0.26 should be treated as post-v9.1 evidence. If incorporated into a revised manuscript/artifact snapshot, create a new version/tag rather than moving the v9.1 freeze tag.
+ARC-v0.26 through ARC-v0.28 should be treated as post-v9.1 evidence. If incorporated into a revised manuscript/artifact snapshot, create a new version/tag rather than moving the immutable v9.1 freeze tag.
 
 ## Public artifact boundary
 

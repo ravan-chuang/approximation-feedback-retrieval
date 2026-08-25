@@ -11,7 +11,7 @@ The project asks a broader question than one-shot ANN quality:
 
 ## Current Paper-Facing Snapshot
 
-The current manuscript baseline is the reviewer-hardened **v9.2.2 SIGIR full-paper submission-freeze candidate**, with ARC-v0.27 available as post-v9.2.2 confirmatory evidence:
+The current manuscript baseline is the reviewer-hardened **v9.2.2 SIGIR full-paper submission-freeze candidate**, with ARC-v0.27 and ARC-v0.28 retained as post-v9.2.2 confirmatory and long-horizon boundary evidence:
 
 > **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Effects in Iterative Retrieval**
 
@@ -27,6 +27,9 @@ The current paper-facing evidence supports the following central conclusions:
 6. **Common-state replay exposes distinct perturbation profiles.** Under E5, index-representation approximation creates substantially larger fixed-common-state direct perturbations than IVF or HNSW search-effort approximation across state, candidate, feedback, and utility proxies; this is mechanistic evidence, not a causal mediation theorem.
 7. **Predictive susceptibility does not guarantee intervention value.** RASF is effective at the frozen FEVER-BGE operating point, but the frozen E5 method replication does not beat matched-budget random allocation.
 8. **The severity-matched cross-mechanism ordering independently confirms on a new corpus and encoder family.** On BEIR Natural Questions with `thenlper/gte-small`, FIT-only calibration selects `nprobe=2` with a 2.39% one-shot nDCG@10 gap mismatch; on 1,726 untouched validation queries, the paired representation-minus-search H3abs contrast is **+0.011868** with 95% CI **[+0.009922, +0.013794]**.
+
+9. **The short-horizon ordering does not extrapolate monotonically to persistent recursive feedback.** ARC-v0.28 reuses the frozen NQ-GTE severity match and untouched 1,726-query validation split, changes the state transition from anchored to recursive accumulation, and extends the structurally frozen long-horizon subset to 50 feedback updates. The pre-specified recursive H=50 persistence hypothesis is rejected: representation-minus-search H3abs is **-0.000866**, 95% CI **[-0.001083, -0.000657]**. The contrast is positive at H=4/H=8, statistically unresolved at H=12, and negative from H=16 through H=50. The anchored operator instead decays toward zero without reversing.
+
 
 A central severity-controlled result is:
 
@@ -54,6 +57,56 @@ The supported interpretation is deliberately narrower than a causal theorem:
 > **Matching one-shot nDCG@10 loss does not remove the observed mechanism-conditioned difference in short-horizon feedback dynamics.**
 
 The current evidence does **not** establish that all forms of representation approximation universally expand, that all search-effort approximation universally contracts, or that the observed boundary extends unchanged to arbitrary feedback operators, exact-search oracles, long-horizon agents, or other retrieval families.
+
+---
+
+
+## NQ-GTE Long-Horizon Operator/Horizon Boundary (ARC-v0.28)
+
+ARC-v0.28 is a **post-v0.27 reviewer-oriented prospective audit**, not a pristine new confirmation. It reuses the frozen BEIR Natural Questions + `thenlper/gte-small` severity-matched design from ARC-v0.27 and retains the same 1,726 validation queries. No severity, split, operator, long-horizon subset, endpoint, or success criterion was retuned after validation trajectories were observed.
+
+The full 44-policy grid is retained through H=8 for comparability. A structurally selected, outcome-independent eight-policy subset (mean-k20 and softmax-k20-t0.1 for each alpha in {0.1, 0.3, 0.5, 0.7}) is evaluated at H={4,8,12,16,24,32,40,50}. The primary new estimand was frozen as the recursive H=50 query-averaged nDCG@10 H3abs representation-minus-search contrast.
+
+### Frozen primary outcome
+
+The pre-specified positive-persistence hypothesis is **not supported**:
+
+```text
+recursive H=50 representation-minus-search H3abs
+= -0.000866
+95% CI [-0.001083, -0.000657]
+```
+
+The negative primary is retained unchanged.
+
+### Horizon-conditioned transition
+
+| Horizon | Anchored rep-search H3abs | Recursive rep-search H3abs |
+|---:|---:|---:|
+| 4  | +0.014659 | +0.015420 |
+| 8  | +0.004509 | +0.002231 |
+| 12 | +0.002082 | -0.000374 |
+| 16 | +0.001189 | -0.001050 |
+| 24 | +0.000537 | -0.001306 |
+| 32 | +0.000305 | -0.001244 |
+| 40 | +0.000196 | -0.001072 |
+| 50 | +0.000126 | -0.000866 |
+
+For recursive feedback, the contrast is positive at H=4/H=8, unresolved at H=12, and significantly negative from H=16 through H=50. Anchored feedback remains positive while shrinking toward zero.
+
+The supported interpretation is therefore narrower and more informative than monotonic long-horizon persistence:
+
+> **Approximation-feedback dynamics are jointly conditioned by approximation mechanism, state-update operator, and horizon. Short-horizon cross-mechanism ordering need not extrapolate monotonically to persistent recursive retrieval-feedback trajectories.**
+
+### Execution and provenance
+
+The validation sweep used the A100 `GPU_BATCHED` backend after a FIT-only CPU/GPU semantic audit. The completed run contains 1,726 validation queries and 5,053,728 trajectory rows. The canonical protocol SHA-256 is:
+
+```text
+15f968514bde2602870ac0a08a3bb6a9eca77b2ca40038120b8f82f5017ec93a
+```
+
+ARC-v0.28 is a controlled bridge toward Agentic IR / Agentic RAG sequential retrieval, **not** a full LLM-agent experiment: it does not instantiate an LLM planner, adaptive tool policy, learned stopping policy, memory manager, or answer-generation environment.
 
 ---
 
@@ -137,6 +190,8 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.25 | FEVER-E5 Severity-Matched Mechanism Validation | FIT-only one-shot nDCG@10 severity calibration followed by untouched 3,316-query validation; paired mechanism contrast remains strongly positive |
 | ARC-v0.26 | FEVER-E5 Softmax Score-Channel Audit | Completed post-primary audit: exact candidate rescoring preserves positive representation H3abs while significantly reducing its magnitude; not an exact-search experiment |
 | ARC-v0.27 | NQ-GTE Independent Severity-Matched Confirmation | FIT-only severity calibration on BEIR NQ + GTE-small followed by outcome-blind 1,726-query validation; paired representation-minus-search H3abs remains clearly positive |
+| ARC-v0.28 | NQ-GTE H=50 Operator/Horizon Agentic-IR Bridge Audit | Frozen post-v0.27 long-horizon audit: anchored feedback decays toward zero, while recursive feedback crosses from positive short-horizon ordering to a significant negative ordering from H=16 through H=50 |
+
 
 ---
 

@@ -1,0 +1,196 @@
+{
+  "backend_audit_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_fit_execution_backend_audit.json",
+  "checkpoint_manifest_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_validation_checkpoint_manifest.csv",
+  "classification": "post-v0.27 reviewer-oriented prospective operator/horizon audit; controlled bridge toward Agentic IR/RAG, not a full LLM-agent experiment",
+  "completed_at_utc": "2026-08-25T19:27:25.617421+00:00",
+  "dataset": "BEIR Natural Questions",
+  "encoder": "thenlper/gte-small",
+  "endpoint_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_agentic_bridge_endpoints.parquet",
+  "execution_backend": "GPU_BATCHED",
+  "family_summary_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_family_robustness.csv",
+  "interaction_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_interactions.csv",
+  "late_horizon_summary_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_late_gap_summary.csv",
+  "long_horizon_ndcg_operator_cells": [
+    {
+      "ci95_high": 0.017006868005827555,
+      "ci95_low": 0.012361159771964498,
+      "horizon": 4,
+      "mean": 0.014658649243036436,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.005404162619336843,
+      "ci95_low": 0.0035997780044433277,
+      "horizon": 8,
+      "mean": 0.004508825710954409,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.0025702560849838025,
+      "ci95_low": 0.001598473714487347,
+      "horizon": 12,
+      "mean": 0.002081950027372784,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.0014974185165996965,
+      "ci95_low": 0.000890038782850934,
+      "horizon": 16,
+      "mean": 0.0011894708241831703,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.0006886902988165147,
+      "ci95_low": 0.0003863055874476512,
+      "horizon": 24,
+      "mean": 0.0005372213035761746,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.0003972016092757302,
+      "ci95_low": 0.00021512209178310625,
+      "horizon": 32,
+      "mean": 0.0003046361273500422,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.0002557821325264302,
+      "ci95_low": 0.0001357191378642329,
+      "horizon": 40,
+      "mean": 0.0001959154863089933,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.0001660907815107585,
+      "ci95_low": 8.709418874005217e-05,
+      "horizon": 50,
+      "mean": 0.00012587415288610828,
+      "operator": "anchored"
+    },
+    {
+      "ci95_high": 0.018840377074321388,
+      "ci95_low": 0.011963370666543653,
+      "horizon": 4,
+      "mean": 0.015420152570430876,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": 0.00399356017700586,
+      "ci95_low": 0.0004883058703728506,
+      "horizon": 8,
+      "mean": 0.0022306498297653718,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": 0.000800874005036002,
+      "ci95_low": -0.001549639247726789,
+      "horizon": 12,
+      "mean": -0.00037410505825554883,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.0001996685826162975,
+      "ci95_low": -0.0019007354664877052,
+      "horizon": 16,
+      "mean": -0.001049726190301569,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.0007712818484790116,
+      "ci95_low": -0.0018431516278229003,
+      "horizon": 24,
+      "mean": -0.0013055261900657927,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.000867913678779612,
+      "ci95_low": -0.0016400688861012652,
+      "horizon": 32,
+      "mean": -0.0012443796749853167,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.0007858011808695489,
+      "ci95_low": -0.0013652680143990228,
+      "horizon": 40,
+      "mean": -0.0010719383092887723,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.000657008494297918,
+      "ci95_low": -0.0010827445726687205,
+      "horizon": 50,
+      "mean": -0.0008664826618930828,
+      "operator": "recursive"
+    }
+  ],
+  "n_validation_queries": 1726,
+  "negative_null_saturation_reversal_retained": true,
+  "not_a_full_llm_agent_experiment": true,
+  "peak_round_summary_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_peak_gap_round_summary.csv",
+  "primary_new_estimand": "recursive H=50 long-policy-subset query-averaged nDCG@10 H3abs representation minus severity-matched search effort",
+  "primary_recursive_h50_agentic_bridge_supported": false,
+  "primary_result": {
+    "ci95": [
+      -0.0010827445726687205,
+      -0.000657008494297918
+    ],
+    "ci_excludes_zero_positive": false,
+    "mean": -0.0008664826618930828
+  },
+  "protocol_sha256": "15f968514bde2602870ac0a08a3bb6a9eca77b2ca40038120b8f82f5017ec93a",
+  "recursive_h50_family_robustness": [
+    {
+      "ci95_high": -0.000583201198725412,
+      "ci95_low": -0.001010919191169006,
+      "family": "mean",
+      "horizon": 50,
+      "mean": -0.0008011445093076629,
+      "n_queries": 1726,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.0007095199333974069,
+      "ci95_low": -0.0011580515603618875,
+      "family": "softmax",
+      "horizon": 50,
+      "mean": -0.0009318208144785026,
+      "n_queries": 1726,
+      "operator": "recursive"
+    },
+    {
+      "ci95_high": -0.0006535441969693926,
+      "ci95_low": -0.001082408427802298,
+      "family": "equal_family",
+      "horizon": 50,
+      "mean": -0.0008664826618930828,
+      "n_queries": 1726,
+      "operator": "recursive"
+    }
+  ],
+  "recursive_h50_metric_cells": [
+    {
+      "ci95_high": -0.000657008494297918,
+      "ci95_low": -0.0010827445726687205,
+      "mean": -0.0008664826618930828,
+      "metric": "ndcg10"
+    },
+    {
+      "ci95_high": -0.0008855420089419128,
+      "ci95_low": -0.0013368980046448557,
+      "mean": -0.0011100875883823527,
+      "metric": "mrr10"
+    },
+    {
+      "ci95_high": 0.0001287260625794136,
+      "ci95_low": -0.0005404955201173071,
+      "mean": -0.00020931424981080675,
+      "metric": "recall10"
+    }
+  ],
+  "regime_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_regime_summary.csv",
+  "scientific_claim_scope": "Post-v0.27 NQ-GTE operator/horizon stress test. The long-horizon tier evaluates anchored and recursive retrieval-feedback trajectories through 50 updates as a controlled bridge toward Agentic IR / Agentic RAG. It does not instantiate an LLM planner, adaptive tool policy, dynamic stopping policy, memory manager, or full agent environment.",
+  "status": "ARC_V028_H50_A100_BATCHED_AGENTIC_BRIDGE_ANALYZED",
+  "summary_path": "/content/drive/MyDrive/rag-pq-checkpoints/arc-v0/nq-gte-operator-horizon-generalization-v028/20260825-181541/v028_h50_query_bootstrap.csv",
+  "validation_retuning_performed": false
+}
