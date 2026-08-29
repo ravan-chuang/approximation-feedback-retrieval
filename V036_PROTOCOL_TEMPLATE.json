@@ -1,0 +1,23 @@
+{
+  "study_id": "ARC-v0.36",
+  "title": "NQ-GTE Frozen Downstream QA Consequence Audit",
+  "status": "PRE_RUN_TEMPLATE__RUNTIME_REVISION_RESOLVED_BEFORE_ANSWER_OUTCOMES",
+  "scientific_role": "post-primary reviewer-oriented new downstream endpoint",
+  "source_membership": "ARC-v0.31/0.32 frozen 500-query NQ-GTE main subset",
+  "retrieval": {
+    "representation_low": "IVF-PQ32@nprobe64",
+    "search_effort_low": "IVF-SQ8@nprobe2",
+    "shared_high": "IVF-SQ8@nprobe64"
+  },
+  "operator": "anchored centroid",
+  "H": 4,
+  "policies": "8-policy ARC-v0.28/0.32 structural subset",
+  "answer_model": "Qwen/Qwen2.5-3B-Instruct",
+  "answer_model_revision": "RESOLVE_AND_FREEZE_AT_RUNTIME_BEFORE_ANSWERS",
+  "evidence_k": 5,
+  "max_passage_chars": 850,
+  "gold": "official NQ-Open dev answers; 100% exact normalized question mapping required",
+  "primary": "mean_query( mean_policy(F1_search_H-F1_rep_H) - (F1_search_0-F1_rep_0) )",
+  "inference": "10,000 paired-query bootstrap, two-sided 95% CI",
+  "retention": "positive/null/reversed all retained; no post-outcome retuning"
+}
