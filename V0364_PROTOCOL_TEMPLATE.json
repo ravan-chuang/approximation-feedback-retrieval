@@ -1,0 +1,23 @@
+{
+  "study_id": "ARC-v0.36.4",
+  "title": "NQ-GTE Frozen Downstream QA Consequence Audit — Official NQ Dev Gold",
+  "status": "PRE_ANSWER_OUTCOME_GOLD_LINEAGE_REPAIR",
+  "prior_attempts": {
+    "v036": "NQ-open dev mismatch: 326/500",
+    "v0363": "DPR NQ-test parsed correctly but mismatch: 303/500"
+  },
+  "new_gold_source": "Official Natural Questions v1.0 development set, five original shards",
+  "gold_urls": [
+    "https://storage.googleapis.com/natural_questions/v1.0/dev/nq-dev-00.jsonl.gz",
+    "https://storage.googleapis.com/natural_questions/v1.0/dev/nq-dev-01.jsonl.gz",
+    "https://storage.googleapis.com/natural_questions/v1.0/dev/nq-dev-02.jsonl.gz",
+    "https://storage.googleapis.com/natural_questions/v1.0/dev/nq-dev-03.jsonl.gz",
+    "https://storage.googleapis.com/natural_questions/v1.0/dev/nq-dev-04.jsonl.gz"
+  ],
+  "alignment": "normalized exact question text only",
+  "gold_rule": "all non-null short-answer spans across five annotations; YES/NO retained; stable dedup",
+  "required": "500/500 exact matched queries with non-empty, unambiguous gold",
+  "answer_outcomes_before_repair": false,
+  "scientific_choices_changed": false,
+  "retention": "positive/null/reversed outcomes all retained; no post-answer retuning"
+}
