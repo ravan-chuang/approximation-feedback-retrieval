@@ -1,0 +1,12 @@
+{
+  "study_id": "ARC-v0.37",
+  "title": "HotpotQA Native-Gold Downstream QA Consequence Audit",
+  "status": "PRE_RUN_TEMPLATE",
+  "new_benchmark": true,
+  "retrieval_source": "BEIR HotpotQA global corpus/test qrels",
+  "qa_gold_source": "Official HotpotQA dev distractor answer field",
+  "hard_preflight": "BEIR test IDs must equal official HotpotQA dev IDs (7405/7405) and question text must exactly normalize-match",
+  "split": "hash-based FIT/VALID over all 7405, then fixed 500 MAIN from VALID",
+  "primary": "mean_q[(mean_policy F1_search_H - F1_rep_H) - (F1_search_0 - F1_rep_0)]",
+  "retention": "positive/null/reversed retained; no post-freeze tuning"
+}
