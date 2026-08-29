@@ -1,0 +1,12 @@
+{
+  "study_id": "ARC-v0.36.2",
+  "title": "NQ-GTE Frozen Downstream QA Consequence Audit — DPR Parser Fixed",
+  "status": "PRE_ANSWER_OUTCOME_PARSER_REPAIR",
+  "v0361_failure": "csv.Sniffer misdetected delimiter; rows were literal-tab separated",
+  "v0362_change": "split each DPR QA line on the first literal tab only",
+  "answer_outcomes_before_repair": false,
+  "scientific_choices_changed": false,
+  "gold_source": "https://dl.fbaipublicfiles.com/dpr/data/retriever/nq-test.qa.csv",
+  "required_coverage": "500/500 normalized exact-question matches",
+  "retention": "positive/null/reversed outcomes all retained; no post-answer retuning"
+}
