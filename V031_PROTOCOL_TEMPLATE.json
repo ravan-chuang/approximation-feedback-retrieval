@@ -1,0 +1,76 @@
+{
+  "agent": {
+    "adaptive_stopping": false,
+    "default_backend": "transformers_local",
+    "default_model": "Qwen/Qwen2.5-3B-Instruct",
+    "generation": {
+      "do_sample": false,
+      "max_new_tokens": 48,
+      "temperature": 0.0
+    },
+    "history_exposed_to_agent": false,
+    "operator": "frozen LLM query rewrite",
+    "prompt_input": [
+      "original question",
+      "current retrieval query",
+      "ranked evidence text only"
+    ],
+    "scores_exposed_to_agent": false
+  },
+  "ann_contrasts": {
+    "representation": {
+      "high": "IVF-SQ8 @ nprobe=64",
+      "low": "IVF-PQ32 @ nprobe=64"
+    },
+    "search_effort": {
+      "high": "IVF-SQ8 @ nprobe=64",
+      "low": "IVF-SQ8 @ nprobe=2"
+    }
+  },
+  "classification": "Prospective for new generative-query-update outcomes, but not a pristine new dataset confirmation because the NQ-GTE validation pool and prior ANN trajectory results were observed in ARC-v0.27/v0.28.",
+  "dataset": "BEIR Natural Questions",
+  "encoder": "thenlper/gte-small",
+  "primary_estimand": {
+    "classification": {
+      "negative_transfer": "95% paired-query bootstrap CI strictly below 0",
+      "positive_transfer": "95% paired-query bootstrap CI strictly above 0",
+      "unresolved": "95% CI includes 0"
+    },
+    "definition": "Within query, H3abs is the OLS slope over t=0..4 of |nDCG@10_high(t)-nDCG@10_low(t)|. The primary contrast is representation H3abs minus search-effort H3abs.",
+    "direction": "two-sided transfer audit",
+    "name": "agent_H3abs_representation_minus_search_effort"
+  },
+  "retention_rule": "Positive transfer, null, reversal, weaker effects, stronger effects, or qualitatively different agent behavior must all be retained. No prompt, model, ANN comparator, horizon, primary endpoint, or query subset may be retuned after main-agent outcomes begin.",
+  "retrieval": {
+    "candidate_depth": 100,
+    "evidence_k_to_agent": 5,
+    "horizon_updates": 4,
+    "metric": "inner_product",
+    "utility_k": 10
+  },
+  "sampling": {
+    "engineering_smoke_n": 32,
+    "main_n": 500,
+    "selection": "deterministic SHA-256 ordering of query IDs",
+    "smoke_queries_excluded_from_main": true,
+    "source_pool": "ARC-v0.28 NQ-GTE validation query IDs"
+  },
+  "scientific_goal": "Test whether the mechanism-conditioned ANN feedback boundary transfers from centroid-style dense feedback to a frozen generative query-rewrite agent.",
+  "secondary": [
+    "semantic query-state divergence slope between L/H generated queries",
+    "candidate Jaccard-divergence slope",
+    "signed nDCG@10 direction",
+    "H=4 absolute utility-gap level",
+    "MRR@10 and Recall@10 analogues",
+    "same-evidence generation repeat audit on smoke queries",
+    "representation-vs-search difference in agent rewrite divergence"
+  ],
+  "statistics": {
+    "independent_unit": "query",
+    "paired_query_bootstrap_reps": 10000,
+    "policy_aggregation": "not applicable; one frozen agent policy",
+    "seed": 20260827
+  },
+  "study_id": "ARC-v0.31",
+  "title": "Frozen Generative Retrieval-Agent Transfer"
+}
