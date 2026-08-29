@@ -1,0 +1,27 @@
+{
+  "study_id": "ARC-v0.36.1",
+  "title": "NQ-GTE Frozen Downstream QA Consequence Audit — Gold-Alignment Fixed",
+  "status": "PRE_RUN_FIX_TEMPLATE",
+  "repair_reason": "ARC-v0.36 NQ-open.dev mapping covered 326/500; assertion stopped before answer outcomes",
+  "answer_outcomes_before_repair": false,
+  "only_scientific_change": "gold-answer source alignment",
+  "gold_source": "DPR data.retriever.qas.nq-test",
+  "gold_url": "https://dl.fbaipublicfiles.com/dpr/data/retriever/nq-test.qa.csv",
+  "required_coverage": "500/500 normalized exact-question matches",
+  "unchanged": [
+    "frozen 500-query membership",
+    "GTE-small",
+    "PQ32@nprobe64 representation low",
+    "SQ8@nprobe2 search-effort low",
+    "SQ8@nprobe64 shared high",
+    "anchored centroid",
+    "H=4",
+    "8-policy structural subset",
+    "Qwen2.5-3B-Instruct deterministic answerer",
+    "top-5 evidence, 850 chars/passage",
+    "token-F1 primary",
+    "Delta_QA difference-in-differences estimand",
+    "10,000 paired-query bootstrap"
+  ],
+  "retention": "positive/null/reversed outcomes all retained; no post-answer retuning"
+}
