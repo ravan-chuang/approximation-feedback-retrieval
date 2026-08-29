@@ -1,0 +1,11 @@
+{
+  "study_id": "ARC-v0.36.5",
+  "title": "NQ-GTE Frozen Downstream QA Consequence Audit — Official GCS Transport Fixed",
+  "status": "PRE_ANSWER_OUTCOME_TRANSPORT_REPAIR",
+  "v0364_failure": "HTTP 403 from direct https://storage.googleapis.com object GET",
+  "v0365_change": "use official gs://natural_questions/v1.0/dev objects via gcloud storage cp or gsutil cp",
+  "gold_source_changed": false,
+  "answer_outcomes_before_repair": false,
+  "scientific_choices_changed": false,
+  "required_alignment": "500/500 exact matched queries with non-empty, unambiguous official NQ dev gold"
+}
