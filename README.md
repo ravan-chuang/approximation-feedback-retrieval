@@ -11,55 +11,70 @@ The project asks a broader question than one-shot ANN quality:
 
 ## Current Paper-Facing Snapshot
 
-The current manuscript baseline is the reviewer-hardened **v9.2.2 SIGIR full-paper submission-freeze candidate**, with ARC-v0.27 and ARC-v0.28 retained as post-v9.2.2 confirmatory and long-horizon boundary evidence:
+The current manuscript baseline is the reviewer-hardened **v18.6 SIGIR 2026 full-paper candidate**:
 
-> **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Effects in Iterative Retrieval**
+> **Approximation in the Loop: When One-Shot ANN Quality Is Insufficient for Iterative Dense Retrieval**
 
-The manuscript is in **submission-freeze preparation** after factual, numerical, reference, claim-strength, citation-support, anonymity, layout, and adversarial-review audits.
+The paper studies approximate retrieval as part of a **state transition**, rather than as a sequence of independent ANN calls. Lower- and higher-fidelity branches share the corpus, encoder, initial query, feedback operator, retrieval depth, task, and evaluator; only the ANN intervention changes.
 
-The current paper-facing evidence supports the following central conclusions:
+The current paper-facing evidence supports a narrower and more defensible thesis than a universal amplification claim:
 
-1. **One-shot ANN fidelity and short-horizon feedback dynamics are distinct evaluation axes.**
-2. **Approximation mechanism is a material boundary condition.** Under the tested index-representation contrasts, candidate and utility separation can expand; under two search-effort interventions—IVF `nprobe` and HNSW `efSearch`—query states diverge while aggregate candidate and utility disagreement contract.
-3. **Matching one-shot task-effectiveness loss does not remove the mechanism contrast.** A FIT-only FEVER-E5 severity match selects `nprobe=8`, reducing the representation-vs-search-effort one-shot nDCG@10 gap mismatch to **4.53%**; the untouched validation trajectories still have opposite H3abs signs.
-4. **The cross-mechanism ordering transfers to a large non-Wikipedia corpus.** On BEIR MS MARCO passage with 8.84M passages, representation and search-effort interventions again have opposite all-policy H3abs signs, while equal-family analysis shows that the standalone representation sign is operator-modulated.
-5. **The main H3 mechanism boundary is not an artifact of one OLS slope definition.** Endpoint and round-averaged utility-gap changes preserve representation expansion and search-effort contraction in the audited FEVER settings.
-6. **Common-state replay exposes distinct perturbation profiles.** Under E5, index-representation approximation creates substantially larger fixed-common-state direct perturbations than IVF or HNSW search-effort approximation across state, candidate, feedback, and utility proxies; this is mechanistic evidence, not a causal mediation theorem.
-7. **Predictive susceptibility does not guarantee intervention value.** RASF is effective at the frozen FEVER-BGE operating point, but the frozen E5 method replication does not beat matched-budget random allocation.
-8. **The severity-matched cross-mechanism ordering independently confirms on a new corpus and encoder family.** On BEIR Natural Questions with `thenlper/gte-small`, FIT-only calibration selects `nprobe=2` with a 2.39% one-shot nDCG@10 gap mismatch; on 1,726 untouched validation queries, the paired representation-minus-search H3abs contrast is **+0.011868** with 95% CI **[+0.009922, +0.013794]**.
+> **One-shot ANN quality is informative, but it is not sufficient to determine feedback-time behavior. Approximation mechanism, state-transition operator, horizon, and estimand must be evaluated separately.**
 
-9. **The short-horizon ordering does not extrapolate monotonically to persistent recursive feedback.** ARC-v0.28 reuses the frozen NQ-GTE severity match and untouched 1,726-query validation split, changes the state transition from anchored to recursive accumulation, and extends the structurally frozen long-horizon subset to 50 feedback updates. The pre-specified recursive H=50 persistence hypothesis is rejected: representation-minus-search H3abs is **-0.000866**, 95% CI **[-0.001083, -0.000657]**. The contrast is positive at H=4/H=8, statistically unresolved at H=12, and negative from H=16 through H=50. The anchored operator instead decays toward zero without reversing.
+### Current headline evidence
 
+1. **Matched one-shot loss does not imply matched loop dynamics.** In directly severity-matched settings, representation-minus-search-effort `H3_abs` is positive on FEVER-E5, MS MARCO-E5, and NQ-GTE.
+2. **The NQ matched-mechanism result is independently strong.** With `thenlper/gte-small`, the paired representation-minus-search `H3_abs` contrast is **+0.011868**, 95% CI **[+0.009922, +0.013794]**.
+3. **The result survives an exhaustive reference audit.** On a frozen 500-query NQ-GTE subset, replacing the relative high-fidelity comparator with exhaustive FlatIP over the persisted embedding store gives **+0.012035**, 95% CI **[+0.007966, +0.016277]**.
+4. **One-shot equality is not dynamic equality.** Among the same 500 frozen NQ-GTE queries, **45.2%** are exact one-shot ties between representation and search-effort approximation; **27.0%** of those ties become terminally distinguishable after four anchored feedback updates.
+5. **One-shot selection can incur measurable downstream retrieval regret.** Among queries decisive at both one-shot and terminal evaluation, the one-shot-selected mechanism disagrees with the terminal oracle on **7.72%** of queries; mean terminal regret is **0.01181 nDCG@10**.
+6. **Mechanism is not severity.** On FEVER-E5, representation approximation yields positive short-horizon `H3_abs`, whereas matched IVF `nprobe` search-effort approximation yields negative `H3_abs`; HNSW `efSearch` reproduces the search-effort boundary.
+7. **Forcing is not propagation.** Common-state replay shows that representation approximation injects the largest direct perturbation while exhibiting the smallest realized common-map propagation ratio in the audited anchored setting.
+8. **Trend is not level.** Under recursive feedback, the representation-minus-search temporal ordering reverses at long horizons, but the terminal absolute gap remains larger for representation approximation.
+9. **The long-horizon reversal replicates.** At `H=50`, recursive representation-minus-search `H3_abs` is **-0.000866** on NQ-GTE and **-0.00266** on FEVER-E5, while the `H=50` terminal absolute-gap level remains positive in both settings.
+10. **Generative rewriting is an operator boundary, not a universal confirmation.** Frozen Qwen2.5-3B and Mistral-7B rewrite operators leave the centroid-era `H3_abs` ordering unresolved, while terminal semantic, candidate, and absolute-utility separation remains larger for representation approximation in nominal secondary analyses.
+11. **The paper deliberately separates confirmatory and post-primary evidence.** Frozen and untouched validations support the strongest claims; exact-reference, decision-consequence, construct-robustness, and generative terminal analyses are labeled according to their evidence status.
+12. **The next external-validity audit is frozen before outcomes.** ARC-v0.35 is a 768-dimensional NQ replication using `thenlper/gte-base`; it is currently a prospective protocol and has **no reported outcome yet**.
 
-A central severity-controlled result is:
+### Central severity-controlled result
 
-| FEVER-E5 setting | FIT one-shot nDCG@10 gap | Validation mean H3abs |
+| Setting | One-shot severity relation | Validation / frozen result |
 |---|---:|---:|
-| Index representation: IVF-PQ32 → IVF-SQ8, `nprobe=64` | **0.249338** | **+0.030166** |
-| Search effort: IVF-SQ8, `nprobe=8 → 64` | **0.238035** | **-0.003573** |
+| FEVER-E5 representation: IVF-PQ32 → IVF-SQ8, `nprobe=64` | FIT loss = **0.249338** | `H3_abs` = **+0.030166** |
+| FEVER-E5 search effort: IVF-SQ8, `nprobe=8 → 64` | FIT loss = **0.238035** | `H3_abs` = **-0.003573** |
+| NQ-GTE matched representation − search | 2.39% one-shot loss mismatch | **+0.011868** [**+0.009922**, **+0.013794**] |
+| NQ-GTE exhaustive-reference representation − search | exhaustive FlatIP comparator | **+0.012035** [**+0.007966**, **+0.016277**] |
 
-The FIT one-shot gap mismatch is **0.011303 absolute / 4.533% relative**. On 3,316 validation queries, the paired query-level representation-minus-matched-nprobe H3abs contrast is:
+For FEVER-E5, the FIT one-shot loss mismatch is **0.011303 absolute / 4.533% relative**. On 3,316 untouched validation queries, the paired representation-minus-matched-search-effort contrast is:
 
 ```text
 +0.033739
-95% CI [0.031838, 0.035642]
+95% CI [+0.031838, +0.035642]
 ```
 
-and the equal-family counterpart is:
+The supported interpretation is deliberately narrower than a causal or deployment theorem:
 
-```text
-+0.033443
-95% CI [0.031567, 0.035386]
-```
+> **Matching one-shot nDCG@10 loss does not make representation approximation and reduced search effort dynamically interchangeable inside a feedback loop.**
 
-The supported interpretation is deliberately narrower than a causal theorem:
+This is **not** a cost-matched deployment comparison. One-shot severity matching equalizes the task-effectiveness loss used for calibration; it does not equalize latency, memory, energy, candidate overlap, score distortion, or perturbation geometry.
 
-> **Matching one-shot nDCG@10 loss does not remove the observed mechanism-conditioned difference in short-horizon feedback dynamics.**
+### Current claim boundary
 
-The current evidence does **not** establish that all forms of representation approximation universally expand, that all search-effort approximation universally contracts, or that the observed boundary extends unchanged to arbitrary feedback operators, exact-search oracles, long-horizon agents, or other retrieval families.
+The project does **not** claim that:
+
+- representation approximation is universally worse than search-effort approximation;
+- `H3_abs` is a universal harm, stability, or risk metric;
+- recursive long-horizon behavior can be inferred from `H=4`;
+- centroid feedback represents all modern retrieval agents;
+- the current 384-d evidence is scale-invariant to larger embedding models;
+- the two LLM rewrite audits constitute complete autonomous-agent benchmarks; or
+- one-shot ANN evaluation should be discarded.
+
+The current deployment-facing recommendation is instead:
+
+> **Use conventional one-shot quality / latency / memory evaluation as a first-stage screen. When retrieved evidence changes the next query, audit tied or deployment-critical ANN configurations inside the actual state-transition operator and deployment horizon.**
 
 ---
-
 
 ## NQ-GTE Long-Horizon Operator/Horizon Boundary (ARC-v0.28)
 
@@ -107,6 +122,52 @@ The validation sweep used the A100 `GPU_BATCHED` backend after a FIT-only CPU/GP
 ```
 
 ARC-v0.28 is a controlled bridge toward Agentic IR / Agentic RAG sequential retrieval, **not** a full LLM-agent experiment: it does not instantiate an LLM planner, adaptive tool policy, learned stopping policy, memory manager, or answer-generation environment.
+
+---
+
+## Latest Reviewer-Hardening Audits (ARC-v0.29–v0.35)
+
+| Version | Audit | Status / paper-facing role |
+|---|---|---|
+| ARC-v0.29 | FEVER-E5 operator/horizon replication | Frozen long-horizon replication. Recursive `H=50` representation-minus-search `H3_abs = -0.00266`, 95% CI `[-0.00287, -0.00246]`; terminal level remains positive. |
+| ARC-v0.30 | Reviewer-hardening audit bundle | Post-primary reviewer-oriented robustness and evidence-lineage hardening; does not replace prespecified primaries. |
+| ARC-v0.31 | NQ-GTE generative retrieval-agent transfer | Frozen Qwen2.5-3B deterministic rewrite operator. Primary `H3_abs` contrast unresolved at **-0.002192**, 95% CI **[-0.009999, +0.006089]**; terminal representation-induced separation is larger in nominal secondary endpoints. |
+| ARC-v0.32 | NQ-GTE exhaustive-reference audit | Replaces the relative comparator with exhaustive FlatIP over the persisted shared embedding store. Representation-minus-search `H3_abs = +0.012035`, 95% CI **[+0.007966, +0.016277]**. |
+| ARC-v0.33 | NQ-GTE one-shot decision-regret audit | 45.2% exact one-shot ties; 27.0% of ties become terminally distinguishable; one-shot selector disagreement with terminal oracle = 7.72%; mean terminal regret = 0.01181 nDCG@10. |
+| ARC-v0.34 | Second generative-operator transfer | Frozen Mistral-7B-Instruct-v0.3 audit on the same 500-query membership. Primary `H3_abs = -0.00112`, 95% CI **[-0.00909, +0.00728]**; terminal semantic/candidate/absolute-utility separation remains larger for representation in nominal secondary endpoints. |
+| ARC-v0.35 | NQ GTE-base 768-d frozen replication | **Prospective / pending.** Frozen external-validity replication with `thenlper/gte-base` (768-d), PQ64 vs SQ8 representation contrast, FIT-only search-effort calibration, `H=4`, eight-policy anchored subset, and a 10k paired-query bootstrap primary. No outcome is reported until the frozen VALID run completes. |
+
+### Generative-operator boundary
+
+The two completed LLM rewrite audits should be read as controlled **operator-boundary** experiments, not as complete-agent benchmarks.
+
+| Model | Frozen primary rep − search `H3_abs` | Terminal semantic difference | Terminal candidate difference | Terminal `|ΔnDCG@10|` difference |
+|---|---:|---:|---:|---:|
+| Qwen2.5-3B | -0.0022, unresolved | +0.0139 | +0.1178 | +0.0543 |
+| Mistral-7B | -0.0011, unresolved | +0.0163 | +0.1152 | +0.0619 |
+
+The frozen temporal primary is unresolved under both models. Terminal intervals are nominal secondary analyses and are not used to overturn the primary null.
+
+### ARC-v0.35 frozen success criterion
+
+ARC-v0.35 directly addresses the strongest remaining encoder-scale limitation. The primary estimand is:
+
+```text
+Delta_768 = H3_abs(representation) - H3_abs(search effort)
+```
+
+The protocol is frozen before GTE-base VALID outcomes:
+
+- dataset: BEIR Natural Questions;
+- encoder: `thenlper/gte-base`, expected dimension = 768;
+- representation contrast: IVF-PQ64@64 vs IVF-SQ8@64;
+- search-effort contrast: IVF-SQ8@FIT-selected `nprobe` vs IVF-SQ8@64;
+- feedback: anchored centroid, `H=4`;
+- policy set: fixed eight-policy structural subset;
+- inference: within-query policy aggregation followed by 10,000 paired-query bootstrap replicates;
+- retention: positive, unresolved, or reversed outcomes are all retained without retuning.
+
+A positive CI would establish transfer to **one 768-d encoder**, not universal scale invariance.
 
 ---
 
@@ -191,6 +252,13 @@ Across the tested settings, approximation-feedback dynamics are heterogeneous. S
 | ARC-v0.26 | FEVER-E5 Softmax Score-Channel Audit | Completed post-primary audit: exact candidate rescoring preserves positive representation H3abs while significantly reducing its magnitude; not an exact-search experiment |
 | ARC-v0.27 | NQ-GTE Independent Severity-Matched Confirmation | FIT-only severity calibration on BEIR NQ + GTE-small followed by outcome-blind 1,726-query validation; paired representation-minus-search H3abs remains clearly positive |
 | ARC-v0.28 | NQ-GTE H=50 Operator/Horizon Agentic-IR Bridge Audit | Frozen post-v0.27 long-horizon audit: anchored feedback decays toward zero, while recursive feedback crosses from positive short-horizon ordering to a significant negative ordering from H=16 through H=50 |
+| ARC-v0.29 | FEVER-E5 H=50 Operator/Horizon Replication | Frozen long-horizon replication of the recursive temporal-order reversal on FEVER-E5 |
+| ARC-v0.30 | Reviewer-Hardening Audit Bundle | Post-primary robustness, evidence-lineage, and reviewer-facing claim hardening |
+| ARC-v0.31 | Qwen Generative Rewrite Operator Audit | Frozen deterministic Qwen2.5-3B operator-boundary audit; temporal primary unresolved, terminal separation larger for representation |
+| ARC-v0.32 | NQ-GTE Exhaustive FlatIP Reference Audit | Frozen 500-query comparator audit against exhaustive search over the persisted embedding store |
+| ARC-v0.33 | NQ-GTE One-Shot Decision Regret Audit | Post-primary consequence audit of one-shot ties, terminal distinguishability, selector disagreement, and regret |
+| ARC-v0.34 | Mistral Generative Operator Transfer | Independent deterministic Mistral-7B rewrite audit on the same frozen NQ query membership |
+| ARC-v0.35 | NQ GTE-base 768-d Frozen Replication | Prospective encoder-scale external-validity replication; protocol frozen, outcome pending |
 
 
 ---
@@ -2069,131 +2137,99 @@ Positive, null, stable, reversal, beneficial-divergence, partial-replication, an
 
 # Current Status
 
-## Completed
+## Completed paper-facing evidence
 
-- large-corpus memory-safe IVF-PQ infrastructure
-- retriever-condition replication
-- synchronized approximation-feedback trajectories
-- statistical mechanism audit
-- sealed FEVER H1-H4 confirmation
-- audited HotpotQA retrieval rebuild
-- sealed HotpotQA H1-H4 cross-dataset confirmation
-- HotpotQA boundary / regime map
-- boundary-aware selective fidelity mitigation
-- local Apple M3 Max quality-cost / Pareto audit
-- deterministic quality-cost merge audit
-- cross-policy HotpotQA boundary transfer
-- FEVER external boundary replication
-- FEVER zero-mass / regime audit
-- FEVER configuration and dose-response audit
-- deployable PQ32-only FEVER risk prediction
-- full-coverage FEVER signed-harm audit
-- threshold-sensitivity and alpha-controlled FEVER robustness audit
-- deployable predictor feature-ablation audit
-- FEVER PQ32 query-feature provenance equality audit
-- FEVER Risk-Aware Selective Fidelity end-to-end closure
-- 10,000-allocation matched-random robustness audit
-- E5 cross-embedding-model FEVER representation replication
-- E5 full signed-direction audit with `SIGNED_HARM_PRESERVED`
-- IVF `nprobe` cross-approximation mechanism test
-- HNSW `efSearch` cross-index-family mechanism replication with `HNSW_REVERSAL`
-- HNSW post-primary `32 → 256` / `64 → 256` severity-sensitivity audit
-- E5 RASF cross-embedding-model method replication with `E5_RASF_PRIMARY_FAILS_TO_REPLICATE`
-- H3 alternative temporal-summary robustness audit
-- Eq. 6 common-state operator replay
-- NaN-safe / finite-coverage statistical recompute
-- BEIR MS MARCO full-corpus external boundary replication
-- FEVER-E5 FIT-only one-shot severity calibration
-- FEVER-E5 severity-matched 3,316-query validation
-- manuscript terminology hardening around **index-representation approximation**, **short-horizon dynamics**, and **cross-embedding-model replication**
-- factual / numerical manuscript audit
-- reference and closest-work positioning audit
-- claim-strength / citation-support audit
-- adversarial empirical-IR / ANN-systems / theory-reviewer audit
-- anonymity / comments / tracked-changes audit
-- full nine-page render and layout QA for the current v9.1 candidate
+The current manuscript evidence is complete through **ARC-v0.34**. Major completed components include:
 
-## Post-v9.1 completed audit
+- sealed FEVER and HotpotQA trajectory confirmations;
+- cross-encoder BGE/E5 replication and signed-direction audits;
+- IVF `nprobe` and HNSW `efSearch` search-effort boundary tests;
+- threshold, policy, estimator, and score-channel robustness audits;
+- deployable susceptibility prediction and RASF intervention studies, including retained transfer failures;
+- full-corpus BEIR MS MARCO external transfer;
+- FEVER-E5 and NQ-GTE FIT-only one-shot severity matching;
+- NQ-GTE independent matched-mechanism confirmation;
+- NQ-GTE and FEVER-E5 recursive `H=50` operator/horizon audits;
+- common-state replay separating direct forcing from realized propagation;
+- exhaustive FlatIP reference audit on the frozen 500-query NQ-GTE subset;
+- one-shot tie / terminal distinguishability / selector-regret consequence audit;
+- deterministic Qwen2.5-3B generative rewrite audit;
+- independent deterministic Mistral-7B generative operator transfer;
+- factual, numerical, reference, terminology, claim-strength, anonymity, and render/layout hardening for the v18.6 manuscript.
 
-### ARC-v0.26 — FEVER-E5 Softmax Score-Channel Audit
+### Completed score-channel audit (ARC-v0.26)
 
-Status:
+ARC-v0.26 remains a post-primary reviewer-oriented mechanism audit. Shared exact candidate rescoring lowers representation `H3_abs` from **+0.030964** to **+0.022000**; the paired exact-minus-ANN change is **-0.008964**, 95% CI **[-0.009406, -0.008540]**. The representation trend remains positive. This is evidence that score distortion contributes to magnitude but does not, by itself, explain the short-horizon representation result. It is **not** exact-search evidence.
 
-```text
-protocol / notebook : completed
-scientific role     : post-primary reviewer-oriented mechanism audit
-validation queries  : 3,316
-softmax policies    : 32
-trajectory rows     : 1,061,120
-interpretation gate : SELECTION_CHANNEL_SUFFICIENT_FOR_POSITIVE_REPRESENTATION_H3ABS
-```
+## In progress / outcome pending
 
-The audit does **not** re-encode FEVER or rebuild the existing FAISS indexes, and exact candidate rescoring is not exact nearest-neighbor search.
+**ARC-v0.35 — NQ GTE-base 768-d Frozen Replication** is the only current prospective paper-facing experiment. Its protocol is frozen before VALID outcomes and is intended to test whether the short-horizon matched-mechanism ordering transfers from the existing compact 384-d evidence to one 768-d encoder.
 
-The completed result shows that shared exact candidate rescoring lowers H3abs from +0.030964 to +0.022000, while the exact-rescored interval remains strictly above zero. The paired exact-minus-ANN difference is -0.008964 with 95% CI [-0.009406, -0.008540].
-
-The result is post-primary mechanism hardening, not a pristine confirmation, and is retained without validation retuning.
+No v0.35 result should be added to this README until the frozen run completes.
 
 ## Experimental line status
 
-The frozen **v9.1** artifact remains complete through ARC-v0.25 and is preserved by the immutable `sigir-v9.1-artifact-freeze` tag.
+The research line is complete through **ARC-v0.34** for the current v18.6 manuscript evidence. ARC-v0.35 is a prospective 768-d external-validity replication and must remain outcome-blind until the frozen VALID run completes.
 
-ARC-v0.26 is completed **post-v9.1 evidence**. If it is incorporated into a revised manuscript, the resulting manuscript/artifact state should receive a new version and freeze tag rather than moving the v9.1 tag.
-
-Negative, partial, contracting, beneficial, exploratory, null, and failed-transfer outcomes remain part of the record.
-
-The project does not convert:
+The project retains negative, partial, contracting, beneficial, exploratory, null, and failed-transfer outcomes as part of the scientific record. In particular, it does not convert:
 
 - the v0.18 5/6 gate into full replication;
 - the v0.19 5/7 nprobe gate into a universal positive cross-approximation replication;
-- the post-primary HNSW severity audit into a preregistered continuous severity law;
-- the v0.21 E5 RASF failure into a successful controller-transfer result;
-- the v0.24 operator-family dependence into universal representation expansion;
-- the v0.25 one-shot nDCG match into complete causal severity matching;
-- or the v0.26 score-channel audit into exact-search evidence or a universal causal decomposition.
+- the HNSW severity audit into a preregistered continuous severity law;
+- the v0.21 E5 RASF method failure into a successful controller-transfer result;
+- the score-channel audit into exact-search evidence;
+- the long-horizon temporal reversal into a claim that the terminal absolute-gap ordering also reverses;
+- the unresolved Qwen/Mistral `H3_abs` primaries into significant temporal-order transfer;
+- post-primary exhaustive-reference or decision-consequence audits into prospective confirmation; or
+- the pending ARC-v0.35 protocol into a reported 768-d result before execution.
 
 ## Current manuscript state
 
 Current reviewer-hardened paper title:
 
-> **Approximation under Feedback: Mechanism-Conditioned Dynamics and Directional Effects in Iterative Retrieval**
+> **Approximation in the Loop: When One-Shot ANN Quality Is Insufficient for Iterative Dense Retrieval**
 
-Current manuscript:
+Current manuscript status:
 
 ```text
-version                  : v9.1 frozen artifact + post-freeze ARC-v0.26 evidence
-target                   : SIGIR full paper
-rendered length          : 9 pages in the frozen v9.1 submission candidate
-v9.1 science freeze      : complete through ARC-v0.25
-v9.1 artifact tag        : sigir-v9.1-artifact-freeze
-ARC-v0.26                : completed post-v9.1; candidate for conservative v9.2 incorporation
+version                     : v18.6 reviewer-hardened SIGIR full-paper candidate
+target                      : ACM SIGIR 2026 Full Papers
+paper-facing corpora        : FEVER, HotpotQA, MS MARCO, BEIR Natural Questions
+paper-facing encoders       : BGE-small, E5-small-v2, GTE-small (384-d)
+ANN mechanisms              : IVF-PQ/SQ8 representation, IVF nprobe, HNSW efSearch
+feedback operators          : anchored centroid, recursive centroid, deterministic LLM rewrite
+maximum audited horizon     : H=50
+exact-reference audit       : completed on frozen 500-query NQ-GTE subset
+generative operators        : Qwen2.5-3B and Mistral-7B
+current external-validity gap: larger embedding dimensions / representation geometries
+ARC-v0.35                   : frozen 768-d GTE-base replication, pending outcome
 ```
 
 Current paper-facing QA state:
 
 ```text
-claim audit                : complete
-factual / numerical audit  : complete
-reference audit            : complete
-closest-work positioning   : hardened
-citation-support audit      : complete
-terminology audit           : hardened
-adversarial reviewer audit : complete
-anonymity cleanup           : complete
-render / layout QA          : complete
+claim calibration            : reviewer-hardened
+factual / numerical audit    : complete for v18.6
+reference / citation audit   : complete for current manuscript
+estimand definitions         : hardened
+terminal decision definitions: hardened
+confirmatory vs post-primary : explicitly separated
+null / reversal retention    : preserved
+anonymity / layout QA        : completed for the current draft
 ```
 
 ## Remaining submission-facing work
 
-- decide whether ARC-v0.26 should be incorporated into a revised v9.2 manuscript or retained as artifact-only post-primary evidence;
-- if incorporated, preserve its post-primary status and create a new manuscript/artifact freeze rather than moving the v9.1 tag;
-- verify final compliance against the exact target-year ACM / SIGIR call and template;
-- verify anonymized repository / artifact links;
-- perform one final PDF-level pre-upload inspection after any template conversion;
-- freeze the final submission PDF and artifact hashes;
-- avoid any outcome-driven retuning of frozen experiments.
+The highest-value remaining work is intentionally narrow:
 
-No new large-corpus sweep is currently required. Additional compute should be spent only on a clearly identified scientific ambiguity rather than on increasing trajectory count.
+1. **Run ARC-v0.35 exactly as frozen.** Do not alter the split, PQ geometry, nprobe grid, policy subset, horizon, or primary after VALID starts.
+2. **If v0.35 completes, update the manuscript conservatively.** A positive result supports transfer to one 768-d encoder; an unresolved or reversed result must also be retained and used to narrow the claim.
+3. **Optional high-value downstream audit:** a frozen answer-generation / QA endpoint (e.g. EM/F1) would address the remaining question of whether retrieval-trajectory differences propagate to final answer quality.
+4. **Verify anonymized artifact access** before submission and ensure paper-facing intervals can be recomputed from released query-level artifacts without distributing licensed corpora or multi-GB indexes.
+5. **Run one final PDF/template compliance check** after the final scientific content is frozen.
+6. **Freeze final hashes and tags** only after the submission PDF and artifact package are final.
+
+Additional compute should be used only to answer a clear scientific ambiguity. More datasets, a third LLM rewrite model, or additional post-primary metrics are lower priority than the 768-d replication and a downstream answer-level consequence test.
 
 ---
 
