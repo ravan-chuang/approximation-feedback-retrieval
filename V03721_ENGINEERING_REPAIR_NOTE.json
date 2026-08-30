@@ -1,0 +1,16 @@
+{
+  "study_id": "ARC-v0.37.2.1",
+  "parent": "ARC-v0.37.2",
+  "status": "PRE_MAIN_ENGINEERING_REPAIR",
+  "failure_stage": "FIT-only calibration",
+  "selected_nprobe_seen_before_fix": false,
+  "main_outcomes_seen_before_fix": false,
+  "answer_outcomes_seen_before_fix": false,
+  "scientific_choices_changed": false,
+  "repair": {
+    "ndcg": "ignore -1 padded IDs",
+    "jaccard": "exclude -1 padded IDs",
+    "feedback": "require >=20 real candidates",
+    "answer_evidence": "require >=5 real candidates"
+  }
+}
