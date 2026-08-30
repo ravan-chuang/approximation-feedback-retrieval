@@ -1,0 +1,13 @@
+{
+  "study_id": "ARC-v0.37.1",
+  "title": "HotpotQA Native-Gold Downstream QA Benchmark — Transport Fixed",
+  "status": "PRE_RUN_TEMPLATE",
+  "scientific_change_from_v037": false,
+  "transport_change_only": true,
+  "official_url": "http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_dev_distractor_v1.json",
+  "fallback_mirror": "https://huggingface.co/datasets/RAGLAB/data/resolve/main/eval_datasets/HotPotQA/hotpot_dev_distractor_v1.json?download=true",
+  "fallback_sha256": "4e9ecb5c8d3b719f624d66b60f8d56bf227f03914f5f0753d6fa1b359d7104ea",
+  "hard_lineage_gate": "7405/7405 shared IDs plus zero normalized question-text mismatches",
+  "outcomes_seen_before_fix": false,
+  "retention": "positive/null/reversed retained; no post-freeze tuning"
+}
