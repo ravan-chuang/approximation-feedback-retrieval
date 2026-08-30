@@ -1,0 +1,12 @@
+{
+  "study_id": "ARC-v0.37.2.2",
+  "parent": "ARC-v0.37.2.1",
+  "status": "PRE_MAIN_ENGINEERING_SCOPE_REPAIR",
+  "failure_stage": "FIT-only calibration",
+  "failure": "padding_diagnostics not defined in active Colab runtime",
+  "repair": "define calibration-local _fit_padding_diagnostics and explicit dependency guards",
+  "selected_nprobe_seen_before_fix": false,
+  "main_outcomes_seen_before_fix": false,
+  "answer_outcomes_seen_before_fix": false,
+  "scientific_choices_changed": false
+}
